@@ -4,6 +4,8 @@
 1. Yew Fu Yen - 3035667168
 2. Soh Wai Heng - 3035709502
 
+## PROJECT TOPIC - THE CARDMASTER
+
 ## Game description:
 
 Our group is planning to make a text-based game which combines the concept of both an RPG (role-playing game) and a trading card game.
