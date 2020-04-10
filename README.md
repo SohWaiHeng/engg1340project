@@ -1,17 +1,69 @@
 # engg1340project
 
-GROUP 102
-1. Yew Fu Yen - 
+## GROUP 102
+1. Yew Fu Yen - 3035667168
 2. Soh Wai Heng - 3035709502
 
-Game description:
+## Game description:
 
-We are planning to make a text-based role-playing game, and the main concept of this game is similar to the Pokemon game, where the player will be able to go around the map, which in our case, is just a simple 2D map, to complete a variety of missions. In each of these missions, the player will be confronted with different opponents in a battlefield, and in order for the player to pass that mission, he/she has to defeat all the opponents before all of his/her creatures' in-game health drop to zero. These battles will be carried out in the form of card games. The purpose of these missions is to allow the player to improve their inventory, as the player will be rewarded with useful items like new creatures, in-game money or equipments if he/she is able to complete these given missions. All these missions also serve to prepare the player to face the last and biggest battle of our game, which is the "final boss". The game is completed when the player has successfully defeated the "final boss". 
+Our group is planning to make a text-based game which combines the concept of both an RPG (role-playing game) and a trading card game.
+
+The game follows a main story, and just like any RPGs, the player will be able to go around maps of different regions, to complete a variety of missions along with the progression of the storyline.
+The main goal of the game is to complete the storyline.
+There are three types of collectibles in the games, which are creatures, cards and in-game currencies. The player will collect these items along with the progression of the game.
+The creatures are used to build a deck to be used by the player in battles. Cards can be added to creatures, and in-game currencies are used to level up creatures or buy items in game.
+Along the journey, the player will be confronted with different opponents (computer AI) during mission tasks or at some locations in the map. The player will have to battle with these opponents in order to continue with the game.
+
+These battles will be carried out in the form of a turn-based card game.The battle rules are implemented based on an old mobile card game named Card Wars Kingdom.
+The players will deploy the creatures in his deck to the battlefield, then decide how he should use his creatures/cards based on the elixir he owns that round.
+To win the battle, the player has to defeat all of opponent's creature deployed on the battlefield.
+The in-depth battle rules are written in the section ```Rules in the battlefield``` below.
+
+As the reward of winning the battle, the player will obtain new creatures/cards and in-game currencies to improve his inventories.
+Battles are usually required for the player to complete a mission when progressing with the main story. There would be a number of missions designed for the player to complete in game.
+All these missions also serve to prepare the player to face the last and biggest battle of our game, which is the "final boss". 
+The game is completed when the player has successfully defeated the "final boss" and thus finishes the story.
 
 
-Rules in the battlefield:
+## Features in game in relation to the coding requirements:
 
-The concept of our card game will be based on an old game named Card Wars Kingdom. Before the battle commences, the player has to construct a deck of creature cards from all the cards they owned before the battle begins. The cards can be constructed or changed anytime in the menu page. The player has to come up with an effective strategy and choose the most suitable creatures for the battle in order to increase his/her chances of winning.
+### 1. Generation of random game sets or events
+	- There are several features in the game which can be randomly generated including:
+	  1. Random locations in map where the player will be confronted with an opponent (with certain probabilities)
+	  2. Random draw from the player's available card pool in battle (totally random)
+	  3. Random moves by the the opponent's Computer AI
+	  4. Random drops and rewards given to player after winning a battle (with certain probabilities)
+	  5. Random draw of a creature given to player every time the player buys a treasure chest (with certain probabilities)
+
+### 2. Data structures for storing game status
+   	- Creatures' data like their names, stats and cards will be stored in structs
+	- List of the player's creature will be stored in linked list / array of structs
+	- Cards will be represented in a class, with member functions (function of the card) and member variables (name of card, stats of card, whom this card is played on)
+	- Currencies will also be stored in structs, since there are different type of currencies
+	- In the game there will be a menu page where the player can access all the creatures he has, check his stats and build his deck
+	- We plan to represent the menu page in a class, for which its member functions are used to perform different functions available in the menu page (eg: build deck from creature list)
+
+### 3. Dynamic memory management
+	- Linked list is used to store the creatures the player owns. The linked list can be easily added with new creatures and thus memory can be easily allocated accordingly
+	- Data needed during runtime in the game are only loaded from certain txt files during runtime if possible. We plan to use a series of dynamic arrays and variables to achieve this. After these data are used the memory will be cleaned after changes were output and saved in txt files.
+
+### 4. File I/O
+	- The game will include both save and load functions
+	- The player can save the game at certain save points
+	- Saving will take all the info of the creatures owned by the player, the player's amount of in-game currencies, and the part of storyline the player is in at the time of saving, and output them to a txt file (file name decided by player)
+	- The player can continue his game by loading an available txt save file
+	- Loading will take in some necessary info from txt file (when starting the game) and memory will be allocated to store these data
+	- Some game data will also be stored in txt files and is loaded when needed. For example: maps, full list of creatures, full list of cards
+
+### 5. Program codes in multiple files
+	- We are going to split the whole code into multiple cpp, header and txt files.
+	- Since our game is based on a storyline, we plan to split different events that will happen in the story into blocks of functions. These story function blocks will be written in different cpp files and be arranged in the main functions sequentially.
+	- Some necessary functions like functions for the player to move around the map, functions for battling will also be written in different cpp files.
+	- Multiple functions of the same category of usage (eg: for walking on map) can be declared in the sanme header file.
+	- txt files are used to store data like maps, list of creatures etc.
+
+## Rules in the battlefield:
+TheThe concept of our card game will be based on an old game named Card Wars Kingdom. Before the battle commences, the player has to construct a deck of creature from all the creatures he owned before the battle begins. The deck can be constructed or changed anytime in the menu page. The player has to come up with an effective strategy and choose the most suitable creatures for the battle in order to increase his/her chances of winning.
 
 a. Creatures:
         
@@ -41,7 +93,7 @@ c. Basic rules of battle:
 
     i. There will be a set amount of elixir given to the player in every single round. In round 1, the player will have one elixir, in round 2, the player will have 2 elixirs, and so on. (The maximum number of elixirs given is 10, so even if the game has exceeded 10 rounds, the player will only get 10 elixirs)
 	
-	ii. An elixir is used to perform a single action in each round.
+	ii. Elixir is used to perform actions in each round. Different action requires different amount of elixir.
 	
 	iii. The player or AI is randomly chosen to start the game.
 	
@@ -180,7 +232,7 @@ h. Example of how the battlefield looks like:
 
 
 
-Other functions/features in our game:
+## Other functions/features in our game:
 
 1. Title screen: 
 
@@ -190,11 +242,7 @@ Player will be given the choice of starting a new game or continue their previou
 
 If the player chooses to start a new game, a tutorial page will be prompted to teach the player on the rules of the game and different controls and keys used in the game at the beginning of the game. The player is given the choice to skip the tutorials. This tutorial page will be loaded from another file.
 
-3. Characters/Creatures/Items:
-
-All the features of in-game characters, creatures and items will be stored in different data structures like structs or classes. Different classes consist of different types of functions depending on the needs of each individual class. Each and every unique characters, creatures and items will be created based on their own classes and all of them will be stored in another file(s).
-
-4. Map/player movement:
+3. Map/player movement:
 
 We will create a map and divide it into smaller blocks (25 x 65 characters) to be displayed on the screen terminal. The player can move his/her character around the map using the keys WASD via the paths set by us, and attempts to walk through the walls will lead to an error message. When the character has reached the sides of the map, another block of the map will be displayed to replace the existing one. The player is allowed to fast-forward their movement by entering the characters shown on different junctions.
 
@@ -227,9 +275,4 @@ An example of a single block of map is shown below:
 	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
 	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
 	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
-
-
-5. Save and delete game:
-
-Player can save their progress in the game whenever he/she wants to. If the game has not been saved before, the player will be asked to enter a name for the file to be saved. These saved files can be saved and reopened again using File I/O functions. If there exist more than one saved files in the game, the player will be asked to specify the name of the file they intend to reopen. We'll use dynamic arrays to store these file names since we are unsure of the total number of files there will be. The player can choose to delete any of their saved progress too, and the file will then be deleted from the dynamic array and computer memory. The file of completed game will also automatically be destroyed.
 
