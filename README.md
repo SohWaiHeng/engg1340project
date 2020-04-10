@@ -229,7 +229,7 @@ An example of a single block of map is shown below:
 	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
 
 
-5. Save and delete game:
+5. Save game:
 
-Player can save their progress in the game whenever he/she wants to. If the game has not been saved before, the player will be asked to enter a name for the file to be saved. These saved files can be saved and reopened again using File I/O functions. If there exist more than one saved files in the game, the player will be asked to specify the name of the file they intend to reopen. We'll use dynamic arrays to store these file names since we are unsure of the total number of files there will be. The player can choose to delete any of their saved progress too, and the file will then be deleted from the dynamic array and computer memory. The file of completed game will also automatically be destroyed.
+Player can save their progress in the game whenever he/she wants to. If the game has not been saved before, the player will be asked to enter a name for the file to be saved. These saved files can be saved and reopened again using File I/O functions. If there exist more than one saved files in the game, the player will be asked to enter his/her name so that their game file will be reopened and he/she can continue their progress. 
 
