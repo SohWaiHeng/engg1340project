@@ -1,10 +1,10 @@
 # engg1340project
 
-## GROUP 102
+## GROUP 102 
 1. Yew Fu Yen - 3035667168
 2. Soh Wai Heng - 3035709502
 
-PROJECT TOPIC - THE CARDMASTER
+# PROJECT TOPIC - THE CARDMASTER
 
 ## Game description:
 
