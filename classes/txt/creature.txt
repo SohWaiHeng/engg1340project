@@ -1,0 +1,5 @@
+no  namelength name                      symbol      card       hp   cost  atk  mgc  crt
+1   2          happy fish                ~(^v^)~     1 2 3 4 5  120  2     30   120  2  
+
+// all creatures should be stored in this format cuz i coded creature.cpp according to this format
+// if changes are made in this txt file then there may be some changes needed to be done in the creature.cpp code

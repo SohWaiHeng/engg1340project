@@ -1,0 +1,9 @@
+no  namelength name                    cost area remove counteratk haste atk magic shield elixirsap addelixir drawcard heal directdmg niceland thorns heroic revenge defenseup poison blind silence blockcard
+1   2          ultimate wish           0    0    0      0          0     0   0     0      0         2         0        100  0         0        0      0      0       0         0      0     0       0        
+2   2          minty cloud             2    0    0      0          0     0   0     0      0         0         0        0    30        0        0      0      0       0         0      0     0       0        
+3   1          alliance                9    1    0      0          0     0   1     0      0         0         0        0    0         0        0      0      0       0         0      0     0       0        
+4   2          fluffy ring             1    0    0      0          0     0   0     0      0         0         1        10   0         0        0      0      0       0         0      0     0       0        
+5   1          niceland                1    0    0      0          0     0   0     0      0         0         0        0    0         1        0      0      0       0         0      0     0       0        
+
+// all cards should be stored in this format cuz i coded card.cpp according to this format
+// if the sequence in this txt file is changed then some changes should be made in card.cpp too

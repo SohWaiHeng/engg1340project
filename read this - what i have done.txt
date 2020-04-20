@@ -1,0 +1,5 @@
+I created a class to store cards and another class creatures and defined some necessary member functions
+I have also written two txt files to store the list of all cards and creatures in game
+please read xia and understand how the class is structured so u can use it in ur menu
+the Makefile provides codes to compile the classes and headers into an executable file "test", the "test" is just to test the correctness of my code la
+
