@@ -31,6 +31,7 @@ void card::setcard (int cardno) {
 
             // take in card's name
             iss >> integer;
+            cardnamelength = integer;
             cardname = "";
             for (int i = 0; i < integer; i++) {
                 iss >> name;
@@ -45,6 +46,10 @@ void card::setcard (int cardno) {
             // take in card's cost
             iss >> integer;
             cardcost = integer;
+
+            // take in card's rarity
+            iss >> integer;
+            cardrarity = integer;
 
             // take in card's functions
             // card functions are stored in the variable cardstatus of type "struct status" defined in status.h

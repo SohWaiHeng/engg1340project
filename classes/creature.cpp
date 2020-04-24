@@ -1,6 +1,8 @@
 #include<iostream>
 #include<fstream>
 #include<sstream>
+#include<stdlib.h>
+#include<time.h>
 #include "creature.h"
 using namespace std;
 
@@ -69,6 +71,9 @@ void creature::setbasestats (int creatureno) {
     }
     // and thus a creature is stored
     fin.close();
+
+    // initialise the 'deployed' value as false
+    deployed = false;
 }
 
 // calculates and sets the creature's current status based on its level
@@ -99,8 +104,41 @@ void creature::getcurrentstats () {
     cout << "atk: " << current.atk << endl;
     cout << "mgc: " << current.mgc << endl;
     cout << "crt: " << current.crt << " %" << endl;
-    for (int i = 0; i < 5; i++) {
+    /*for (int i = 0; i < 5; i++) {
         cout << endl << "card " << i+1 << endl;
         cardpool[i].getfunction();
+    }*/
+}
+
+int creature::getatk(bool &critical) {
+    srand(time(NULL));
+    int randomno = rand() % 100 + 1;
+    if (randomno < current.crt) {
+        critical = true;
+        return (current.atk * 1.5);
     }
+    else {
+        critical = false;
+        return current.atk;
+    }
+}
+
+int creature::getmgc(bool &critical) {
+    srand(time(NULL));
+    int randomno = rand() % 100 + 1;
+    if (randomno < current.crt) {
+        critical = true;
+        return (current.mgc * 1.5);
+    }
+    else {
+        critical = false;
+        return current.mgc;
+    }
+}
+
+int creature::gethpratio () {
+    double currenthp = current.hp;
+    double basehp = base.hp;
+    double ratio = ((currenthp / (basehp+0.01)) * 5) + 1;
+    return ratio;
 }

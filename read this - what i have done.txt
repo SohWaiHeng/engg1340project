@@ -1,5 +1,24 @@
-I created a class to store cards and another class creatures and defined some necessary member functions
-I have also written two txt files to store the list of all cards and creatures in game
-please read xia and understand how the class is structured so u can use it in ur menu
-the Makefile provides codes to compile the classes and headers into an executable file "test", the "test" is just to test the correctness of my code la
+what i have done:
+1. written functions to print battle field
+2. written function to deploy creature in battle
+3. written function to attack in battle
+4. worked out overall battle framework (store deployed creature in linked list, remove when dead etc.)
+
+what i havent done:
+1. write function to use card in battle
+2. write function (code function) to carry out the function (uses) of the cards
+3. write function to print out battle results (determine the rewards etc)
+4. write AI as opponent
+5. write some code to delay the output (cuz the output come out a bit too fast the player may miss what happens)
+6. write some code to display your creature attacking the opponent's creature
+
+U can run 'battletest' to try the battle if you are using Linux.
+run 'test.exe' if using windows
+idk if 'battletest' can run on macOS
+
+for now u can only deploy a creature on battlefield or attack using a creature.
+and for now the battle is pvp cuz i havent written the AI
+if u run 'battletest', u can play against urself, but its a bit boring at this stage cuz all you can do is attack nia
+to deploy: type "deploy <creature number on the left side of screen> <position>" position: deploy as the second creature among ur creatures, position = 2
+to attack: type "attack <target creature name> with <own creature name>
 

@@ -35,19 +35,40 @@ struct stats {
 */
 class creature {
     public:
+        int getcreaturenumber() { return creaturenumber; };
+
+        int gethp() { return current.hp; };
+        void decreasehp(int byhowmuch) { current.hp = current.hp - byhowmuch; };
+        int gethpratio();
+
+        int getatk(bool &critical);
+        int getoriginalatk() { return current.atk; };
+
+        int getmgc(bool &critical);
+        int getoriginalmgc() { return current.mgc; };
+
+        std::string getname() { return current.name; };
+        int getcost() { return current.cost; };
+        std::string getsymbol() { return current.symbol; };
+        void getcurrentstats();
+
         void setbasestats(int creatureno);
         void setcurrentstats(int creaturelvl);
-        void getcurrentstats();
-        int getcreaturenumber() {return creaturenumber;};
+        
         void setstatus();
         void getstatus();
 
+        void setdeployed(bool deployedbool) { deployed = deployedbool; };
+        bool getdeployed() { return deployed; };
+
+        card cardpool[5];
+
     private:
         int creaturenumber;
-        status creaturestatus;
         stats base;
         stats current;
-        card cardpool[5];
+        status creaturestatus;
+        bool deployed;
 };
 
 #endif
