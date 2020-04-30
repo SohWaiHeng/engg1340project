@@ -2,7 +2,7 @@
 #define STATUS_H
 
 // a struct to store status
-struct status {
+struct statusEffect {
     int numberofstatus = 21;
     int area;
     

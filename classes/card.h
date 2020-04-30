@@ -7,7 +7,7 @@
 // define a class 'card' as a data type to store cards
 class card {
     public:
-        void getfunction();
+        std::string getfunction();
         int getrarity() { return cardrarity; };
         int getcardnumber() { return cardnumber; };
         std::string getname() { return cardname; };
@@ -17,7 +17,7 @@ class card {
         int getnamelength() { return cardnamelength; };
 
     private:
-        status cardstatus;
+        statusEffect cardstatus;
         int cardnumber;
         int cardcost;
         std::string cardname;

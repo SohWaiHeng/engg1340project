@@ -72,7 +72,8 @@ void card::setcard (int cardno) {
 }
 
 // print out the card's functions
-void card::getfunction () {
+string card::getfunction () {
+    string final = "";
     int status[] = {cardstatus.area, cardstatus.remove,
                     cardstatus.counteratk, cardstatus.haste, cardstatus.atk,
                     cardstatus.magic, cardstatus.shield, cardstatus.elixirsap, cardstatus.addelixir, cardstatus.drawcard,
@@ -87,13 +88,14 @@ void card::getfunction () {
                         "poison", "blind", "silence", "blockcard"};
     
     // print out the name and elixir cost of the card
-    cout << "name: " << cardname << endl;
-    cout << "cost: " << cardcost << endl;
+    /*cout << "name: " << cardname << endl;
+    cout << "cost: " << cardcost << endl;*/
 
     // print out all status which are not equal to zero
     for (int i = 0; i < cardstatus.numberofstatus; i++) {
         if (status[i] != 0) {
-            if (i == 0 || i == 1) {
+            final = final + statusname[i] + " x " + to_string(status[i]) + ",  ";
+            /*if (i == 0 || i == 1) {
                 cout << statusname[i] << ' ';
             } 
             else {
@@ -103,7 +105,8 @@ void card::getfunction () {
                 else {
                     cout << "- " << statusname[i] << " x " << status[i] << endl;
                 }
-            }
+            }*/
         }
     }
+    return final;
 }

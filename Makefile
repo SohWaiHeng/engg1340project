@@ -8,21 +8,17 @@ ofiles/creature.o: classes/creature.cpp classes/creature.h
 	g++ $(FLAGS) -c $<
 	mv creature.o ofiles
 
-ofiles/test.o: classes/test.cpp classes/creature.h
-	g++ $(FLAGS) -c $<
-	mv test.o ofiles
-
 ofiles/battle.o: battle.cpp battle.h
 	g++ $(FLAGS) -c $<
 	mv battle.o ofiles
 
-ofiles/battletest.o: battletest.cpp battle.h
+ofiles/printbattle.o: printbattle.cpp battle.h
 	g++ $(FLAGS) -c $<
-	mv battletest.o ofiles
+	mv printbattle.o ofiles
 
-classes/test: ofiles/test.o ofiles/creature.o ofiles/card.o
-	g++ $(FLAGS) $^ -o $@
-	mv test classes
+ofiles/test.o: test.cpp battle.h
+	g++ $(FLAGS) -c $<
+	mv test.o ofiles
 
-battletest: ofiles/battletest.o ofiles/battle.o ofiles/creature.o ofiles/card.o
+test: ofiles/test.o ofiles/battle.o ofiles/printbattle.o ofiles/creature.o ofiles/card.o
 	g++ $(FLAGS) $^ -o $@

@@ -3,22 +3,28 @@ what i have done:
 2. written function to deploy creature in battle
 3. written function to attack in battle
 4. worked out overall battle framework (store deployed creature in linked list, remove when dead etc.)
+5. write function to use card in battle
+6. write function (code function) to carry out the function (uses) of the cards
+7. write function to print out battle results 
+8. bug fixes
 
-what i havent done:
-1. write function to use card in battle
-2. write function (code function) to carry out the function (uses) of the cards
-3. write function to print out battle results (determine the rewards etc)
-4. write AI as opponent
-5. write some code to delay the output (cuz the output come out a bit too fast the player may miss what happens)
-6. write some code to display your creature attacking the opponent's creature
+overall i have completed battle de function
 
-U can run 'battletest' to try the battle if you are using Linux.
+what i havent done
+1. determine the rewards
+2. write AI as opponent
+3. write some code to delay the output (cuz the output come out a bit too fast the player may miss what happens) (can skip)
+4. write some code to display your creature attacking the opponent's creature (can skip)
+5. tutorial
+6. manual to display all functions of cards, eg: shield, thorns etc, for player's reference
+
+U can run 'test' to try the battle if you are using Linux.
 run 'test.exe' if using windows
-idk if 'battletest' can run on macOS
+idk if 'test' can run on macOS
 
-for now u can only deploy a creature on battlefield or attack using a creature.
-and for now the battle is pvp cuz i havent written the AI
-if u run 'battletest', u can play against urself, but its a bit boring at this stage cuz all you can do is attack nia
 to deploy: type "deploy <creature number on the left side of screen> <position>" position: deploy as the second creature among ur creatures, position = 2
 to attack: type "attack <target creature name> with <own creature name>
+to use card: type "use <card name> on <creature name>"
+to show function of card / stats of undeployed/deployed creatures: type "show <card/creature> <name of card / number of undeployed creature / name of deployed creature>
+
 

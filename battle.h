@@ -24,11 +24,13 @@ struct cardOnHand {
     cardOnHand * next;
 };
 
+int numberOfCards (cardOnHand * cardhead);
+int numberOfCreatures (deployed * head);
+void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * opponent, int currentElixir, creature deck[]);
+
 //void deploy (int &currentElixir, creature deck[], deployed * &head);
 //void initialiseCard (cardOnHand * &cardhead, creature deck[], int push);
 //int drawCard (creature &toBeDrawnFrom);
-//int numberOfCards (cardOnHand * cardhead);
-//int numberOfCreatures (deployed * head);
 //void addCardToHand (cardOnHand * &cardhead, card toBeAdded);
 //void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard, int &currentElixir);
 //void playersMove (deployed * &player, deployed * &opponent, int &currentElixir, creature deck[], cardOnHand * &playerscard);
@@ -39,7 +41,7 @@ struct cardOnHand {
 //void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * opponent, int currentElixir);
 //void opponentsResponse();
 //void battleResults();
-//void use();
+//void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHand playerscard);
 //void removeCardFromHand();
 void battle (creature deck[], opponent currentOpponent);
 

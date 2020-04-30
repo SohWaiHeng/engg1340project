@@ -38,7 +38,7 @@ class creature {
         int getcreaturenumber() { return creaturenumber; };
 
         int gethp() { return current.hp; };
-        void decreasehp(int byhowmuch) { current.hp = current.hp - byhowmuch; };
+        void decreasehp(int byhowmuch);
         int gethpratio();
 
         int getatk(bool &critical);
@@ -55,11 +55,29 @@ class creature {
         void setbasestats(int creatureno);
         void setcurrentstats(int creaturelvl);
         
-        void setstatus();
-        void getstatus();
+        void setstatus(std::string condition, int number);
+        int getstatus(std::string condition);
+        int getnumberofstatus() { return creaturestatus.numberofstatus; };
 
         void setdeployed(bool deployedbool) { deployed = deployedbool; };
         bool getdeployed() { return deployed; };
+
+        void heal(int percentage);
+        void counteratk(creature &attacker);
+        void haste(bool start);
+        void atk(int percentage);
+        void magic(creature &target);
+        void shield();
+        void elixirsap(creature &target, int &elixir, bool attacking);
+        void addelixir(int &elixir, int byHowMuch);
+        void drawcard();
+        void directdmg(int percentage);
+        void thorns(int damage, creature attacker);
+        void revenge(int store, bool release, creature &target);
+        void defenseup(int &damage);
+        void poison();
+        void silence();
+        void blockcard();
 
         card cardpool[5];
 
@@ -67,7 +85,7 @@ class creature {
         int creaturenumber;
         stats base;
         stats current;
-        status creaturestatus;
+        statusEffect creaturestatus;
         bool deployed;
 };
 

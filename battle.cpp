@@ -1,370 +1,30 @@
 #include<iostream>
-#include<fstream>
 #include<string>
 #include<sstream>
 #include<stdlib.h>
 #include<time.h>
 #include<limits>
-#include<algorithm>
-#include<iomanip>
 #include "battle.h"
 using namespace std;
-
-// count number of cards on player's hand
-int numberOfCards (cardOnHand * cardhead) {
-    int count = 0;
-    cardOnHand *currentnode =  cardhead;
-    while (currentnode != NULL) {
-        count ++;
-        currentnode = currentnode->next;
-    }
-    return count;
-}
-
-// count number of player's creatures deployed on field
-int numberOfCreatures (deployed * head) {
-    int count = 0;
-    deployed *currentnode = head;
-    while (currentnode != NULL) {
-        count ++;
-        currentnode = currentnode->next;
-    }
-    return count;
-}
-
-// for printing repeated char
-void repeatedPrinting (char start, char toBePrinted, int times, char end) {
-    if (times > 1) {
-        cout << start;
-        for (int i = 0; i < times-2; i++) {
-            cout << toBePrinted;
-        }
-        cout << end;
-    }
-    else if (times == 1) {
-        cout << toBePrinted;
-    }
-}
-
-// printing creature section
-void printingCreature (int totalSpace, int creatureSpace, deployed * player, char indicator) {
-    int blankspace = (totalSpace - 22 - (creatureSpace * numberOfCreatures(player)));
-    repeatedPrinting(' ', ' ', blankspace / 2 + blankspace % 2, ' ');
-    deployed * creaturenode = player;
-    cout << left;
-    switch (indicator) {
-        case 'a': {
-            for (int i = 0; i < numberOfCreatures(player); i++) {
-                cout << " atk: " << setw(creatureSpace-6) << creaturenode->deployedCreature.getoriginalatk();
-                creaturenode = creaturenode->next;
-            }
-            break;
-        }
-        case 'm': {
-            for (int i = 0; i < numberOfCreatures(player); i++) {
-                cout << " mgc: " << setw(creatureSpace-6) << creaturenode->deployedCreature.getoriginalmgc();
-                creaturenode = creaturenode->next;
-            }
-            break;
-        }
-        case 'h': {
-            for (int i = 0; i < numberOfCreatures(player); i++) {
-                cout << " hp:";
-                repeatedPrinting(' ', '-', creaturenode->deployedCreature.gethpratio() + 2, ' ');
-                cout << setw(creatureSpace - 4 - 2 - creaturenode->deployedCreature.gethpratio()) << creaturenode->deployedCreature.gethp();
-                creaturenode = creaturenode->next;
-            }
-            break;
-        }
-        case 's': {
-            for (int i = 0; i < numberOfCreatures(player); i++) {
-                cout << "    " << creaturenode->deployedCreature.getsymbol() << "          ";
-                creaturenode = creaturenode->next;
-            }
-            break;
-        }
-        case 'n': {
-            for (int i = 0; i < numberOfCreatures(player); i++) {
-                cout << " ";
-                int length = creaturenode->deployedCreature.getname().length();
-                if (length <= 13) {
-                    repeatedPrinting(' ', ' ', ((13 - length) / 2), ' ');
-                    cout << creaturenode->deployedCreature.getname();
-                    repeatedPrinting(' ', ' ', ((13 - length) / 2)  + ((13 - length) % 2), ' ');
-                    cout << "    ";
-                }
-                else {
-                    cout << setw(17) << creaturenode->deployedCreature.getname();
-                }
-                cout << "   ";
-                creaturenode = creaturenode->next;
-            }
-            break;
-        }
-        case 'c': {
-            for (int i = 0; i < numberOfCreatures(player); i++) {
-                cout << " cost: " << setw(creatureSpace-7) << creaturenode->deployedCreature.getcost();
-                creaturenode = creaturenode->next;
-            }
-            break;
-        }
-    }
-    repeatedPrinting(' ', ' ', blankspace / 2, ' ');
-}
-
-// get nth word in a string
-string getword (string wordlist, int index) {
-    string targetword;
-    istringstream iss (wordlist);
-    for (int i = 0; i <= index; i++) {
-        iss >> targetword;
-    }
-    return targetword;
-}
-
-// printing card on hand section
-void printingCard (int totalSpace, int cardSpace, cardOnHand * playerscard, char indicator, int currentElixir) {
-    int blankspace = (totalSpace - 22 - (cardSpace * numberOfCards(playerscard)));
-    repeatedPrinting(' ', ' ', blankspace / 2, ' ');
-    cardOnHand * cardnode = playerscard;
-    switch (indicator) {
-        case '\0': {
-            for (int i = 0; i < numberOfCards(playerscard); i++) {
-                repeatedPrinting(' ', '_', cardSpace, ' ');
-            }
-            break;
-        }
-        case '1': {
-            for (int i = 0; i < numberOfCards(playerscard); i++) {
-                cout << "|  (" << i+1 << ")   |";  
-            }
-            break;
-        }
-        case 'c': {
-            for (int i = 0; i < numberOfCards(playerscard); i++) {
-                cout << '|' << cardnode->theCard.getcost() << " elixir|";
-                cardnode = cardnode->next;
-            }
-            break;
-        }
-        case '0': {
-            for (int i = 0; i < numberOfCards(playerscard); i++) {
-                repeatedPrinting('|', ' ', cardSpace, '|');
-            }
-            break;
-        }
-        case '\n': {
-            for (int i = 0; i < numberOfCards(playerscard); i++) {
-                repeatedPrinting('|', '_', cardSpace, '|');
-            }
-            break;
-        }
-        case 'n': {
-            for (int i = 0; i < 4; i++) {
-                if (i != 0) {
-                    repeatedPrinting('|', ' ', 12, ' ');
-                    repeatedPrinting(' ', ' ', blankspace / 2, ' ');
-                }
-
-                for (int j = 0; j < numberOfCards(playerscard); j++) {
-                    int length = cardnode->theCard.getnamelength();
-                    if (i != 0) {
-                        if (i == 1) {
-                            if (length <= 2) {
-                                cout << '|' << setw(8) << getword(cardnode->theCard.getname(), 0) << '|';
-                            }
-                            else {
-                                cout << '|' << setw(8) << getword(cardnode->theCard.getname(), 1) << '|';
-                            }
-                        }
-                        else if (i == 2) {
-                            if (length == 2) {
-                                cout << '|' << setw(8) << getword(cardnode->theCard.getname(), 1) << '|';
-                            }
-                            else if (length == 3 || length == 4) {
-                                cout << '|' << setw(8) << getword(cardnode->theCard.getname(), 2) << '|';
-                            }
-                            else {
-                                repeatedPrinting('|', ' ', cardSpace, '|');
-                            }
-                        }
-                        else {
-                            if (length == 4) {
-                                cout << '|' << setw(8) << getword(cardnode->theCard.getname(), 3) << '|';
-                            }
-                            else {
-                                repeatedPrinting('|', ' ', cardSpace, '|');
-                            }
-                        }
-                    }
-                    else {
-                        if (length == 3 || length == 4) {
-                            cout << '|' << setw(8) << getword(cardnode->theCard.getname(), 0) << '|';
-                        }
-                        else {
-                            repeatedPrinting('|', ' ', cardSpace, '|');
-                        }
-                    }
-                    cardnode = cardnode->next;
-                }
-
-                cardnode = playerscard;
-                int totalblankspace = blankspace / 2 + blankspace % 2 + 9;
-                if (i != 3) {
-                    if (i == 1) {
-                        repeatedPrinting(' ', ' ', (totalblankspace-7) / 2, ' ');
-                        cout << "Elixir:";
-                        repeatedPrinting(' ', ' ', (totalblankspace-7) / 2 + (totalblankspace-7) % 2 + 1, '|');
-                        cout << endl;
-                    }
-                    else if (i == 2) {
-                        if (currentElixir == 10) {
-                            repeatedPrinting(' ', ' ', (totalblankspace-2) / 2, ' ');
-                            cout << currentElixir;
-                            repeatedPrinting(' ', ' ', (totalblankspace-2) / 2 + (totalblankspace-2) % 2 + 1, '|');
-                            cout << endl;
-                        }
-                        else {
-                            repeatedPrinting(' ', ' ', (totalblankspace-1) / 2, ' ');
-                            cout << currentElixir;
-                            repeatedPrinting(' ', ' ', (totalblankspace-1) / 2 + (totalblankspace-1) % 2 + 1, '|');
-                            cout << endl;
-                        }
-                    }
-                    else {
-                        repeatedPrinting(' ', ' ', blankspace / 2 + blankspace % 2, ' ');
-                        repeatedPrinting(' ', ' ', 10, '|');
-                        cout << endl;
-                    }
-                }
-            }
-        }
-    }
-    repeatedPrinting(' ', ' ', blankspace / 2 + blankspace % 2, ' ');
-}
-
-// printing undeployed creatures on the left side of battle screen
-void printUndeployed (creature deck[], int line) {
-    string leftarray[3] = {"|_______    ", "||  ", "|_______|   "};
-    if (line > 6 && line < 22) {
-        int index = (line - 7) % 3;
-        int i = (line - 7) / 3;
-        if (deck[i].getdeployed() == true) {
-            repeatedPrinting('|', ' ', 12, ' ');
-        }
-        else {
-            if (index == 1) {
-                leftarray[index] = leftarray[index].insert(3, to_string(i+1));
-                leftarray[index] = leftarray[index].insert(1, deck[i].getsymbol());
-                cout << leftarray[index];
-            }
-            else {
-                cout << leftarray[index];
-            }
-        }
-    }
-    else {
-        repeatedPrinting('|', ' ', 12, ' ');
-    }
-}
-
-// print out full battle screen
-void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * opponent, int currentElixir, creature deck[]) {
-    // commented code for debug purpose
-    /*cout << endl;
-    deployed * creaturenode = player;
-    while (creaturenode != NULL) {
-        cout << "own" << endl;
-        creaturenode->deployedCreature.getcurrentstats();
-        creaturenode = creaturenode->next;
-        cout << endl;
-    }
-    cardOnHand * cardnode = cardhead;
-    while (cardnode != NULL) {
-        cardnode->theCard.getfunction();
-        cardnode = cardnode->next;
-        cout << endl;
-    }
-    deployed * opponentcreaturenode = opponent;
-    while (opponentcreaturenode != NULL) {
-        cout << "enemy" << endl;
-        opponentcreaturenode->deployedCreature.getcurrentstats();
-        opponentcreaturenode = opponentcreaturenode->next;
-        cout << endl;
-    }*/
-
-    const int creatureSpace = 21;
-    const int cardSpace = 10;
-    int totalSpace = max({ (creatureSpace * numberOfCreatures(player)), (cardSpace * numberOfCards(cardhead)), (creatureSpace * numberOfCreatures(opponent))}) + 22;
-    int line = 0;
-    cout << endl;
-    
-    repeatedPrinting(' ', '_', totalSpace, ' ');
-    line++;
-    cout << endl;
-    
-    repeatedPrinting('|', ' ', totalSpace, '|');
-    line++;
-    cout << endl;
-
-    char toPrintOpponent[5] = {'a', 'm', 'h', 's', 'n'};
-    for (int i = 0; i < 5; i++) {
-        printUndeployed(deck, line);
-        printingCreature(totalSpace, creatureSpace, opponent, toPrintOpponent[i]);
-        repeatedPrinting(' ', ' ', 10, '|');
-        line++;
-        cout << endl;
-    }
-
-    for (int i = 0; i < 6; i++) {
-        printUndeployed(deck, line);
-        repeatedPrinting(' ', ' ', totalSpace-12, '|');
-        line++;
-        cout << endl;
-    }
-
-    char toPrintPlayer[6] = {'n', 's', 'c', 'h', 'a', 'm'};
-    for (int i = 0; i < 6; i++) {
-        printUndeployed(deck, line);
-        printingCreature(totalSpace, creatureSpace, player, toPrintPlayer[i]);
-        repeatedPrinting(' ', ' ', 10, '|');
-        line++;
-        cout << endl;
-    }
-
-    printUndeployed(deck, line);
-    repeatedPrinting(' ', ' ', totalSpace-12, '|');
-    line++;
-    cout << endl;
-
-    char toPrintCard[5] = {'\0', '1', 'c', 'n', '\n'};
-    for (int i = 0; i < 5; i++) {
-        printUndeployed(deck, line);
-        printingCard(totalSpace, cardSpace, cardhead, toPrintCard[i], currentElixir);
-        repeatedPrinting(' ', ' ', 10, '|');
-        line++;
-        cout << endl;
-    }
-
-    repeatedPrinting('|', '_', totalSpace, '|');
-    cout << endl;
-
-    cout << endl;
-}
 
 // to deploy a creature on battle field
 // format : deploy <creature number> <creature position>
 // negates all invalid input
 void deploy (int &currentElixir, creature deck[], deployed * &head) {
+    if (numberOfCreatures(head) == 4) {
+        cin.clear(); 
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "You can only have a maximum of 4 creatures on the field" << endl;
+        return;
+    }
+    
     int creatureidx;
     cin >> creatureidx;
-    string *trash = new string;
     while ( cin.fail() ) {
         cin.clear(); 
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cout << "To deploy a creature, please type the <creature number>, followed by the <position> that you wish to deploy the creature at." << endl;
         cout << "Please enter the creature number properly" << endl;
-        cout << "Deploy ";
         return;
     }
     if ( creatureidx < 1 || creatureidx > 5) {
@@ -386,7 +46,6 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
         cin.clear(); 
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cout << "Please enter the position of the creature as a valid number" << endl;
-        cout << "deploy " << creatureidx << " ";
         return;
     }
 
@@ -417,6 +76,7 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
     else {
         previousnode->next = newdeployed;
     }
+    return;
 }
 
 // randomly draw a card from a creature
@@ -451,6 +111,7 @@ void addCardToHand (cardOnHand * &cardhead, card toBeAdded) {
     newnode->theCard = toBeAdded;
     newnode->next = cardhead;
     cardhead = newnode;
+    return;
 }
 
 // randomly draw 5 cards from all creatures' card at start of battle
@@ -460,6 +121,28 @@ void initialiseCard (cardOnHand * &cardhead, creature deck[], int push) {
         addCardToHand(cardhead, deck[( rand() % 24 ) / 5].cardpool[( rand() % 24 ) % 5]);
         push++;
     }
+    return;
+}
+
+void death (deployed * &creaturenode, deployed * &head) {
+    deployed * deleteafter = head;
+    if (deleteafter == creaturenode) {
+        head = creaturenode->next;
+        if (creaturenode->deployedCreature.getstatus("elixirsap") < 0) {
+            creaturenode->next->deployedCreature.setstatus("elixirsap", creaturenode->deployedCreature.getstatus("elixirsap"));
+        }
+        delete creaturenode;
+    }
+    else {
+        while (deleteafter->next != creaturenode) {
+            deleteafter = deleteafter->next;
+        }
+        if (creaturenode->deployedCreature.getstatus("elixirsap") < 0) {
+            deleteafter->deployedCreature.setstatus("elixirsap", creaturenode->deployedCreature.getstatus("elixirsap"));
+        }
+        deleteafter->next = creaturenode->next;
+        delete creaturenode;
+    } 
 }
 
 // attack the opponent creature
@@ -492,7 +175,11 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
     
     deployed * targetnode = opponent;
     bool flag = false;
+    bool heroic = false;
     while (flag == false && targetnode != NULL) {
+        if (targetnode->deployedCreature.getstatus("heroic") != 0) {
+            heroic = true;
+        }
         if (targetnode->deployedCreature.getname() == name) {
             flag = true;
         }
@@ -500,8 +187,23 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
             targetnode = targetnode->next;
         }
     }
+
     if (flag == false) {
         cout << "Invalid target name inserted. Please check your spelling." << endl;
+        return;
+    }
+    else {
+        deployed * continuenode = targetnode->next;
+        while (continuenode != NULL) {
+            if (continuenode->deployedCreature.getstatus("heroic") != 0) {
+                heroic = true;
+            }
+            continuenode = continuenode->next;
+        }
+    }
+    
+    if (heroic == true && targetnode->deployedCreature.getstatus("heroic") == 0) {
+        cout << "You can only attack creatures with heroic." << endl;
         return;
     }
 
@@ -535,42 +237,358 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
     }
 
     if (attackernode->deployedCreature.getcost() > currentElixir) {
-        cout << "Not enough elixir" << endl;
+        cout << "Not enough elixir!" << endl;
         return;
     }
     else {
         currentElixir = currentElixir - attackernode->deployedCreature.getcost();
     }
+
+    if (targetnode->deployedCreature.getstatus("blind") > 0) {
+        cout << "MISSED!" << endl;
+        targetnode->deployedCreature.setstatus("blind", -1);
+    }
     
     bool critical = false;
-    targetnode->deployedCreature.decreasehp(attackernode->deployedCreature.getatk(critical));
+    int byHowMuch = attackernode->deployedCreature.getatk(critical);
+    targetnode->deployedCreature.decreasehp(byHowMuch);
     if (critical == true) {
         cout << "CRITICAL ATTACK !!!" << endl;
     }
 
-    if (targetnode->deployedCreature.gethp() <= 0) {
-        deployed * deleteafter = opponent;
-        if (deleteafter == targetnode) {
-            opponent = targetnode->next;
-            delete targetnode;
-        }
-        else {
-            while (deleteafter->next != targetnode) {
-                deleteafter = deleteafter->next;
-            }
-            deleteafter->next = targetnode->next;
-            delete targetnode;
-        } 
+    if (attackernode->deployedCreature.getstatus("blockcard") > 0) {
+        cout << "No card drawn. Blocked." << endl;
+        attackernode->deployedCreature.setstatus("blockcard", -1);
     }
-
-    if (numberOfCards(playerscard) < 10) {
+    else if (numberOfCards(playerscard) < 10) {
         int idxOfCardDrawn = drawCard(attackernode->deployedCreature);
         addCardToHand(playerscard, attackernode->deployedCreature.cardpool[idxOfCardDrawn]);
         attackernode->deployedCreature.cardpool[idxOfCardDrawn].cardDrawn();
-    } else {
+    } 
+    else {
         cout << "Hand full." << endl;
     }
+
+    if (attackernode->deployedCreature.getstatus("atk") != 0) {
+        attackernode->deployedCreature.atk(0);
+    }
+    
+    attackernode->deployedCreature.thorns(byHowMuch, targetnode->deployedCreature);
+
+    attackernode->deployedCreature.elixirsap(targetnode->deployedCreature, currentElixir, true);
+
+    if (targetnode->deployedCreature.gethp() <= 0) {
+        death(targetnode, opponent);
+    }
+    else if (attackernode->deployedCreature.gethp() <= 0) {
+        death (attackernode, player);
+
+        targetnode->deployedCreature.counteratk(player->deployedCreature);
+
+        targetnode->deployedCreature.elixirsap(player->deployedCreature, currentElixir, true);
+
+        if (player->deployedCreature.gethp() <= 0) {
+            death (attackernode, player);
+        }
+        if (targetnode->deployedCreature.gethp() <= 0) {
+            death(targetnode, opponent);
+        }
+    }
+    else {
+        targetnode->deployedCreature.counteratk(attackernode->deployedCreature);
+        
+        if (attackernode->deployedCreature.gethp() <= 0) {
+            death (attackernode, player);
+        }
+        if (targetnode->deployedCreature.gethp() <= 0) {
+            death(targetnode, opponent);
+        }
+    }
     return;
+}
+
+void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHand * &playerscard) {
+    string fullsentence;
+    getline(cin, fullsentence);
+
+    istringstream iss (fullsentence);
+    string word;
+    string name = "";
+    while (iss >> word && word != "on") {
+        if (name == "") {
+            name += word;
+        }
+        else {
+            name = name + " " + word;
+        }
+    }
+    if (word != "on") {
+        cout << "To use a card on a creature, please type \"use <card's name> on <creature's name>\"" << endl;
+        cout << "You did not type the word \"on\"" << endl;
+        return;
+    }
+    if (name == "") {
+        cout << "No card name inserted." << endl;
+        return;
+    }
+
+    cardOnHand * cardnode = playerscard;
+    while (cardnode != NULL && cardnode->theCard.getname() != name) {
+            cardnode = cardnode->next;
+    }
+    if (cardnode == NULL) {
+        cout << "Invalid card name inserted. Please check your spelling." << endl;
+        return;
+    }
+
+    name = "";
+    while (iss >> word) {
+        if (name == "") {
+            name += word;
+        }
+        else {
+            name = name + " " + word;
+        }
+    }
+    if (name == "") {
+        cout << "No creature name inserted." << endl;
+        return;
+    }
+
+    deployed * creaturenode1 = player;
+    while (creaturenode1 != NULL && creaturenode1->deployedCreature.getname() != name) {
+        creaturenode1 = creaturenode1->next;
+    }
+
+    deployed * creaturenode2 = opponent;
+    while (creaturenode2 != NULL && creaturenode2->deployedCreature.getname() != name) {
+        creaturenode2 = creaturenode2->next;
+    }
+    
+    bool indicator = true;
+    if (creaturenode1 == NULL && creaturenode2 == NULL) {
+        cout << "Invalid creature name inserted. Please check your spelling." << endl;    
+        return;
+    }
+    else if (creaturenode1 != NULL && creaturenode2 != NULL) {
+        cout << "Do you wish to use this card on your own \"" << name << "\" or opponent's \"" << name << "\"?" << endl;
+        cout << "Please type ( own / opponent ) ";
+        string choice;
+        cin >> choice;
+        while (choice != "own" && choice != "opponent") {
+            cout << "Please type either \"own\" or \"opponent\": ";
+            cin >> choice;
+        }
+        if (choice == "own") {
+            indicator = true;
+            creaturenode2 = NULL;
+        }
+        else if (choice == "opponent") {
+            indicator = false;
+            creaturenode1 = creaturenode2;
+        }
+    }
+    else if (creaturenode1 == NULL && creaturenode2 != NULL) {
+        indicator = false;
+        creaturenode1 = creaturenode2;
+    }
+
+    if (creaturenode1->deployedCreature.getstatus("silence") > 0) {
+        cout << "The creature is silenced. You cannot play card on it." << endl;
+        return;
+    }
+
+    if (cardnode->theCard.getcost() > currentElixir) {
+        cout << "Not enough elixir!" << endl;
+        return;
+    }
+    else {
+        currentElixir = currentElixir - cardnode->theCard.getcost();
+    }
+
+    string cardFunction = cardnode->theCard.getfunction();
+    istringstream iss2 (cardFunction);
+
+    string condition;
+    string trash;
+    int number;
+
+    while (iss2 >> condition) {
+        iss2 >> trash;
+        iss2 >> number;
+
+        if (condition == "magic") {
+            if (indicator) {
+                cout << "Target name? ";
+                string targetname;
+                getline(cin, targetname);
+
+                deployed * targetnode = opponent;
+                while (targetnode != NULL && targetnode->deployedCreature.getname() != targetname) {
+                    targetnode = targetnode->next;
+                }
+                if (targetnode == NULL) {
+                    cout << "Invalid target name inserted!" << endl;
+                    return;
+                }
+
+                creaturenode1->deployedCreature.magic(targetnode->deployedCreature);
+            }
+            else {
+                cout << "Magic attack cards can only be used on own creatures" << endl;
+                return;
+            }
+        }
+        else if (condition == "addelixir") {
+            if (indicator) {
+                creaturenode1->deployedCreature.addelixir(currentElixir, number);
+            }
+            else {
+                cout << "Addelixir cards can only be used on own creatures" << endl;
+                return;
+            }
+        }
+        else if (condition == "drawcard") {
+            for (int i = 0; i < number; i++) {
+                if (numberOfCards(playerscard) < 10) {
+                    int idxOfCardDrawn = drawCard(creaturenode1->deployedCreature);
+                    addCardToHand(playerscard, creaturenode1->deployedCreature.cardpool[idxOfCardDrawn]);
+                    creaturenode1->deployedCreature.cardpool[idxOfCardDrawn].cardDrawn();
+                } 
+                else {
+                    cout << "Hand full." << endl;
+                    i = number;
+                }
+            }
+            cout << number << " card drawn from " << creaturenode1->deployedCreature.getname() << endl;
+        }
+        else if (condition == "atk") {
+            creaturenode1->deployedCreature.atk(number);
+        } 
+        else if (condition == "heal") {
+            creaturenode1->deployedCreature.heal(number);
+        }
+        else if (condition == "directdmg") {
+            creaturenode1->deployedCreature.directdmg(number);
+        }
+        else {
+            creaturenode1->deployedCreature.setstatus(condition, number);
+        }
+
+        creaturenode1->deployedCreature.haste(false);
+
+        iss2 >> trash;
+    }
+
+    cardOnHand * deleteafter = playerscard;
+    if (deleteafter == cardnode) {
+        playerscard = cardnode->next;
+        delete cardnode;
+    }
+    else {
+        while (deleteafter->next != cardnode) {
+            deleteafter = deleteafter->next;
+        }
+        deleteafter->next = cardnode->next;
+        delete cardnode;
+    }
+
+    return;
+}
+
+void show (deployed * player, deployed * opponent, creature deck[], cardOnHand * playerscard) {
+    string type;
+    cin >> type;
+
+    if (type == "creature") {
+        string name;
+        cin >> name;
+        string temp;
+        getline(cin, temp);
+        name = name + temp;
+
+        bool check = true;
+        int length = name.length();
+        for (int i = 0; i < length; i++) {
+            check = isdigit(name[i]);
+            if (check == false) {
+                i = length;
+            }
+        }
+
+        if (check == false) {
+            cout << name << endl;
+            deployed * creaturenode1 = player;
+            while (creaturenode1 != NULL && creaturenode1->deployedCreature.getname() != name) {
+                creaturenode1 = creaturenode1->next;
+            }
+
+            deployed * creaturenode2 = opponent;
+            while (creaturenode2 != NULL && creaturenode2->deployedCreature.getname() != name) {
+                creaturenode2 = creaturenode2->next;
+            }
+
+            if (creaturenode1 == NULL && creaturenode2 == NULL) {
+                cout << "Invalid creature name inserted. Please check your spelling." << endl;    
+                return;
+            }
+            else if (creaturenode1 != NULL && creaturenode2 != NULL) {
+                cout << "Do you wish to use this card on your own \"" << name << "\" or opponent's \"" << name << "\"?" << endl;
+                cout << "Please type ( own / opponent ) ";
+                string choice;
+                cin >> choice;
+                while (choice != "own" && choice != "opponent") {
+                    cout << "Please type either \"own\" or \"opponent\": ";
+                    cin >> choice;
+                }
+                if (choice == "own") {
+                    creaturenode2 = NULL;
+                }
+                else if (choice == "opponent") {
+                    creaturenode1 = creaturenode2;
+                }
+            }
+            else if (creaturenode1 == NULL && creaturenode2 != NULL) {
+                creaturenode1 = creaturenode2;
+            }
+
+            creaturenode1->deployedCreature.getcurrentstats();
+        }
+        else {
+            int number = atoi(name.c_str());
+            if (number > 0 && number < 6)
+                deck[number-1].getcurrentstats();
+            else {
+                cout << "invalid creature number inserted" << endl;
+                return;
+            }
+        }
+    }
+    else if (type == "card") {
+        string name;
+        cin >> name;
+        string temp;
+        getline(cin, temp);
+        name = name + temp;
+
+        cardOnHand * cardnode = playerscard;
+        while (cardnode != NULL && cardnode->theCard.getname() != name) {
+            cardnode = cardnode->next;
+        }
+        if (cardnode == NULL) {
+            cout << "Invalid card name entered. Please check your spelling." << endl;
+            return;
+        }
+        else {
+            cout << cardnode->theCard.getfunction();
+        }
+    }
+    else {
+        cin.clear(); 
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "To show info of a creature / card, please type \"show <type: creature/card> <name of creature/number of undeployed creature/name of card>" << endl;
+        return;
+    }
 }
 
 // a centre switch to take in player's input and calls different functions based on user's input
@@ -586,16 +604,70 @@ void playersMove (deployed * &player, deployed * &opponent, int &currentElixir, 
         else if (action == "attack") {
             attack(player, opponent, playerscard, currentElixir);
         }
-        /*else if (action == "use") {
-            use();
-        }*/
+        else if (action == "use") {
+            use(player, opponent, currentElixir, playerscard);
+        }
+        else if (action == "show") {
+            show(player, opponent, deck, playerscard);
+        }
         else if (action == "next") {
             cout << "------------------------------------------------------------------------------" << endl;
             return;
         }
         else {
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             cout << "Invalid response. Please check your spelling." << endl;
         }
+    }
+}
+
+void roundStart (deployed * &player, deployed * &opponent, int &currentElixir) {
+    if (player != NULL && opponent != NULL) {
+        deployed * currentnode = player;
+        while (currentnode != NULL) {
+            if (currentnode->deployedCreature.getstatus("niceland") != 0) {
+                currentnode->deployedCreature.heal(10);
+            }
+
+            currentnode->deployedCreature.elixirsap(currentnode->deployedCreature, currentElixir, false);
+            currentnode->deployedCreature.haste(true);
+
+            currentnode->deployedCreature.revenge(0, true, opponent->deployedCreature);
+            if (opponent->deployedCreature.gethp() <= 0) {
+                death(opponent, opponent);
+            }
+            if (currentnode->deployedCreature.gethp() <= 0) {
+                currentnode = currentnode->next;
+                death(currentnode, player);
+                break;
+            }
+
+            currentnode->deployedCreature.poison();
+            if (currentnode->deployedCreature.gethp() <= 0) {
+                currentnode = currentnode->next;
+                death(currentnode, player);
+                break;
+            }
+
+            string minusOneTurn[4] = {"thorns", "heroic", "defenseup", "silence"};
+            for (int i = 0; i < 4; i++) {
+                if (currentnode->deployedCreature.getstatus(minusOneTurn[i]) != 0) {
+                    currentnode->deployedCreature.setstatus(minusOneTurn[i], -1);
+                }
+            }
+
+            currentnode = currentnode->next;
+        }
+    }
+}
+
+void battleResults (deployed * player, deployed * opponent) {
+    if (player == NULL) {
+        cout << "You win!" << endl;
+    }
+    else if (opponent == NULL) {
+        cout << "You lose!" << endl;
     }
 }
 
@@ -630,11 +702,13 @@ void battle(creature deck[], opponent currentOpponent) {
     while (head1 != NULL && head2 != NULL) {
         totalElixir++;
         currentElixir = totalElixir;
+        roundStart(head1, head2, currentElixir);
         playersMove(head1, head2, currentElixir, deck, cardhead1);
         currentElixir = totalElixir;
+        roundStart(head2, head1, currentElixir);
         playersMove(head2, head1, currentElixir, currentOpponent.opponentCreature, cardhead2);
         //opponentsResponse();
     }
     printBattleScreen(head1, cardhead1, head2, currentElixir, deck);
-    //battleResults();
+    battleResults(head1, head2);
 }
