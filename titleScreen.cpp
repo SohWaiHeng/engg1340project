@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <limits>
 #include "titleScreen.h"
 using namespace std;
 
