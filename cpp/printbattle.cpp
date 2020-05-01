@@ -2,7 +2,7 @@
 #include<sstream>
 #include<iomanip>
 #include<algorithm>
-#include "battle.h"
+#include "../hfiles/battle.h"
 using namespace std;
 
 // count number of cards on player's hand

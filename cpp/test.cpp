@@ -1,5 +1,5 @@
 #include<iostream>
-#include "battle.h"
+#include "../hfiles/battle.h"
 
 int main () {
     creature deck[5];

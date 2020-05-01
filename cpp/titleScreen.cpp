@@ -3,11 +3,11 @@
 #include <fstream>
 #include <string>
 #include <limits>
-#include "titleScreen.h"
+#include "../hfiles/titleScreen.h"
 using namespace std;
 
 void printTitleScreen(){
-    ifstream fin("titleScreen.txt");
+    ifstream fin("txt/titleScreen.txt");
     string line;
     while (getline(fin,line)){
         cout << line << endl;

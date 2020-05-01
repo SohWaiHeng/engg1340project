@@ -5,12 +5,12 @@ I created main() to test the code inside here
 #include <iostream>
 #include <fstream>
 #include "movement.h"
-#include "tutorial.h"
+#include "../hfiles/tutorial.h"
 using namespace std;
 
 void tutorial(string currentBlock, string currentCharacter){
-    ifstream fin("map1.txt");   // created another text file to store so that the original map is not altered
-    ofstream fout("out.txt");  
+    ifstream fin("txt/map1.txt");   // created another text file to store so that the original map is not altered
+    ofstream fout("txt/out.txt");  
     string line;
     while(getline(fin,line)){
         fout << line << endl;
@@ -18,7 +18,7 @@ void tutorial(string currentBlock, string currentCharacter){
     fin.close();
     fout.close();
 
-    string newBlock = "out.txt";
+    string newBlock = "txt/out.txt";
     int coordinate[2];
     cout << "\nLet's begin the tutorial.\n" << endl;
     printMap(newBlock); 

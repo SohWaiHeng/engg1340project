@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include<time.h>
 #include<limits>
-#include "battle.h"
+#include "../hfiles/battle.h"
 using namespace std;
 
 // to deploy a creature on battle field

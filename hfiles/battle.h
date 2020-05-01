@@ -1,6 +1,6 @@
 #ifndef BATTLE_H
 #define BATTLE_H
-#include "classes/creature.h"
+#include "../classes/creature.h"
 #include<string>
 
 struct rewardstruct {
