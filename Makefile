@@ -1,24 +1,24 @@
 FLAGS = -pedantic-errors -std=c++11
 
-ofiles/card.o: classes/card.cpp classes/card.h
-	g++ $(FLAGS) -c $<
-	mv card.o ofiles
+card.o: classes/card.cpp classes/card.h
+	g++ $(FLAGS) -c $<	
 
-ofiles/creature.o: classes/creature.cpp classes/creature.h
+creature.o: classes/creature.cpp classes/creature.h
 	g++ $(FLAGS) -c $<
-	mv creature.o ofiles
 
-ofiles/battle.o: battle.cpp battle.h
+battle.o: battle.cpp battle.h
 	g++ $(FLAGS) -c $<
-	mv battle.o ofiles
 
-ofiles/printbattle.o: printbattle.cpp battle.h
+printbattle.o: printbattle.cpp battle.h
 	g++ $(FLAGS) -c $<
-	mv printbattle.o ofiles
 
-ofiles/test.o: test.cpp battle.h
+test.o: test.cpp battle.h
 	g++ $(FLAGS) -c $<
-	mv test.o ofiles
 
-test: ofiles/test.o ofiles/battle.o ofiles/printbattle.o ofiles/creature.o ofiles/card.o
+test: test.o battle.o printbattle.o creature.o card.o
 	g++ $(FLAGS) $^ -o $@
+	mv test.o ofiles
+	mv battle.o ofiles
+	mv printbattle.o ofiles
+	mv creature.o ofiles
+	mv card.o ofiles

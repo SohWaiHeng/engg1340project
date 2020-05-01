@@ -349,7 +349,9 @@ void creature::defenseup(int &damage) {
 }
 
 void creature::poison() {
-    int byHowMuch = (base.hp + ((base.hp * increase) * current.lvl)) * (creaturestatus.poison/100.0);
-    cout << getname() << " poisoned by " << creaturestatus.poison << "%" << endl;
-    decreasehp(byHowMuch);
+    if (creaturestatus.poison != 0) {
+        int byHowMuch = (base.hp + ((base.hp * increase) * current.lvl)) * (creaturestatus.poison/100.0);
+        cout << getname() << " poisoned by " << creaturestatus.poison << "%" << endl;
+        decreasehp(byHowMuch);
+    }
 }

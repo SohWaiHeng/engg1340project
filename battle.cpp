@@ -664,10 +664,10 @@ void roundStart (deployed * &player, deployed * &opponent, int &currentElixir) {
 
 void battleResults (deployed * player, deployed * opponent) {
     if (player == NULL) {
-        cout << "You win!" << endl;
+        cout << "You lose!" << endl;
     }
     else if (opponent == NULL) {
-        cout << "You lose!" << endl;
+        cout << "You win!" << endl;
     }
 }
 
