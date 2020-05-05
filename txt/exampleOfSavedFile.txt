@@ -1,0 +1,7 @@
+creature 1 2 3 4 5 6 8 10
+avatar 1
+creaturesDeck 2 happy fish 2 happy polla 1 gg 1 lol 2 dead dog
+currentAvatar pantherman
+currency 19
+currentMap map1.txt
+currentCoordinate 5 3
