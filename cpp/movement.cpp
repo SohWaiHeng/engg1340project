@@ -263,13 +263,12 @@ void moveAroundMap(int *currency, string *currentAvatar, string creaturesDeck[5]
 		    	currentCoordinate[1] -= 4;
 		    }
 		    // FINAL BOSS
-		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 30 && *currentBlock == "map4.txt"){
+		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 30 && *currentBlock == "../txt/map4.txt"){
 		    	cout << "You have now reached the dungeon of our final boss.\n";
 			cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss?\n";
 		    }
-		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 28 && *currentBlock == "map4.txt"){
+		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 28 && *currentBlock == "../txt/map4.txt"){
 		    	// final boss battle
-			cout << "final boss\n";
 		    }
 		    prevMove = string()+move[i];
 		    mapWithAvatar(currentAvatar,avatarSymbol,ownedAvatar,currentCoordinate,currentBlock,newBlock);
