@@ -2,6 +2,7 @@
 #include<sstream>
 #include<iomanip>
 #include<algorithm>
+#include "../hfiles/colours.h"
 #include "../hfiles/battle.h"
 using namespace std;
 
@@ -131,7 +132,7 @@ void printingCard (int totalSpace, int cardSpace, cardOnHand * playerscard, char
         }
         case '1': {
             for (int i = 0; i < numberOfCards(playerscard); i++) {
-                cout << "|  (" << i << ")   |";  
+                cout << "|  (" << i+1 << ")   |";  
             }
             break;
         }
@@ -294,14 +295,13 @@ void printStatus (int totalSpace, int creatureSpace, deployed * player, int &lin
         }
 
         currentptr = newptr->linked;
-        string statusname[] = {"area", "remove",
-                        "counteratk", "haste", "atk", 
+        string statusname[] = {"counteratk", "haste", "atk", 
                         "magic", "shield", "elixirsap", "addelixir", "drawcard", 
                         "heal", "directdmg", "niceland", 
                         "thorns", "heroic", "revenge", "defenseup", 
                         "poison", "blind", "silence", "blockcard"};
 
-        for (int j = 0; j < currentcreaturenode->deployedCreature.getnumberofstatus(); j++) {
+        for (int j = 0; j < currentcreaturenode->deployedCreature.getnumberofstatus()-5; j++) {
             if (currentcreaturenode->deployedCreature.getstatus(statusname[j]) != 0) {
                 statuslinked * newstatus = new statuslinked;
                 newstatus->statusname = statusname[j];
@@ -374,12 +374,12 @@ void printStatus (int totalSpace, int creatureSpace, deployed * player, int &lin
                             cout << setw(creatureSpace) << " (" + currentptr->statusname + " up " + to_string(currentptr->number) + "%)";
                         }
                         else {
-                            cout << setw(creatureSpace) << " (" + currentptr->statusname + " down " + to_string(currentptr->number) + "%)";
+                            cout << setw(creatureSpace) << " (" + currentptr->statusname + " down " + to_string(-currentptr->number) + "%)";
                         }
                     }
                     else if (currentptr->statusname == "heroic") {
                         cout << left;
-                        cout << setw(creatureSpace) << " !! HEROIC !! x " + to_string(currentptr->number);
+                        cout << setw(creatureSpace) << RED << " !! HEROIC !! x " + to_string(currentptr->number) << WHITE;
                     }
                     else if (currentptr->statusname == "revenge") {
                         cout << left;
@@ -438,7 +438,6 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
     const int cardSpace = 10;
     int totalSpace = max({ (creatureSpace * numberOfCreatures(player)), (cardSpace * numberOfCards(cardhead)), (creatureSpace * numberOfCreatures(opponent))}) + 22;
     int line = 0;
-    cout << endl;
     
     repeatedPrinting(' ', '_', totalSpace, ' ');
     line++;

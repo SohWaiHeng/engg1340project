@@ -148,13 +148,13 @@ int creature::gethpratio () {
 }
 
 void creature::setstatus(string condition, int number) {
-    int * status[] = {&creaturestatus.area, &creaturestatus.remove,
+    int * status[] = {&creaturestatus.area, &creaturestatus.remove, &creaturestatus.own, &creaturestatus.enemy, &creaturestatus.card,
                     &creaturestatus.counteratk, &creaturestatus.haste, &creaturestatus.atk,
                     &creaturestatus.magic, &creaturestatus.shield, &creaturestatus.elixirsap, &creaturestatus.addelixir, &creaturestatus.drawcard,
                     &creaturestatus.heal, &creaturestatus.directdmg, &creaturestatus.niceland,  
                     &creaturestatus.thorns, &creaturestatus.heroic, &creaturestatus.revenge, &creaturestatus.defenseup, 
                     &creaturestatus.poison, &creaturestatus.blind, &creaturestatus.silence, &creaturestatus.blockcard};
-    string statusname[] = {"area", "remove",
+    string statusname[] = {"area", "remove", "own", "enemy", "card",
                         "counteratk", "haste", "atk", 
                         "magic", "shield", "elixirsap", "addelixir", "drawcard", 
                         "heal", "directdmg", "niceland", 
@@ -188,13 +188,13 @@ void creature::setstatus(string condition, int number) {
 }
 
 int creature::getstatus (string condition) {
-    int status[] = {creaturestatus.area, creaturestatus.remove,
+    int status[] = {creaturestatus.area, creaturestatus.remove, creaturestatus.own, creaturestatus.enemy, creaturestatus.card,
                     creaturestatus.counteratk, creaturestatus.haste, creaturestatus.atk,
                     creaturestatus.magic, creaturestatus.shield, creaturestatus.elixirsap, creaturestatus.addelixir, creaturestatus.drawcard,
                     creaturestatus.heal, creaturestatus.directdmg, creaturestatus.niceland,  
                     creaturestatus.thorns, creaturestatus.heroic, creaturestatus.revenge, creaturestatus.defenseup, 
                     creaturestatus.poison, creaturestatus.blind, creaturestatus.silence, creaturestatus.blockcard};
-    string statusname[] = {"area", "remove",
+    string statusname[] = {"area", "remove", "own", "enemy", "card",
                         "counteratk", "haste", "atk", 
                         "magic", "shield", "elixirsap", "addelixir", "drawcard", 
                         "heal", "directdmg", "niceland", 
@@ -241,6 +241,7 @@ void creature::counteratk (creature &attacker) {
         if (getstatus("atk") != 0) {
             atk(0);
         }
+        cout << attacker.getname() << " damaged by " << getname() << damage << " hp." << endl;
         thorns(damage, attacker);
         creaturestatus.counteratk--;
     }

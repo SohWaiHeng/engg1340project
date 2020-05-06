@@ -1,7 +1,7 @@
 #ifndef BATTLE_H
 #define BATTLE_H
 #include "../classes/creature.h"
-#include<string>
+#include <string>
 
 struct rewardstruct {
     int gold;
@@ -30,8 +30,9 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
 
 //void deploy (int &currentElixir, creature deck[], deployed * &head);
 //void initialiseCard (cardOnHand * &cardhead, creature deck[], int push);
-//int drawCard (creature &toBeDrawnFrom);
-//void addCardToHand (cardOnHand * &cardhead, card toBeAdded);
+int drawCard (creature &toBeDrawnFrom);
+void addCardToHand (cardOnHand * &cardhead, card toBeAdded);
+void death (deployed * &creaturenode, deployed * &head);
 //void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard, int &currentElixir);
 //void playersMove (deployed * &player, deployed * &opponent, int &currentElixir, creature deck[], cardOnHand * &playerscard);
 //void setopponent(opponent &currentOpponent);
@@ -39,10 +40,12 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
 //void printingCreature (int totalSpace, int creatureSpace, deployed * player, char indicator);\
 //void printingCard (int totalSpace, int cardSpace, cardOnHand * playerscard, char indicator, int currentElixir);
 //void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * opponent, int currentElixir);
-//void opponentsResponse();
+void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHand * &cardhead, deployed * &playerhead);
 //void battleResults();
 //void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHand playerscard);
 //void removeCardFromHand();
+void tutorialmode (creature deck[], opponent currentOpponent);
 void battle (creature deck[], opponent currentOpponent);
+void delay(double number_of_seconds);
 
 #endif

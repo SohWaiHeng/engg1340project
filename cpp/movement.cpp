@@ -8,6 +8,7 @@ I have assumed the wall on the map is represented by '-' and '|'
 
 #include <iostream>
 #include <fstream>
+#include "../hfiles/colours.h"
 #include "../hfiles/movement.h"
 using namespace std;
 
@@ -94,7 +95,7 @@ void movement(char move, string currentBlock, string currentCharacter){
                             flag = 1;
                         }
                         else if (checkForWall(blockArray[i].substr(j-1,currentCharacter.length()))==true) {
-                            cout << "\x1B[31m" << "\nYou've hit the wall. Be careful!" << "\x1B[0m" << endl;
+                            cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                         }
                         else if (checkForWall(blockArray[i].substr(j-1,currentCharacter.length()))==false){
                             changePositions(blockArray, i, j, i, j-1, currentCharacter, "     ", currentCharacter);

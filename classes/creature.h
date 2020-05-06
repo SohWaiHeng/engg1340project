@@ -17,6 +17,12 @@ struct stats {
     int crt;
 };
 
+struct owned {
+    int index;
+    int level;
+    owned * next;
+};
+
 /* define a class 'creature' as a data type to store creatures
     member variables:
         - creaturenumber: index no. of creature in creature.txt
@@ -36,6 +42,7 @@ struct stats {
 class creature {
     public:
         int getcreaturenumber() { return creaturenumber; };
+        int getlevel() { return current.lvl; };
 
         int gethp() { return current.hp; };
         void decreasehp(int byhowmuch);

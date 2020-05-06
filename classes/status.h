@@ -3,8 +3,12 @@
 
 // a struct to store status
 struct statusEffect {
-    int numberofstatus = 21;
+    int numberofstatus = 24;
     int area;
+    int remove;
+    int own;
+    int enemy;
+    int card;
     
     int counteratk;
     int haste;
@@ -19,7 +23,6 @@ struct statusEffect {
     int heal;
     int directdmg;
     int niceland;
-    int remove;
     
     int thorns;
     int heroic;

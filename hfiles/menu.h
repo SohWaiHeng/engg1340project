@@ -2,7 +2,9 @@
 #define MENU_H
 
 #include <string>
-#include "structs.h"
+#include "../classes/avatar.h"
+#include "../classes/creature.h"
+#include "../classes/currency.h"
 #include "titleScreen.h"
 // CREATURES
 void loadCreaturesFromSavedTextFile(creatures ownedCreature[100], creatures notOwnedCreature[100]);
@@ -27,12 +29,12 @@ void displayCards(std::string choice,std:: string creaturesDeck[5], creatures ow
 // TREASURE CHEST
 void treasureChest(creatures ownedCreature[100], creatures notOwnedCreature[100], avatars ownedAvatar[50], avatars notOwnedAvatar[50]);
 
-// save and load 
-void changeOwnedAvatarsAndCreaturesTextFile(int num, std::string choice, creatures ownedCreature[100], creatures notOwnedCreature[100], avatars ownedAvatar[50], avatars notOwnedAvatar[50]);
-void loadFile(std::string *currentFile, int *currency, int currentCoordinate[2], std::string *currentMap, std::string *currentAvatar, std::string creaturesDeck[5]);
-void loadFileOption(std::string *file, int *currency, int currentCoordinate[2], std::string *currentMap, std::string *currentAvatar, std::string creaturesDeck[5], creatures ownedCreature[100], creatures notOwnedCreature[100], avatars notOwnedAvatar[50], avatars ownedAvatar[50]);
-void saveGame(std::string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50], int *currency, int currentCoordinate[2], std::string *currentMap, std::string *currentAvatar, std::string creaturesDeck[5]);
-void newGame(std::string *file, int *currency, int currentCoordinate[2], std::string *currentMap, std::string *currentAvatar, std::string creaturesDeck[5]);
+// save and load
+void buildLinkedListOfOwnedCreatures (owned * &ownedhead, int newindex, int newlevel);
+void load(string filename, owned * &ownedhead, int avataridx[10], currency &currentcurrency, int currentCoordinate[2], string &currentMap, avatar &currentAvatar, creature deck[5]);
+string loadFileOption();
+void save(string filename, owned * ownedhead, int avataridx[10], currency currentcurrency, int currentCoordinate[2], string currentMap, avatar currentAvatar, creature deck[5]);
+string newGame();
 
 // display menus
 void shop(std::string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50], creatures notOwnedCreature[100], avatars notOwnedAvatar[50], int *currency, int currentCoordinate[2], std::string *currentMap, std::string *currentAvatar,std::string creaturesDeck[5]);

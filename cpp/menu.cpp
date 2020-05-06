@@ -10,10 +10,15 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "movement.h"
-#include "menu.h"
-#include "structs.h"
-#include "titleScreen.h"
+#include "../hfiles/movement.h"
+#include "../hfiles/menu.h"
+#include "../hfiles/structs.h"
+#include "../hfiles/titleScreen.h"
+#include "../hfiles/colours.h"
+#include "../hfiles/battle.h"
+#include "../classes/avatar.h"
+#include "../classes/creature.h"
+#include "../classes/currency.h"
 
 using namespace std;
 
@@ -1320,20 +1325,88 @@ void shop(string *currentFile, creatures ownedCreature[100], avatars ownedAvatar
     }
 }
 
-void loadFile(string *currentFile, int *currency, int currentCoordinate[2], string *currentMap, string *currentAvatar, string creaturesDeck[5]){
-    int no, count = 0;  
-    string line, str;
-    ifstream fin(*currentFile+".txt");
-    ofstream fout("ownedAvatarsAndCreatures.txt");
-    getline(fin, line);
-    fout << line << endl;
-    getline(fin, line);
-    fout << line << endl;
-    fout.close();
+void buildLinkedListOfOwnedCreatures (owned * &ownedhead, int newindex, int newlevel) {
+    owned * newnode = new owned;
+    newnode->index = newindex;
+    newnode->level = newlevel;
+    
+    owned * currentnode = ownedhead;
+    while (currentnode != NULL) {
+        if (newindex <= currentnode->index) {
+            if (newindex == currentnode->index) {
+                if (newlevel >= currentnode->level) {
+                    owned * previousnode = ownedhead;
+                    while (previousnode->next != currentnode) {
+                        previousnode = previousnode->next;
+                    }
+                    previousnode->next = newnode;
+                    newnode->next = currentnode;
+                    return;
+                }
+                else {
+                    currentnode = currentnode->next;
+                }
+            }
+            else {
+                owned * previousnode = ownedhead;
+                while (previousnode->next != currentnode) {
+                    previousnode = previousnode->next;
+                }
+                previousnode->next = newnode;
+                newnode->next = currentnode;
+                return;
+            }
+        }
+        else {
+            currentnode = currentnode->next;
+        }
+    }
+    if (currentnode == ownedhead) {
+        ownedhead = newnode;
+        newnode->next = NULL;
+    }
+    else {
+        currentnode = ownedhead;
+        while (currentnode->next != NULL) {
+            currentnode = currentnode->next;
+        }
+        newnode->next = NULL;
+        currentnode->next = newnode;
+    }
+    return;
+}
+
+void load(string filename, owned * &ownedhead, int avataridx[10], currency &currentcurrency, int currentCoordinate[2], string &currentMap, avatar &currentAvatar, creature deck[5]){
+    int index, level;
+    string line, trash;
+    ifstream fin(filename);
+    
     getline(fin, line);
     istringstream iss(line);
-    iss >> str;
-    for (int i = 0; i < 5; i++){
+    iss >> trash;
+    while (iss >> index) {
+        iss >> level;
+        buildLinkedListOfOwnedCreatures(ownedhead, index, level);
+    }
+
+    getline(fin, line);
+    istringstream iss1(line);
+    iss1 >> trash;
+    while (iss1 >> index) {
+        avataridx[index] = 1;
+    }
+   
+    getline(fin, line);
+    istringstream iss2(line);
+    iss2 >> trash;
+    int count = 0;
+    while (iss2 >> index) {
+        iss2 >> level;
+        deck[count].setbasestats(index);
+        deck[count].setcurrentstats(level);
+        count ++;
+    }
+    /*for (int i = 0; i < 5; i++){
         iss >> no;
 	cout << "no: " << no << endl;
 	string name="", fullName="";
@@ -1347,28 +1420,35 @@ void loadFile(string *currentFile, int *currency, int currentCoordinate[2], stri
 	    }
 	 creaturesDeck[i] = fullName;
     	}
-    }
-    getline(fin, line);
-    istringstream iss2(line);
-    iss2 >> str >> *currentAvatar;
+    }*/
+
     getline(fin, line);
     istringstream iss3(line);
-    iss3 >> str >> *currency;
-    getline(fin,line);
-    istringstream iss4(line);
-    iss4 >> str >> *currentMap;
-    getline(fin, line);
-    istringstream iss5(line);
-    iss5 >> str >> currentCoordinate[0] >> currentCoordinate[1];
-    // storyline
-    fin.close();
+    iss3 >> trash >> index;
+    currentAvatar.set(index);
 
-    cout << "\nGame successfully loaded!\n";
+    getline(fin, line);
+    istringstream iss4(line);
+    iss4 >> trash;
+    iss4 >> currentcurrency.coins;
+    iss4 >> currentcurrency.food;
+    iss4 >> currentcurrency.gems;
+
+    getline(fin,line);
+    istringstream iss5(line);
+    iss5 >> trash >> currentMap;
+
+    getline(fin, line);
+    istringstream iss6(line);
+    iss6 >> trash >> currentCoordinate[0] >> currentCoordinate[1];
+
+    fin.close();
 }
 
 // to start a new game, initialize items that player has, set the avatar and creatures for players to start with
-void newGame(string *file, int *currency, int currentCoordinate[2], string *currentMap, string *currentAvatar, string creaturesDeck[5]){
-    *file = "", *currentMap = "map1.txt", *currentAvatar = "pantherman", *currency = 50, currentCoordinate[0] = 2, currentCoordinate[1] = 9;
+string newGame() {
+    //string *file, int *currency, int currentCoordinate[2], string *currentMap, string *currentAvatar, string creaturesDeck[5]
+    /**file = "", *currentMap = "map1.txt", *currentAvatar = "pantherman", *currency = 50, currentCoordinate[0] = 2, currentCoordinate[1] = 9;
     creaturesDeck[0] = "happy fish", creaturesDeck[1] = "happy polla", creaturesDeck[2] = "gg" , creaturesDeck[3] = "lol", creaturesDeck[4] = "ripperoni";
     cout << "\n\nHi there! Welcome to The Cardmaster!\n\n";
     cout << "These are the items you currently have in your inventory!\n";
@@ -1378,78 +1458,136 @@ void newGame(string *file, int *currency, int currentCoordinate[2], string *curr
     ofstream fout("ownedAvatarsAndCreatures.txt");
     fout << "creature 1 2 3 4 5\n";
     fout << "avatar 1\n";
-    fout.close();
-}
+    fout.close();*/
 
-
-// for player to choose a file to load
-void loadFileOption(string *file, int *currency, int currentCoordinate[2], string *currentMap, string *currentAvatar, string creaturesDeck[5], creatures ownedCreature[100],creatures notOwnedCreature[100],avatars ownedAvatar[50],avatars notOwnedAvatar[50]){
-    int count = 1, choice, length;
-    string line, fileNameArray[30], name = "", str;
-    ifstream fin("filenames.txt");
-    while (getline(fin, line)){
-    	name = line;
-        cout << setw(2) << count << ".  " << name << endl;
-        fileNameArray[count-1] = name;
-        count++;
+    cout << "To start a new game, you need to create a save file to store the progress of your game." << endl;
+    cout << "Please name your save file: " << endl;
+    string filename;
+    getline(cin, filename);
+    cout << endl;
+    cout << HIGHLIGHT << "Saving to " << filename << ".txt ..." << endl;
+    
+    ifstream fin ("txt/newgame.txt");
+    string temp, total = "";
+    while (getline(fin, temp)) {
+        total = total + temp + "\n";
     }
     fin.close();
-    if (count==1){
-    	string fileName = *file+".txt";
-        cout << "\x1B[31m"  << "\nSorry, you do not have a saved file. A new game has been started.\n" << "\x1B[0m" ;
-	newGame(file,currency,currentCoordinate,currentMap,currentAvatar,creaturesDeck);
-//	titleScreen(&fileName,currency,currentCoordinate,currentMap,currentAvatar,creaturesDeck,ownedCreature,notOwnedCreature,ownedAvatar,notOwnedAvatar);
-	return;
-    }
-    cout << "Which file do you want to load? Enter a number to indicate your choice: ";
-    cin >> choice;
-    while (choice < 1 || choice > count-1 || cin.fail()){
-        cin.clear();  
-        cin.ignore(numeric_limits<streamsize>::max(),'\n');
-        cout << "\x1B[31m" << "Which file do you want to load? Enter a number to indicate your choice: "<< "\x1B[0m" ;
-        cin >> choice;
-    }
-    *file = fileNameArray[choice-1];
-    loadFile(file, currency, currentCoordinate, currentMap, currentAvatar, creaturesDeck);
-}
 
-void saveGame(string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50], int *currency, int currentCoordinate[2], string *currentMap, string *currentAvatar, string creaturesDeck[5]){
-    if (*currentFile==""){
-        string str;
-        cout << "\nWhat would you like to name your new file? ";
-        cin >> str;
-        *currentFile = str;
-        ofstream fout("filenames.txt",ios::app);
-        fout << str << endl;
-    }
-    string line;
-    ofstream fout(*currentFile+".txt");
-    fout << "creature";
-    for (int i = 0; i < 100 && ownedCreature[i].index!=0; i++){
-        fout << ' ' << ownedCreature[i].index;
-    }
-    fout << "\navatar";
-    for (int i = 0; i < 50 && ownedAvatar[i].index!=0; i++){
-        fout << ' ' << ownedAvatar[i].index;
-    }
-    fout << "\ncreaturesDeck";
-    for (int i = 0; i < 5; i++){
-        int spaceCount = 0;
-    	for (int j = 0; creaturesDeck[i][j] != '\0'; j++){
-	    if (creaturesDeck[i][j]==' '){
-	    	spaceCount++;
-	    }
-	}
-        fout << ' ' <<  spaceCount+1 << ' ' << creaturesDeck[i];
-    }
-    fout << "\ncurrentAvatar " << *currentAvatar << endl;
-    fout << "currency " << *currency << endl;
-    fout << "currentMap " << *currentMap << endl;
-    fout << "currentCoordinate " << currentCoordinate[0] << ' ' << currentCoordinate[1] << endl;
-    // storyline
+    string record = "txt/filenames.txt";
+    ofstream fout;
+    fout.open(record, ios::app);
+    fout << filename << endl;
     fout.close();
 
-    cout << "Progress saved in " << *currentFile << "!\n";
+    string fullfilename = "save/" + filename + ".txt";
+    ofstream fout (fullfilename);
+    fout << total;
+    fout.close();
+
+    delay(1);
+    cout << HIGHLIGHT << "Success!" << endl;
+    string trash;
+    cout << GREEN << "Press enter to continue" << endl;
+    cin >> trash;
+
+    return fullfilename;
+}
+
+// for player to choose a file to load
+string loadFileOption() {
+    int count = 1;
+    string name = "";
+    string str;
+
+    ifstream fin ("txt/filenames.txt");
+    if (fin.fail()) {
+        cout << RED  << "\nNo save file exists. Please start a new game.\n" << WHITE ;
+        string filename = titleScreen();
+        return filename;
+    }
+    while (getline(fin, name)){
+        cout << setw(2) << count << ".  " << name << endl;
+        count++;
+    }
+    cout << setw(2) << count << ".  " << "Exit to title screen" << endl;
+
+    fin.close();
+	
+    int choice;
+    cout << "Which file do you want to load? Enter a number to indicate your choice: ";
+    cin >> choice;
+    while (choice < 1 || choice > count || cin.fail()){
+        cin.clear();  
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout << RED << "Please enter a valid number: "<< WHITE ;
+        cin >> choice;
+    }
+
+    if (choice == count) {
+        string filename = titleScreen();
+        return filename;
+    }
+
+    ifstream fin ("txt/filenames.txt");
+    for (int i = 0; i < choice; i++) {
+        getline(fin, name);
+    }
+    fin.close();
+
+    cout << "Loading..." << endl;
+    delay(1);
+
+    string fullfilename = "save/" + name + ".txt";
+    return fullfilename;
+}
+
+void saveGame(string &filename, owned * ownedhead, int avataridx[10], currency currentcurrency, int currentCoordinate[2], string currentMap, avatar &currentAvatar, creature deck[5]){
+    int option;
+    cout << endl;
+    cout << "Do you wish to overwrite the existing file or save to a new file?" << endl;
+    cout << "1: Overwrite" << endl;
+    cout << "2. New file" << endl;
+    cout << "Please enter a number: ";
+    cin >> option;
+    while (cin.fail() || (option != 1 && option != 2)) {
+        cin.clear();  
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout << RED << "Please enter a valid number: " << WHITE;
+        cin >> option;
+    }
+    if (option == 2) {
+        cout << "\nWhat would you like to name your new file? ";
+        cin >> filename;
+        ofstream fout("txt/filenames.txt",ios::app);
+        fout << filename << endl;
+        fout .close();
+
+        filename = "save/" + filename + ".txt";
+    }
+    string line;
+    ofstream fout(filename);
+
+    fout << "creature";
+    while (ownedhead != NULL) {
+        fout << ' ' << ownedhead->index << ' ' << ownedhead->level;
+        ownedhead = ownedhead->next;
+    }
+    fout << endl << "avatar";
+    for (int i = 0; i < 10 && avataridx[i] != 0; i++){
+        fout << ' ' << i+1;
+    }
+    fout << endl << "creaturesDeck";
+    for (int i = 0; i < 5; i++){
+        fout << ' ' << deck[i].getcreaturenumber() << ' ' << deck[i].getlevel();
+	}
+    fout << endl << "currentAvatar " << currentAvatar.getindex() << endl;
+    fout << "currency " << currentcurrency.coins << ' ' << currentcurrency.food << ' ' << currentcurrency.gems << endl;
+    fout << "currentMap " << currentMap << endl;
+    fout << "currentCoordinate " << currentCoordinate[0] << ' ' << currentCoordinate[1] << endl;
+    fout.close();
+
+    cout << endl << HIGHLIGHT << "Progress saved successfully!"  << WHITE << endl << endl;
 }
 
 // main menu page

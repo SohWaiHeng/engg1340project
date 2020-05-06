@@ -2,9 +2,11 @@
 #define TUTORIAL_H
 
 #include <string>
+#include "movement.h"
+#include "battle.h"
 
-void tutorial(std::string *currentBlock, std::string *currentCharacter, int currentCoordinate[2]);
-
-void battleTutorial();
+//void movementTutorial(std::string currentBlock, std::string currentCharacter);
+//void battleTutorial(creature deck[5]);
+void tutorial();
 
 #endif
