@@ -20,7 +20,6 @@ void printMap(string *map){
 }
 
 // to print map together with avatar
-
 void mapWithAvatar(string *currentAvatar, string *avatarSymbol, avatars ownedAvatar[50], int currentCoordinate[2], string *currentBlock, string *newBlock){
     int lineCount=0, columnCount=0;
     string line, newLine;
@@ -88,7 +87,7 @@ bool checkForMapChange(string *currentBlock, int currentCoordinate[2], int *bloc
 
 // to see whether there's an alphabet on position avatar is heading to
 bool checkForAlphabet(string nextPosition){
-    if (nextPosition.find('Z')==-1 && nextPosition.find('X')==-1 && nextPosition.find('C')==-1 && nextPosition.find('V')==-1 && nextPosition.find('B')==-1 && nextPosition.find('N')==-1 && nextPosition.find('M')==-1)
+    if (nextPosition.find('Z')==-1 && nextPosition.find('X')==-1 && nextPosition.find('C')==-1 && nextPosition.find('V')==-1 && nextPosition.find('B')==-1)
         return false;
     else {return true;}
 }
