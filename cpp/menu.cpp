@@ -317,7 +317,6 @@ void changeOwnedAvatarsAndCreaturesTextFile(int num, string choice, creatures ow
 	    	cout << number << endl;
             // to ensure the number is in ascending order
                 if (flag==0 && number > num){
-                    cout << "yes " << number << endl;
 		    ownedCreaturesArray[arrayCount] = num;
                     arrayCount++;
                     flag = 1;
@@ -379,7 +378,7 @@ void displayCreature(string choice, int *currency, string creaturesDeck[5], crea
                 cin >> playersChoice;
                 if (playersChoice == 9) {break;}
             }
-            for (int i = 0; i < 70; i++){
+            for (int i = 0; i < 100; i++){
                 if (ownedCreature[i].name == creaturesDeck[playersChoice-1]){
                     displayAvatarsOrCreatureDetails(ownedCreature[i].index, "creature.txt", creatureStats, 5);
                     cout << "\nEnter 9 to return to creature page: ";
@@ -1121,7 +1120,6 @@ void displayCards(string choice, string creaturesDeck[5], creatures ownedCreatur
                             }
                         }
                         if (name == cardArray[stoi(string(playersChoice).substr(1))+((pageCount-1)*10)]){
-                            cout << "yes " << index;
                             cardNumber = index;
                             break;
                         }
