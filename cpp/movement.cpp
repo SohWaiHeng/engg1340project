@@ -3,8 +3,8 @@
 #include <limits>
 #include <string>
 
-//#include "hfiles/movement.h"
-#include "hfiles/colours.h"
+#include "../hfiles/movement.h"
+#include "../hfiles/colours.h"
 
 using namespace std;
 
