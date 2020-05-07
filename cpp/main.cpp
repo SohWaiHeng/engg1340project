@@ -35,7 +35,7 @@ int main () {
     if (option == 1) {
         cout << "STARTING A NEW GAME..." << endl;
         delay(2);
-        tutorial();
+        tutorial(currentCoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentBlock,newBlock);
     }
 
     int flag = 0;
@@ -53,7 +53,7 @@ int main () {
             mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
         }
         else if (flag == 2) {
-            moveAroundMap(currentavatar, currentcoordinate, currentblock, flag);
+            moveAroundMap(currentCoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentBlock,newBlock);
         }
     }
 
