@@ -6,60 +6,51 @@
 #include "../hfiles/colours.h"
 using namespace std;
 
-void movementTutorial(){
-    int coordinate[2] = {2,13}, moveFlag = 0;
-    string currentAvatar = "pantherman";
-    string avatarSymbol = "[o.o]";
-    string currentBlock = "map1.txt";
-    string newBlock = "txt/out.txt";
-    
+void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock){
+    int moveFlag = 0;
+   
     // teach player to move around using wasd
     cout << endl;
-    cin.clear(); 
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     cout << BLUE << "Let's begin the tutorial.\n" << WHITE << endl;
-    getCoordinate(newBlock,'[',currentCoordinate);
-    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+    getCoordinate(newBlock,'[',avatarCoordinate);
+    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock); 
     cout << BLUE << "\nYou can move around the map by using WASD keys and press enter." << WHITE << endl;
 
     int numberOfMove = 0, firstFlag = 0, secondFlag = 0; //numberOfMove is used to allow player to move around (WASD) 5 times 
     string move;
-    while (firstFlag == 0 || numberOfMove < 5){
+    while (numberOfMove < 5){
         cout << "Your move(s)?: ";
-        getline(cin,move);
-        
-        for (int i = 0; i < move.length(); i++){
+        cin >> move;
+        for (int i = 0; i < move.length() && firstFlag!=1; i++){
             move[i] = tolower(move[i]);
             switch(move[i]){
                 case 'w': case 'a': case 's': case 'd':
-                    movement(move[i],&newBlock,currentCharacter,&moveFlag);
+                    movement(move[i],newBlock,avatarSymbol,moveFlag);
                     numberOfMove++;
-                    firstFlag=1;
                     break;
 
                 default:
                     cout << RED << "\nPlease enter WASD keys to move around.\n" << WHITE;
-            }
+            	    firstFlag = 1;
+	    }
         }
-        getCoordinate(newBlock,'[',currentCoordinate);
-	mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
-    	printMap(newBlock);
-        moveFlag = 0;
+	firstFlag=0;
+	getCoordinate(newBlock,'[',avatarCoordinate);
+        mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+	printMap(newBlock);
     }
-
     // teach player shortcut movement
     cout << BLUE << "\nGood job! Now, can you see those alphabets on the map? You can fast forward your movement by typing those shortcut characters in. Try it out!" << WHITE << endl;
     while(secondFlag < 2){
         secondFlag = 0;
         cout << "Your move(s)?: ";
         getline(cin, move);
-        cout << move;
         for (int i = 0; i < move.length() && secondFlag==0; i++){
             move[i] = tolower(move[i]);
             switch(move[i]){
                 case 'c': case 'z': case 'x': case 'b': case 'v':
-                    movement(move[i],&newBlock,currentCharacter,&moveFlag);
+                    movement(move[i],newBlock,avatarSymbol,moveFlag);
                     secondFlag = 2;
                     break;
                 default:
@@ -68,33 +59,33 @@ void movementTutorial(){
             }
 
         }
-        getCoordinate(&newBlock,'[',currentCoordinate);
-        mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
-        printMap(newBlock);
+        getCoordinate(newBlock,'[',avatarCoordinate);
+        mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+	printMap(newBlock);
     	moveFlag = 0;
     }
 
     // player can move freely
     cout << BLUE << "\nGreat! You can save yourself a lot of time but using these fast forward keys to move around!\n" << WHITE;
-    cout << BLUE << "\nGreat! Now, try moving around and explore the map. Remember, avoid hitting the wall!\n" << WHITE;
+    cout << BLUE << "Now, try moving around and explore the map. Remember, avoid hitting the wall!\n" << WHITE;
     int thirdFlag = 0;
     bool notrepeatprinting = false;
     
     while(thirdFlag < 2) {
-        thirdFlag = 0; // 1:?? , 2: quit tutorial, 3: battle
+        thirdFlag = 0; 
         
-        getCoordinate(newBlock,'[',currentCoordinate);
-        mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+        getCoordinate(newBlock,'[',avatarCoordinate);
+        mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
         printMap(newBlock);
-	    moveFlag = 0;
+	moveFlag = 0;
 
         if (!notrepeatprinting) {
-            if (coordinate[0] == 3 && coordinate[1] > 54){  //any coordinate, first enemy pops up
+            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 45){  //any coordinate, first enemy pops up
                 cout << BLUE << "\nHey, you did a great job moving around the map and exploring!" << endl;
-                cout << "Seems like you are ready to face your first opponent. Keep moving right to head to the battlefield!" << WHITE << endl;
+                cout << "Seems like you are ready to face your first opponent. Go nearer to your opponent to start battle." << WHITE << endl;
                 notrepeatprinting = true;
             }
-            if (coordinate[0] == 3 && coordinate[1] > 59) {  //coordinates to go to battlefield
+            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 48) {  //coordinates to go to battlefield
                 cout << endl;
                 cout << BLUE << "Along your journey, you may often encounter with enemies at different parts of the map." << endl;
                 cout << "You will have to battle with them in order to continue with your journey." << WHITE << endl;
@@ -106,7 +97,7 @@ void movementTutorial(){
             }
         }
         else {
-            if (coordinate[0] == 3 && coordinate[1] > 59) {  //coordinates to go to battlefield
+            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 48) {  //coordinates to go to battlefield
                 cout << endl << BLUE << "Along your journey, you may often encounter with enemies at different parts of the map." << endl;
                 cout << "You will have to battle with them in order to continue with your journey." << WHITE << endl;
                 cout << GREEN << "Press enter to start battle." << WHITE << endl;
@@ -115,7 +106,7 @@ void movementTutorial(){
                 thirdFlag = 3;
                 break;
             }
-            else if (coordinate[1] < 55) {
+            else if (avatarCoordinate[1] < 45) {
                 notrepeatprinting = false;
             }
         }
@@ -128,7 +119,7 @@ void movementTutorial(){
             move[i] = tolower(move[i]);
             switch(move[i]){
                 case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':
-                    movement(move[i],&newBlock,currentCharacter,&moveFlag);
+                    movement(move[i],newBlock,avatarSymbol,moveFlag);
                     break;
                 default:
                     cout << RED << "\nPress WASD keys or alphabets shown in the map to move." << WHITE << endl;
@@ -229,9 +220,9 @@ void battleTutorial(creature deck[5]) {
     tutorialmode(deck, currentOpponent);
 }
 
-void tutorial (avatars ownedAvatar[50]) {
+void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock) {
     // movement tutorial
-    movementTutorial();
+    movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock);
 
     // automatically give player initial deck
     creature deck[5];
