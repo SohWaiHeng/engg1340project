@@ -16,9 +16,13 @@ int main () {
     int avataridx[10] = {0};    // array to store the avatar player owned
     avatar currentavatar;       // current avatar 
     currency currentcurrency;   // current currency
-    int currentcoordinate[2];   // current coordinate
+    int currentcoordinate[2];   // current avatar coordinate
+    int enemyCoordinate[2];     // enemy coordinate
     string currentblock;        // current block file name
     string filename;            // save file location name
+    string avatarSymbol = avatar.getfigure();  // avatar figure
+    string enemySymbol = "(^<^)";  // enemy figure
+    string newBlock = "../txt/out.txt";
     int option;
 
     // print title screen, take in user's input, get the save file's name
