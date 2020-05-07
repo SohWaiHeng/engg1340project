@@ -5,8 +5,10 @@
 #include "movement.h"
 #include "battle.h"
 
-//void movementTutorial(std::string currentBlock, std::string currentCharacter);
-//void battleTutorial(creature deck[5]);
-void tutorial();
+void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], std::string &avatarSymbol, std::string &enemySymbol, std::string &currentBlock, std::string &newBlock);
+
+void battleTutorial(creature deck[5]);
+
+void tutorial(int avatarCoordinate[2], int enemyCoordinate[2], std::string &avatarSymbol, std::string &enemySymbol, std::string &currentBlock, std::string &newBlock);
 
 #endif
