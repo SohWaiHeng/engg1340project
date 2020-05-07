@@ -226,7 +226,7 @@ void battleTutorial(creature deck[5]) {
 
 void tutorial (avatars ownedAvatar[50]) {
     // movement tutorial
-    movementTutorial(currentAvatar,avatarSymbol,currentBlock,newBlock,coordinate,ownedAvatar);
+    movementTutorial(ownedAvatar);
 
     // automatically give player initial deck
     creature deck[5];
