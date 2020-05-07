@@ -1,15 +1,15 @@
 #ifndef MOVEMENT_H
 #define MOVEMENT_H
 
-#include <string>
+#include<string>
+#include "../classes/avatar.h"
+using namespace std;
 
-#include "structs.h"
+void printMap(string map);
 
-void printMap(std::string *map);
+void mapWithAvatar(string avatarSymbol, int currentCoordinate[2], string currentBlock, string newBlock);
 
-void mapWithAvatar(std::string avatarSymbol, int currentCoordinate[2], std::string currentBlock, std::string newBlock);
-
-bool checkForMapChange(std::string *currentBlock, int currentCoordinate[2], int *blockNum);
+bool checkForMapChange(string *currentBlock, int currentCoordinate[2], int *blockNum);
 
 bool checkForAlphabet(std::string nextPosition);
 
@@ -17,10 +17,10 @@ bool checkForWall(std::string nextPosition);
 
 void changePositions(std::string blockArray[], int currentPositionX, int currentPositionY, int nextPositionX, int nextPositionY, std::string currentCharacter, std::string toReplaceOri, std::string toReplaceNew);
 
-void getCoordinate(std::string currentBlock, char alphabet, int coordinate[2]);
+void getCoordinate(string currentBlock, char input, int coordinate[2]);
 
-void movement(char move, std::string *newBlock, std::string currentCharacter, int *moveFlag);
+void movement(char move, string &newBlock, string currentCharacter, int &moveFlag);
 
-void moveAroundMap(int *currency, std::string *currentAvatar, std::string creaturesDeck[5] ,std::string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50], creatures notOwnedCreature[100], avatars notOwnedAvatar[50], int currentCoordinate[2], std::string *currentBlock, std::string *newBlock, std::string *avatarSymbol);
+void moveAroundMap(avatar currentAvatar, int currentCoordinate[2], string &currentBlock, int &flag);
 
 #endif

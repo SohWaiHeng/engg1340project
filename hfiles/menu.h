@@ -42,7 +42,7 @@ string newGame();
 // display menus
 void shop(owned * &ownedhead, int avataridx[], currency &currentcurrency);
 void displayInventory(creature deck[5], owned * ownedhead, int avataridx[], currency currentcurrency, avatar currentavatar);
-void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, bool &quit);
+void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag);
 //void inBattleMenuPage(int *currency, std::string *currentAvatar, std::string creaturesDeck[5] , std::string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50],creatures notOwnedCreature[100], avatars notOwnedAvatar[50], int currentCoordinate[2], std::string *currentMap);
 
 #endif

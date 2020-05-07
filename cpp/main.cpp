@@ -3,6 +3,7 @@
 #include "../hfiles/battle.h"
 #include "../hfiles/tutorial.h"
 #include "../hfiles/menu.h"
+#include "../hfiles/movement.h"
 #include "../classes/creature.h"
 #include "../classes/avatar.h"
 #include "../classes/currency.h"
@@ -16,7 +17,7 @@ int main () {
     avatar currentavatar;       // current avatar 
     currency currentcurrency;   // current currency
     int currentcoordinate[2];   // current coordinate
-    string currentmap;          // current map file name
+    string currentblock;        // current block file name
     string filename;            // save file location name
     int option;
 
@@ -24,7 +25,7 @@ int main () {
     filename = titleScreen(option);
 
     // load data from file
-    load(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentmap, currentavatar, deck);
+    load(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentblock, currentavatar, deck);
     
     // start tutorial if new game
     if (option == 1) {
@@ -33,12 +34,10 @@ int main () {
         tutorial();
     }
 
-    bool quit = false;
-    while (!quit) {
+    int flag = 0;
+    while (flag != 3) {
         // quit from menu
-        string input;
-        cin >> input;
-        if (input == "battle") {
+        if (flag == 0) {
             opponent newopponent;
             for (int i = 0; i < 5; i++) {
                 newopponent.opponentCreature[i].setbasestats(i+1);
@@ -46,12 +45,13 @@ int main () {
             }
             battle(deck, newopponent);
         }
-        else if (input == "menu") {
-            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentmap, quit);
+        else if (flag == 1) {
+            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
+        }
+        else if (flag == 2) {
+            moveAroundMap(currentavatar, currentcoordinate, currentblock, flag);
         }
     }
 
     return 0;
-    //loadAvatarsFromSavedTextFile(ownedAvatar, notOwnedAvatar);
-    //loadCreaturesFromSavedTextFile(ownedCreature, notOwnedCreature);
 }

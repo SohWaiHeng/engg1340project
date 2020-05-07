@@ -12,7 +12,6 @@
 
 #include "../hfiles/movement.h"
 #include "../hfiles/menu.h"
-#include "../hfiles/structs.h"
 #include "../hfiles/titleScreen.h"
 #include "../hfiles/colours.h"
 #include "../hfiles/battle.h"
@@ -879,7 +878,7 @@ void save(string &filename, owned * ownedhead, int avataridx[10], currency curre
 }
 
 // main menu page
-void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, bool &quit){
+void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag){
     int choice = 0;
     while (choice != 5 && choice != 6) {
         cout << endl;
@@ -923,6 +922,7 @@ void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature dec
                 save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck);
                 break;
 	        case 5:
+                flag = 2;
                 break;
             case 6:
                 cout << "\x1B[31m" << "Are you sure that you want to quit the game? [y/n] \n" << "\x1B[0m";
@@ -936,7 +936,7 @@ void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature dec
                 }
                 if (toQuit=='y'){
                     save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck);
-                    quit = true;
+                    flag = 3;
                 }
                 else { 
                     break;

@@ -4,7 +4,11 @@
 #include <string>
 
 #include "../hfiles/movement.h"
+#include "../classes/avatar.h"
+#include "../classes/currency.h"
+#include "../classes/creature.h"
 #include "../hfiles/colours.h"
+#include "../hfiles/menu.h"
 
 using namespace std;
 
@@ -26,7 +30,7 @@ void mapWithAvatar(string avatarSymbol, int currentCoordinate[2], string current
     int lineCount=0, columnCount=0;
     string line, newLine;
     ifstream fin(currentBlock);
-    ofstream fout(\newBlock);
+    ofstream fout(newBlock);
     while (getline(fin,line)){
         if (lineCount == currentCoordinate[0]){
 	    newLine = line.replace(currentCoordinate[1],5,avatarSymbol);
@@ -114,11 +118,11 @@ void getCoordinate(string currentBlock, char input, int coordinate[2]){
 
 
 // to move around
-void movement(char move, string *newBlock, string currentCharacter, int *moveFlag){
+void movement(char move, string &newBlock, string currentCharacter, int &moveFlag){
     string line;
     int lineCount = 0;
     string * blockArray = new string [25];  //dynamic array to store lines in map
-    ifstream fin(&newBlock); 
+    ifstream fin(newBlock); 
     while (getline(fin,line)){
         blockArray[lineCount] = line;
         lineCount++;
@@ -134,7 +138,7 @@ void movement(char move, string *newBlock, string currentCharacter, int *moveFla
                             changePositions(blockArray, i, j, i-1, j, currentCharacter, blockArray[i-1].substr(j,(currentCharacter).length()), currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i-1].substr(j,(currentCharacter).length()))==true) {  // send warning to player when wall is encountered
+                        else if (moveFlag==0&&checkForWall(blockArray[i-1].substr(j,(currentCharacter).length()))==true) {  // send warning to player when wall is encountered
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                         }
                         else {  
@@ -148,7 +152,7 @@ void movement(char move, string *newBlock, string currentCharacter, int *moveFla
                             changePositions(blockArray, i, j+4, i, j-1, string()+move, alphabet, currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==true) {
+                        else if (moveFlag==0&&checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==true) {
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                         }
                         else if (checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==false){
@@ -161,7 +165,7 @@ void movement(char move, string *newBlock, string currentCharacter, int *moveFla
                             changePositions(blockArray, i, j, i+1, j, currentCharacter, blockArray[i+1].substr(j,(currentCharacter).length()), currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==true) {
+                        else if (moveFlag==0&&checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==true) {
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                         }
                         else if (checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==false){
@@ -175,7 +179,7 @@ void movement(char move, string *newBlock, string currentCharacter, int *moveFla
                             changePositions(blockArray, i, j, i, j+1, currentCharacter, alphabet, currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i].substr(j+1,(currentCharacter).length()))==true) {
+                        else if (moveFlag==0&&checkForWall(blockArray[i].substr(j+1,(currentCharacter).length()))==true) {
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                             flag = 1;
 			}
@@ -208,7 +212,7 @@ void movement(char move, string *newBlock, string currentCharacter, int *moveFla
     }
 
     fin.close();
-    ofstream fout(*newBlock);
+    ofstream fout(newBlock);
     for (int i = 0; i < lineCount-1; i++){
         fout << blockArray[i] << endl;
     }
@@ -219,67 +223,68 @@ void movement(char move, string *newBlock, string currentCharacter, int *moveFla
 }
 
 // main function for avatar to move around the map
-
-void moveAroundMap(int *currency, string *currentAvatar, string creaturesDeck[5] ,string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50], creatures notOwnedCreature[100], avatars notOwnedAvatar[50], int currentCoordinate[2], string *currentBlock, string *newBlock, string *avatarSymbol){
+void moveAroundMap(avatar currentAvatar, int currentCoordinate[2], string &currentBlock, int &flag){
     string moveArray[5] = {"z","x","c","v","b"};
     string move, prevMove = "m", avatarSymbol = currentAvatar.getfigure(), newBlock = "../txt/out.txt";
     int moveFlag = 0;
-    int flag = 0, flag1 = 0, blockNum = 1; //blockNum should be declared elsewhere
+    int flag1 = 0, blockNum = 1; //blockNum should be declared elsewhere
+    flag = 0;
     mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
     printMap(newBlock);
     while (flag != 2){
         cout << "Press WASD or alphabets shown in the map to move around.\n";
         cout << "Press M to open up the menu page.\n";
-	cout << "Your move(s): ";
+	    cout << "Your move(s): ";
         cin >> move;
-	flag = 0;
+	    flag = 0;
         flag1 = 0;
-	for (int i = 0; i < move.length() && flag == 0 && moveFlag==0; i++){
-	    move[i] = tolower(move[i]);
-            switch(move[i]){
-                case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':{
+	    for (int i = 0; i < move.length() && flag == 0 && moveFlag==0; i++){
+	        move[i] = tolower(move[i]);
+            switch(move[i]) {
+                case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v': {
                     if (moveFlag==1||(prevMove == string()+move[i] && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))){
-			break;
-		    }
-		    movement(move[i],&newBlock,avatarSymbol,&moveFlag);
-		    getCoordinate(newBlock,(avatarSymbol[0]),currentCoordinate);
-		    if (checkForMapChange(&currentBlock,currentCoordinate,&blockNum) == true){
-		    	flag1 = 1;
-		    }
-		    if (flag1 == 0){
-		    	currentCoordinate[1] += 4;
-		    	checkForMapChange(&currentBlock,currentCoordinate,&blockNum);
-		    	currentCoordinate[1] -= 4;
-		    }
-		    // FINAL BOSS
-		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 30 && currentBlock == "map4.txt"){
-		    	cout << "You have now reached the dungeon of our final boss.\n";
-			cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss?\n";
-		    }
-		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 28 && currentBlock == "map4.txt"){
-		    	// final boss battle
-			cout << "final boss\n";
-		    }
-		    prevMove = string()+move[i];
-		    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
-		    break;
-		}
-                case 'm':
-		    // to main menu
-		    mainMenuPage(currency, currentAvatar, creaturesDeck, currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, currentBlock, newBlock, avatarSymbol);
+			            break;
+		            }
+		            movement(move[i],newBlock,avatarSymbol,moveFlag);
+		            getCoordinate(newBlock,(avatarSymbol[0]),currentCoordinate);
+		            if (checkForMapChange(&currentBlock,currentCoordinate,&blockNum) == true){
+		    	    flag1 = 1;
+		            }
+		            if (flag1 == 0){
+                        currentCoordinate[1] += 4;
+                        checkForMapChange(&currentBlock,currentCoordinate,&blockNum);
+                        currentCoordinate[1] -= 4;
+                    }
+                    // FINAL BOSS
+                    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 30 && currentBlock == "map4.txt"){
+                        cout << "You have now reached the dungeon of our final boss.\n";
+                        cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss?\n";
+                    }
+                    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 28 && currentBlock == "map4.txt"){
+                        // final boss battle
+                        cout << "final boss\n";
+                    }
+                    prevMove = string()+move[i];
+                    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+                    break;
+                }
+                case 'm': {
+		            // to main menu
                     flag = 2;
-		    break;
-                default:
+		            break;
+                }
+                default: {
                     cout << RED << "\nPress WASD keys or alphabets shown in the map to move.\n";
                     cout << "Press M to open up the menu page.\n" << WHITE ; 
-		    cin.clear();
+		            cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(),'\n'); 
-		    flag = 1;
-		    break;
+		            flag = 1;
+		            break;
+                }
             }
-	}
-	moveFlag = 0;
-	printMap(newBlock);
+	    }
+	    moveFlag = 0;
+	    printMap(newBlock);
     }	
 }
 

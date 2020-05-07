@@ -86,7 +86,7 @@ void movementTutorial(){
         getCoordinate(newBlock,'[',currentCoordinate);
         mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
         printMap(newBlock);
-	moveFlag = 0;
+	    moveFlag = 0;
 
         if (!notrepeatprinting) {
             if (coordinate[0] == 3 && coordinate[1] > 54){  //any coordinate, first enemy pops up
