@@ -509,14 +509,16 @@ void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHan
                     cout << "Invalid target name inserted!" << endl;
                     return;
                 }
-
-                creaturenode1->deployedCreature.magic(targetnode->deployedCreature);
-                if (area) {
-                    if (previousnode != NULL) {
-                        previousnode->deployedCreature.magic(targetnode->deployedCreature);
-                    }
-                    if (creaturenode1->next != NULL) {
-                        creaturenode1->next->deployedCreature.magic(targetnode->deployedCreature);
+                
+                for (int i = 0; i < number; i++) {
+                    creaturenode1->deployedCreature.magic(targetnode->deployedCreature);
+                    if (area) {
+                        if (previousnode != NULL) {
+                            previousnode->deployedCreature.magic(targetnode->deployedCreature);
+                        }
+                        if (creaturenode1->next != NULL) {
+                            creaturenode1->next->deployedCreature.magic(targetnode->deployedCreature);
+                        }
                     }
                 }
 

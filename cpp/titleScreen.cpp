@@ -8,7 +8,7 @@
 using namespace std;
 
 void printTitleScreen(){
-    ifstream fin("titleScreen.txt");
+    ifstream fin("txt/titleScreen.txt");
     string line;
     while (getline(fin,line)){
         cout << line << endl;
@@ -35,8 +35,8 @@ string titleScreen(int &option){
         filename = newGame();
     }
     // load an existing game
-    else if (option == 2){
-	    filename = loadFileOption();
+    else if (option == 2) {
+	    filename = loadFileOption(option);
     }
     return filename;
 }

@@ -25,7 +25,7 @@ int main () {
 
     // load data from file
     load(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentmap, currentavatar, deck);
-
+    
     // start tutorial if new game
     if (option == 1) {
         cout << "STARTING A NEW GAME..." << endl;
@@ -36,8 +36,19 @@ int main () {
     bool quit = false;
     while (!quit) {
         // quit from menu
-
-        //
+        string input;
+        cin >> input;
+        if (input == "battle") {
+            opponent newopponent;
+            for (int i = 0; i < 5; i++) {
+                newopponent.opponentCreature[i].setbasestats(i+1);
+                newopponent.opponentCreature[i].setcurrentstats(1);
+            }
+            battle(deck, newopponent);
+        }
+        else if (input == "menu") {
+            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentmap, quit);
+        }
     }
 
     return 0;

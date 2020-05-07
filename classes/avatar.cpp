@@ -1,3 +1,4 @@
+#include<iostream>
 #include<string>
 #include<stdlib.h>
 #include<time.h>
@@ -8,9 +9,9 @@ using namespace std;
 
 void avatar::set(int index){
     int j = 0;
-    ifstream fin ("txt/avatar.txt");
+    ifstream fin ("classes/txt/avatar.txt");
     string line;
-    while (j < index) {
+    while (j <= index) {
         getline(fin, line);
         j++;
     }

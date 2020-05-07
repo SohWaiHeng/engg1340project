@@ -103,6 +103,7 @@ void creature::getcurrentstats () {
     cout << endl;
     cout << current.symbol << endl;
     cout << "name: " << current.name << endl;
+    cout << "level: " << current.lvl << endl;
     cout << "cost: " << current.cost << endl;
     cout << "hp: " << current.hp << endl;
     cout << "atk: " << current.atk << endl;

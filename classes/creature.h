@@ -44,6 +44,7 @@ class creature {
         int getcreaturenumber() { return creaturenumber; };
         int getlevel() { return current.lvl; };
 
+        int getcrt() { return current.crt; };
         int gethp() { return current.hp; };
         void decreasehp(int byhowmuch);
         int gethpratio();

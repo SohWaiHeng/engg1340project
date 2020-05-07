@@ -12,13 +12,12 @@ class avatar {
         int getindex() { return avatarindex; };
         void set(int index);
         card drawcard();
-
+        card cardpool[5];
 
     private:
         int avatarindex;
         string avatarname;
         string avatarfigure;
-        card cardpool[5];
 };
 
 #endif

@@ -6,5 +6,6 @@
 #define GREEN "\x1B[1;92m"
 #define HIGHLIGHT "\x1B[7m"
 #define BLUE "\x1B[1;96m"
+#define YELLOW "\x1B[1;93m"
 
 #endif
