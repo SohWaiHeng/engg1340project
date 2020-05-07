@@ -2,15 +2,16 @@
 #include <fstream>
 #include <limits>
 #include <string>
+
 #include "../hfiles/movement.h"
-#include "../hfiles/menu.h"
+#include "../hfiles/colours.h"
 
 using namespace std;
 
 // to print map
-void printMap(string *map){
+void printMap(string map){
     string line;
-    ifstream fin(*map);
+    ifstream fin(map);
     cout << endl;
     while (getline(fin,line)){
         cout << line << endl;
@@ -20,32 +21,22 @@ void printMap(string *map){
 }
 
 // to print map together with avatar
-void mapWithAvatar(string *currentAvatar, string *avatarSymbol, avatars ownedAvatar[50], int currentCoordinate[2], string *currentBlock, string *newBlock){
+
+void mapWithAvatar(string avatarSymbol, int currentCoordinate[2], string currentBlock, string newBlock){
     int lineCount=0, columnCount=0;
     string line, newLine;
-    // to get the symbol of avatar
-    for (int j = 0; j < 50 && ownedAvatar[j].index != 0; j++){
-        if (ownedAvatar[j].name == *currentAvatar){
-            *avatarSymbol = ownedAvatar[j].symbol;
-            break;
-        }   
-    }
-    ifstream fin(*currentBlock);
-    ofstream fout(*newBlock);
-   // cout << endl;
+    ifstream fin(currentBlock);
+    ofstream fout(\newBlock);
     while (getline(fin,line)){
         if (lineCount == currentCoordinate[0]){
-	    newLine = line.replace(currentCoordinate[1],5,*avatarSymbol);
+	    newLine = line.replace(currentCoordinate[1],5,avatarSymbol);
 	    fout << newLine << endl;
-	   // cout << newLine << endl;
 	}
 	else {
             fout << line << endl;
-	   // cout << line << endl;
     	}
 	lineCount++;
     }
-   // cout << endl;
     fin.close();
     fout.close();
 }
@@ -87,7 +78,7 @@ bool checkForMapChange(string *currentBlock, int currentCoordinate[2], int *bloc
 
 // to see whether there's an alphabet on position avatar is heading to
 bool checkForAlphabet(string nextPosition){
-    if (nextPosition.find('Z')==-1 && nextPosition.find('X')==-1 && nextPosition.find('C')==-1 && nextPosition.find('V')==-1 && nextPosition.find('B')==-1)
+    if (nextPosition.find('Z')==-1 && nextPosition.find('X')==-1 && nextPosition.find('C')==-1 && nextPosition.find('V')==-1 && nextPosition.find('B')==-1 && nextPosition.find('N')==-1 && nextPosition.find('M')==-1)
         return false;
     else {return true;}
 }
@@ -106,10 +97,10 @@ void changePositions(string blockArray[], int currentPositionX, int currentPosit
 }
 
 // to get coordinate of any given alphabet/character
-void getCoordinate(string *currentBlock, char input, int coordinate[2]){
+void getCoordinate(string currentBlock, char input, int coordinate[2]){
     string line;
     int lineCount=0;
-    ifstream fin(*currentBlock);
+    ifstream fin(currentBlock);
     while(getline(fin, line)){
         for (int i = 0; i < line.length(); i++){
             if (line[i] == input){
@@ -123,73 +114,73 @@ void getCoordinate(string *currentBlock, char input, int coordinate[2]){
 
 
 // to move around
-void movement(char move, string *currentBlock, string *currentCharacter, int *moveFlag){
+void movement(char move, string *newBlock, string currentCharacter, int *moveFlag){
     string line;
     int lineCount = 0;
     string * blockArray = new string [25];  //dynamic array to store lines in map
-    ifstream fin(*currentBlock); 
+    ifstream fin(&newBlock); 
     while (getline(fin,line)){
         blockArray[lineCount] = line;
         lineCount++;
     }
     int flag = 0, positionX = -1, positionY = -1;  //positionX and positionY are used to save the row and column of the move character
     for (int i = 0; i < lineCount; i++){
-        for (int j = 0; j < (blockArray[i].length()-(*currentCharacter).length()); j++){
+        for (int j = 0; j < (blockArray[i].length()-(currentCharacter).length()); j++){
             if (blockArray[i][j]==toupper(move)) {positionX=i; positionY=j-2;}  //to save coordinates of alphabet(the one on the junctions), for cases which the avatar is not yet encountered in this loop
-            if (blockArray[i].substr(j,(*currentCharacter).length())==*currentCharacter){    
+            if (blockArray[i].substr(j,(currentCharacter).length())==currentCharacter){    
                 switch (move){ 
                     case 'w':
-                        if (checkForAlphabet(blockArray[i-1].substr(j,(*currentCharacter).length()))==true){  // swap the positions of avatar and alphabet when an alphabet is encountered
-                            changePositions(blockArray, i, j, i-1, j, *currentCharacter, blockArray[i-1].substr(j,(*currentCharacter).length()), *currentCharacter);
+                        if (checkForAlphabet(blockArray[i-1].substr(j,(currentCharacter).length()))==true){  // swap the positions of avatar and alphabet when an alphabet is encountered
+                            changePositions(blockArray, i, j, i-1, j, currentCharacter, blockArray[i-1].substr(j,(currentCharacter).length()), currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i-1].substr(j,(*currentCharacter).length()))==true) {  // send warning to player when wall is encountered
-                            cout << "\x1B[31m" << "\nYou've hit the wall. Be careful!" << "\x1B[0m" << endl;
+                        else if (*moveFlag==0&&checkForWall(blockArray[i-1].substr(j,(currentCharacter).length()))==true) {  // send warning to player when wall is encountered
+                            cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                         }
                         else {  
-                            changePositions(blockArray, i, j, i-1, j, *currentCharacter, "     ", *currentCharacter);
+                            changePositions(blockArray, i, j, i-1, j, currentCharacter, "     ", currentCharacter);
                             flag = 1;
                         }
                         break;
                     case 'a':
                         if (checkForAlphabet(blockArray[i].substr(j-1,1))==true){
                             string alphabet = blockArray[i].substr(j-1,1);
-                            changePositions(blockArray, i, j+4, i, j-1, string()+move, alphabet, *currentCharacter);
+                            changePositions(blockArray, i, j+4, i, j-1, string()+move, alphabet, currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i].substr(j-1,(*currentCharacter).length()))==true) {
-                            cout << "\x1B[31m" << "\nYou've hit the wall. Be careful!" << "\x1B[0m" << endl;
+                        else if (*moveFlag==0&&checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==true) {
+                            cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                         }
-                        else if (checkForWall(blockArray[i].substr(j-1,(*currentCharacter).length()))==false){
-                            changePositions(blockArray, i, j, i, j-1, *currentCharacter, "     ", *currentCharacter);
+                        else if (checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==false){
+                            changePositions(blockArray, i, j, i, j-1, currentCharacter, "     ", currentCharacter);
                             flag = 1;
                         }
                         break;
                     case 's':
-                        if (checkForAlphabet(blockArray[i+1].substr(j,(*currentCharacter).length()))==true){
-                            changePositions(blockArray, i, j, i+1, j, *currentCharacter, blockArray[i+1].substr(j,(*currentCharacter).length()), *currentCharacter);
+                        if (checkForAlphabet(blockArray[i+1].substr(j,(currentCharacter).length()))==true){
+                            changePositions(blockArray, i, j, i+1, j, currentCharacter, blockArray[i+1].substr(j,(currentCharacter).length()), currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i+1].substr(j,(*currentCharacter).length()))==true) {
-                            cout << "\x1B[31m" << "\nYou've hit the wall. Be careful!" << "\x1B[0m" << endl;
+                        else if (*moveFlag==0&&checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==true) {
+                            cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                         }
-                        else if (checkForWall(blockArray[i+1].substr(j,(*currentCharacter).length()))==false){
-                            changePositions(blockArray, i, j, i+1, j, *currentCharacter, "     ", *currentCharacter);
+                        else if (checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==false){
+                            changePositions(blockArray, i, j, i+1, j, currentCharacter, "     ", currentCharacter);
                             flag = 1;
                         }
                         break;
                     case 'd':
 			if (checkForAlphabet(blockArray[i].substr(j+5,1))==true){
                             string alphabet = blockArray[i].substr(j+5,1);
-                            changePositions(blockArray, i, j, i, j+1, *currentCharacter, alphabet, *currentCharacter);
+                            changePositions(blockArray, i, j, i, j+1, currentCharacter, alphabet, currentCharacter);
                             flag = 1;
                         }
-                        else if (*moveFlag==0&&checkForWall(blockArray[i].substr(j+1,(*currentCharacter).length()))==true) {
-                            cout << "\x1B[31m" << "\nYou've hit the wall. Be careful!" << "\x1B[0m" << endl;
+                        else if (*moveFlag==0&&checkForWall(blockArray[i].substr(j+1,(currentCharacter).length()))==true) {
+                            cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                             flag = 1;
 			}
-                        else if (checkForWall(blockArray[i].substr(j+1,(*currentCharacter).length()))==false){
-                            changePositions(blockArray, i, j, i, j+1, *currentCharacter, "     ", *currentCharacter);
+                        else if (checkForWall(blockArray[i].substr(j+1,(currentCharacter).length()))==false){
+                            changePositions(blockArray, i, j, i, j+1, currentCharacter, "     ", currentCharacter);
                             flag = 1;
                         }
                         break;
@@ -199,7 +190,7 @@ void movement(char move, string *currentBlock, string *currentCharacter, int *mo
 			string add = string ()+"  "+move+"  ";
 			if (positionX == -1) {  // to continue finding the alphabet if it is not yet encountered
                             for (int k = i; k < lineCount && flag==0; k++){
-                                for (int l = 0; l < (blockArray[k].length()-(*currentCharacter).length()+1); l++){
+                                for (int l = 0; l < (blockArray[k].length()-(currentCharacter).length()+1); l++){
                                     if (blockArray[k][l]==move) { 
                                         positionX=k; positionY=l-2;
                                         flag = 1;
@@ -208,7 +199,7 @@ void movement(char move, string *currentBlock, string *currentCharacter, int *mo
                                 }
                             }
                         }
-			changePositions(blockArray,i,j,positionX,positionY,*currentCharacter,add,*currentCharacter);
+			changePositions(blockArray,i,j,positionX,positionY,currentCharacter,add,currentCharacter);
                 }
             }
             if (flag == 1){break;}
@@ -217,7 +208,7 @@ void movement(char move, string *currentBlock, string *currentCharacter, int *mo
     }
 
     fin.close();
-    ofstream fout(*currentBlock);
+    ofstream fout(*newBlock);
     for (int i = 0; i < lineCount-1; i++){
         fout << blockArray[i] << endl;
     }
@@ -231,11 +222,10 @@ void movement(char move, string *currentBlock, string *currentCharacter, int *mo
 
 void moveAroundMap(int *currency, string *currentAvatar, string creaturesDeck[5] ,string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50], creatures notOwnedCreature[100], avatars notOwnedAvatar[50], int currentCoordinate[2], string *currentBlock, string *newBlock, string *avatarSymbol){
     string moveArray[5] = {"z","x","c","v","b"};
-    string move;
-    string prevMove = "m";
+    string move, prevMove = "m", avatarSymbol = currentAvatar.getfigure(), newBlock = "../txt/out.txt";
     int moveFlag = 0;
     int flag = 0, flag1 = 0, blockNum = 1; //blockNum should be declared elsewhere
-    mapWithAvatar(currentAvatar,avatarSymbol,ownedAvatar,currentCoordinate,currentBlock,newBlock);
+    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
     printMap(newBlock);
     while (flag != 2){
         cout << "Press WASD or alphabets shown in the map to move around.\n";
@@ -251,35 +241,37 @@ void moveAroundMap(int *currency, string *currentAvatar, string creaturesDeck[5]
                     if (moveFlag==1||(prevMove == string()+move[i] && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))){
 			break;
 		    }
-		    movement(move[i],newBlock,avatarSymbol,&moveFlag);
-		    getCoordinate(newBlock,(*avatarSymbol)[0],currentCoordinate);
-		    if (checkForMapChange(currentBlock,currentCoordinate,&blockNum) == true){
+		    movement(move[i],&newBlock,avatarSymbol,&moveFlag);
+		    getCoordinate(newBlock,(avatarSymbol[0]),currentCoordinate);
+		    if (checkForMapChange(&currentBlock,currentCoordinate,&blockNum) == true){
 		    	flag1 = 1;
 		    }
-		    if ( flag1 == 0){
+		    if (flag1 == 0){
 		    	currentCoordinate[1] += 4;
-		    	checkForMapChange(currentBlock,currentCoordinate,&blockNum);
+		    	checkForMapChange(&currentBlock,currentCoordinate,&blockNum);
 		    	currentCoordinate[1] -= 4;
 		    }
 		    // FINAL BOSS
-		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 30 && *currentBlock == "../txt/map4.txt"){
+		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 30 && currentBlock == "map4.txt"){
 		    	cout << "You have now reached the dungeon of our final boss.\n";
 			cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss?\n";
 		    }
-		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 28 && *currentBlock == "../txt/map4.txt"){
+		    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 28 && currentBlock == "map4.txt"){
 		    	// final boss battle
+			cout << "final boss\n";
 		    }
 		    prevMove = string()+move[i];
-		    mapWithAvatar(currentAvatar,avatarSymbol,ownedAvatar,currentCoordinate,currentBlock,newBlock);
+		    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
 		    break;
 		}
                 case 'm':
+		    // to main menu
 		    mainMenuPage(currency, currentAvatar, creaturesDeck, currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, currentBlock, newBlock, avatarSymbol);
                     flag = 2;
 		    break;
                 default:
-                    cout << "\x1B[31m" << "\nPress WASD keys or alphabets shown in the map to move.\n" << "\x1B[0m";
-                    cout << "\x1B[31m" << "Press M to open up the menu page.\n" << "\x1B[0m" ; 
+                    cout << RED << "\nPress WASD keys or alphabets shown in the map to move.\n";
+                    cout << "Press M to open up the menu page.\n" << WHITE ; 
 		    cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(),'\n'); 
 		    flag = 1;

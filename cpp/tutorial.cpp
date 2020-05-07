@@ -1,24 +1,26 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+
 #include "../hfiles/tutorial.h"
 #include "../hfiles/colours.h"
 using namespace std;
 
-void movementTutorial(avatars ownedAvatar){
-    int coordinate[2] = {2,13};
+void movementTutorial(){
+    int coordinate[2] = {2,13}, moveFlag = 0;
     string currentAvatar = "pantherman";
     string avatarSymbol = "[o.o]";
     string currentBlock = "map1.txt";
     string newBlock = "txt/out.txt";
+    
     // teach player to move around using wasd
     cout << endl;
     cin.clear(); 
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     cout << BLUE << "Let's begin the tutorial.\n" << WHITE << endl;
-    getCoordinate(&newBlock,'[',currentCoordinate);
-    mapWithAvatar(&currentAvatar, &avatarSymbol, ownedAvatar, currentCoordinate, &currentBlock, &newBlock);
-    printMap(&newBlock); 
+    getCoordinate(newBlock,'[',currentCoordinate);
+    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+    printMap(newBlock); 
     cout << BLUE << "\nYou can move around the map by using WASD keys and press enter." << WHITE << endl;
 
     int numberOfMove = 0, firstFlag = 0, secondFlag = 0; //numberOfMove is used to allow player to move around (WASD) 5 times 
@@ -31,7 +33,7 @@ void movementTutorial(avatars ownedAvatar){
             move[i] = tolower(move[i]);
             switch(move[i]){
                 case 'w': case 'a': case 's': case 'd':
-                    movement(move[i],newBlock,currentCharacter);
+                    movement(move[i],&newBlock,currentCharacter,&moveFlag);
                     numberOfMove++;
                     firstFlag=1;
                     break;
@@ -40,9 +42,10 @@ void movementTutorial(avatars ownedAvatar){
                     cout << RED << "\nPlease enter WASD keys to move around.\n" << WHITE;
             }
         }
-        getCoordinate(&newBlock,'[',currentCoordinate);
-	mapWithAvatar(&currentAvatar, &avatarSymbol, ownedAvatar, currentCoordinate, &currentBlock, &newBlock);
-    	printMap(&newBlock);
+        getCoordinate(newBlock,'[',currentCoordinate);
+	mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+    	printMap(newBlock);
+        moveFlag = 0;
     }
 
     // teach player shortcut movement
@@ -56,7 +59,7 @@ void movementTutorial(avatars ownedAvatar){
             move[i] = tolower(move[i]);
             switch(move[i]){
                 case 'c': case 'z': case 'x': case 'b': case 'v':
-                    movement(move[i],newBlock,currentCharacter);
+                    movement(move[i],&newBlock,currentCharacter,&moveFlag);
                     secondFlag = 2;
                     break;
                 default:
@@ -66,8 +69,9 @@ void movementTutorial(avatars ownedAvatar){
 
         }
         getCoordinate(&newBlock,'[',currentCoordinate);
-        mapWithAvatar(&currentAvatar, &avatarSymbol, ownedAvatar, currentCoordinate, &currentBlock, &newBlock);
-        printMap(&newBlock);
+        mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+        printMap(newBlock);
+    	moveFlag = 0;
     }
 
     // player can move freely
@@ -79,9 +83,10 @@ void movementTutorial(avatars ownedAvatar){
     while(thirdFlag < 2) {
         thirdFlag = 0; // 1:?? , 2: quit tutorial, 3: battle
         
-        getCoordinate(&newBlock,'[',currentCoordinate);
-        mapWithAvatar(&currentAvatar, &avatarSymbol, ownedAvatar, currentCoordinate, &currentBlock, &newBlock);
-        printMap(&newBlock);
+        getCoordinate(newBlock,'[',currentCoordinate);
+        mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+        printMap(newBlock);
+	moveFlag = 0;
 
         if (!notrepeatprinting) {
             if (coordinate[0] == 3 && coordinate[1] > 54){  //any coordinate, first enemy pops up
@@ -123,7 +128,7 @@ void movementTutorial(avatars ownedAvatar){
             move[i] = tolower(move[i]);
             switch(move[i]){
                 case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':
-                    movement(move[i],newBlock,currentCharacter);
+                    movement(move[i],&newBlock,currentCharacter,&moveFlag);
                     break;
                 default:
                     cout << RED << "\nPress WASD keys or alphabets shown in the map to move." << WHITE << endl;
@@ -226,7 +231,7 @@ void battleTutorial(creature deck[5]) {
 
 void tutorial (avatars ownedAvatar[50]) {
     // movement tutorial
-    movementTutorial(ownedAvatar);
+    movementTutorial();
 
     // automatically give player initial deck
     creature deck[5];
