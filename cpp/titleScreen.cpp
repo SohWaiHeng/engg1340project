@@ -2,11 +2,13 @@
 #include <fstream>
 #include <string>
 #include <limits>
+
 #include "../hfiles/titleScreen.h"
 #include "../hfiles/menu.h"
 
 using namespace std;
 
+// to print out title screen from txt file at the start of the game
 void printTitleScreen(){
     ifstream fin("txt/titleScreen.txt");
     string line;
@@ -16,6 +18,8 @@ void printTitleScreen(){
     fin.close();
 }
 
+// for player to choose either starting a new game or load previous progress
+// return either a new game or a previously saved progress
 string titleScreen(int &option){
     printTitleScreen();
     cout << "Please Enter a Number: ";
@@ -40,14 +44,3 @@ string titleScreen(int &option){
     }
     return filename;
 }
-
-/*int main(){
-    creatures ownedCreature[100], notOwnedCreature[100];
-    avatars ownedAvatar[50], notOwnedAvatar[50];
-    int currency, currentCoordinate[2];
-    string currentFile = "", currentMap, currentAvatar, creaturesDeck[5];
-   // moveAroundMap(&currency, &currentAvatar, creaturesDeck, &currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, &currentMap);
-    titleScreen();
-//    moveAroundMap(&currency, &currentAvatar, creaturesDeck, &currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, &currentMap);
-    mainMenuPage(&currency, &currentAvatar, creaturesDeck, &currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, &currentMap);
-}*/

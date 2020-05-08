@@ -4,9 +4,11 @@
 #include<stdlib.h>
 #include<time.h>
 #include<limits>
+
 #include "../hfiles/battle.h"
 #include "../hfiles/colours.h"
 #include "../hfiles/menu.h"
+
 using namespace std;
 
 // to deploy a creature on battle field

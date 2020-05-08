@@ -1,7 +1,9 @@
 #include<iostream>
 #include<fstream>
 #include<sstream>
+
 #include "card.h"
+
 using namespace std;
 
 // set the card's name, cost and its functions

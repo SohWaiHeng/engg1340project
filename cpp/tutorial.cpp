@@ -5,6 +5,8 @@
 #include "../hfiles/tutorial.h"
 #include "../hfiles/colours.h"
 #include "../hfiles/battle.h"
+#include "../hfiles/movement.h"
+
 using namespace std;
 
 // this tutorial is used to teach players different ways of moving around the map

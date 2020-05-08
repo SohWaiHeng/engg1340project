@@ -2,6 +2,7 @@
 #define CARD_H
 
 #include "status.h"
+
 #include<string>
 
 // define a class 'card' as a data type to store cards

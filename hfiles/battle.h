@@ -1,7 +1,10 @@
 #ifndef BATTLE_H
 #define BATTLE_H
+
 #include "../classes/creature.h"
+
 #include <string>
+
 using namespace std;
 
 struct rewardstruct {

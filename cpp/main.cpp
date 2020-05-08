@@ -1,13 +1,16 @@
 #include<iostream>
+
 #include "../hfiles/titleScreen.h"
 #include "../hfiles/battle.h"
 #include "../hfiles/tutorial.h"
 #include "../hfiles/menu.h"
 #include "../hfiles/movement.h"
+#include "../hfiles/colours.h"
+
 #include "../classes/creature.h"
 #include "../classes/avatar.h"
 #include "../classes/currency.h"
-#include "../hfiles/colours.h"
+
 using namespace std;
 
 int main () {

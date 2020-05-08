@@ -4,7 +4,9 @@
 #include<time.h>
 #include<fstream>
 #include<sstream>
+
 #include "avatar.h"
+
 using namespace std;
 
 void avatar::set(int index){
