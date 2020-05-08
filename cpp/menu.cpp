@@ -746,7 +746,7 @@ void load(string filename, owned * &ownedhead, int avataridx[10], currency &curr
 
     getline(fin, line);
     istringstream iss7(line);
-    iss6 >> trash >> enemycoordinate[0] >> enemycoordinate[1];
+    iss7 >> trash >> enemycoordinate[0] >> enemycoordinate[1];
 
     fin.close();
 }
