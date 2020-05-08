@@ -54,7 +54,7 @@ void displayCreatureByPage(int pageCount, owned * ownedhead) {
 }
 
 void displayAvatarByPage(int avataridx[]) {
-    cout << "No.    NAME      SYMBOL" <<endl;
+    cout << "No.    NAME     SYMBOL" <<endl;
     for (int i = 0; i < 10; i++) {
         if (avataridx[i] != 0) {
             avatar temp;
@@ -62,10 +62,10 @@ void displayAvatarByPage(int avataridx[]) {
             int length = temp.getname().length();
             int space = (12 - length)/2;
             string name = string(space,' ') + temp.getname() + string(space,' ');
-            cout << ' ' << i << '.' << setw(12) << name << setw(8) << temp.getfigure() << endl;
+            cout << ' ' << i << '.' << setw(12) << name << ' ' << setw(8) << temp.getfigure() << endl;
         }
         else {
-            cout << ' ' << i << ".    ???      ???" << endl;
+            cout << ' ' << i << ".    ???       ???" << endl;
         }
     }
 }
@@ -94,7 +94,7 @@ void displayAvatarDetails (int index) {
 
 // display 10 owned creatures each page
 void displayOwnedCreaturesByPage(int pageCount, owned * ownedhead){
-    cout << "No.       NAME          SYMBOL  LEVEL" << endl;
+    cout << "No.        NAME         SYMBOL  LEVEL" << endl;
     owned * printhead = ownedhead;
     for (int i = 0; i < 10*(pageCount-1); i++) {
         printhead = printhead->next;
