@@ -382,9 +382,14 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                     cin >> yesno;
                 }
                 if (tolower(yesno) == 'y') {
-                    node->level += 1;
-                    currentcurrency.food -= node->level;
-                    cout << GREEN << temp.getname() << " upgraded to level " << node->level << WHITE << endl;
+                    if (node->level < 20) {
+                        node->level += 1;
+                        currentcurrency.food -= node->level;
+                        cout << GREEN << temp.getname() << " upgraded to level " << node->level << WHITE << endl;
+                    }
+                    else {
+                        cout << RED << "max level reached!" << endl;
+                    }
                 }
             }
             else if (playerschoice.length() == 2 && tolower(playerschoice[0]) == 'p') {

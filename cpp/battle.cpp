@@ -6,6 +6,7 @@
 #include<limits>
 #include "../hfiles/battle.h"
 #include "../hfiles/colours.h"
+#include "../hfiles/menu.h"
 using namespace std;
 
 // to deploy a creature on battle field
@@ -877,19 +878,21 @@ void roundStart (deployed * &player, deployed * &opponent, int &currentElixir) {
     }
 }
 
-void battleResults (deployed * player, deployed * opponent) {
+void battleResults (deployed * player, deployed * opponenthead, bool &winlose) {
     if (player == NULL) {
         cout << RED << "You lose!" << WHITE << endl;
+        winlose = false;
     }
-    else if (opponent == NULL) {
+    else if (opponenthead == NULL) {
         cout << GREEN << "You win!" << WHITE << endl;
+        winlose = true;
     }
     cout << HIGHLIGHT << "Leaving battlefield..." << WHITE << endl;
 }
 
 // overall battle function 
 // call this function to start the battle
-void battle(creature deck[], opponent currentOpponent) {
+void battle(creature deck[], opponent currentOpponent, bool winlose) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     
     deployed * head1 = NULL;
@@ -925,10 +928,10 @@ void battle(creature deck[], opponent currentOpponent) {
         opponentsResponse(currentOpponent.opponentCreature, currentElixir, head2, cardhead2, head1);
     }
     printBattleScreen(head1, cardhead1, head2, currentElixir, deck);
-    battleResults(head1, head2);
+    battleResults(head1, head2, winlose);
 }
 
-void tutorialmode (creature deck[], opponent currentOpponent) {
+void tutorialmode (creature deck[], opponent currentOpponent, bool &winlose) {
     deployed * head1 = NULL;
     deployed * head2 = NULL;
     cardOnHand * cardhead1 = NULL;
@@ -1152,5 +1155,5 @@ void tutorialmode (creature deck[], opponent currentOpponent) {
         opponentsResponse(currentOpponent.opponentCreature, currentElixir, head2, cardhead2, head1);
     }
     printBattleScreen(head1, cardhead1, head2, currentElixir, deck);
-    battleResults(head1, head2);
+    battleResults(head1, head2, winlose);
 }

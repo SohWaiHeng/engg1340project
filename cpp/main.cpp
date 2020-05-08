@@ -7,6 +7,7 @@
 #include "../classes/creature.h"
 #include "../classes/avatar.h"
 #include "../classes/currency.h"
+#include "../hfiles/colours.h"
 using namespace std;
 
 int main () {
@@ -19,6 +20,7 @@ int main () {
     int currentcoordinate[2];   // current coordinate
     string currentblock;        // current block file name
     string filename;            // save file location name
+    opponent currentOpponent;
     int option;
 
     // print title screen, take in user's input, get the save file's name
@@ -35,15 +37,35 @@ int main () {
     }
 
     int flag = 0;
+    string battlemode = "random";
     while (flag != 3) {
-        // quit from menu
         if (flag == 0) {
-            opponent newopponent;
+            bool winlose = false;
+            determineopponent(battlemode, currentOpponent, deck);
+            battle(deck, currentOpponent, winlose);
             for (int i = 0; i < 5; i++) {
-                newopponent.opponentCreature[i].setbasestats(i+1);
-                newopponent.opponentCreature[i].setcurrentstats(1);
+                deck[i].setdeployed(false);
             }
-            battle(deck, newopponent);
+            if (winlose) {
+                delay(1);
+                cout << GREEN << "You gained " << currentOpponent.rewards.coins << " coins!" << endl;
+                currentcurrency.coins += currentOpponent.rewards.coins;
+                delay(1);
+                cout << "You gained " << currentOpponent.rewards.food << " food!" << endl;
+                currentcurrency.food += currentOpponent.rewards.food;
+                delay(1);
+                cout << "You gained " << currentOpponent.rewards.gems << " gems!" << endl;
+                currentcurrency.gems += currentOpponent.rewards.gems;
+                delay(1);
+                cout << "You obtained " << currentOpponent.opponentCreature[currentOpponent.rewards.creatureidx].getname() << "!" << WHITE << endl;
+                bool own;
+                buildLinkedListOfOwnedCreatures(ownedhead, currentOpponent.rewards.creatureidx, 1, own);
+                if (own == true) {
+                    cout << RED << "You already had this creature. An extra 5 food is given instead" << WHITE << endl;
+                    currentcurrency.food += 5;
+                }
+            }
+            flag = 2;
         }
         else if (flag == 1) {
             mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);

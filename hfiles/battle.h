@@ -4,8 +4,9 @@
 #include <string>
 
 struct rewardstruct {
-    int gold;
+    int coins;
     int food;
+    int gems;
     int creatureidx;
 };
 
@@ -40,12 +41,13 @@ void death (deployed * &creaturenode, deployed * &head);
 //void printingCreature (int totalSpace, int creatureSpace, deployed * player, char indicator);\
 //void printingCard (int totalSpace, int cardSpace, cardOnHand * playerscard, char indicator, int currentElixir);
 //void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * opponent, int currentElixir);
+void determineopponent(std::string mode, opponent currentopponent, creature deck[5]);
 void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHand * &cardhead, deployed * &playerhead);
 //void battleResults();
 //void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHand playerscard);
 //void removeCardFromHand();
-void tutorialmode (creature deck[], opponent currentOpponent);
-void battle (creature deck[], opponent currentOpponent);
+void tutorialmode (creature deck[], opponent currentOpponent, bool &winlose);
+void battle (creature deck[], opponent currentOpponent, bool &winlose);
 void delay(double number_of_seconds);
 
 #endif
