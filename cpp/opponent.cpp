@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include<time.h>
 #include<dos.h>
+#include<string>
 #include "../hfiles/battle.h"
 using namespace std;
 
@@ -520,4 +521,48 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
     cout << "------------------------------------------------------------------------------" << endl;
     delay(3);
     return;
+}
+
+void determineopponent(string mode, opponent &currentopponent, creature deck[5]) { 
+    int sum = 0;
+    for (int i = 0; i < 5; i++) {
+        sum += deck[i].getlevel();
+    }
+    int averagedecklevel = sum/5;
+
+    if (mode == "boss") {
+        currentopponent.opponentCreature[0].setbasestats(31);
+        currentopponent.opponentCreature[1].setbasestats(44);
+        currentopponent.opponentCreature[2].setbasestats(63);
+        currentopponent.opponentCreature[3].setbasestats(75);
+        currentopponent.opponentCreature[4].setbasestats(79);
+        for (int i = 0; i < 5; i++) {
+            currentopponent.opponentCreature[i].setcurrentstats(20);
+        }
+    }
+    else if (mode == "random") {
+        int push = 0;
+        for (int i = 0; i < 5; i++) {
+            srand(time(NULL)+push);
+            currentopponent.opponentCreature[i].setbasestats(rand()%80+1);
+            currentopponent.opponentCreature[i].setcurrentstats(averagedecklevel);
+            push++;
+        }
+    }
+    else if (mode == "tutorial") {
+        for (int i = 0; i < 5; i++) {
+            currentopponent.opponentCreature[i].setbasestats(81);
+            currentopponent.opponentCreature[i].setcurrentstats(1);
+        }
+
+    }
+    currentopponent.rewards.food = averagedecklevel * 3;
+    currentopponent.rewards.coins = averagedecklevel * 75;
+    if (rand()%7 == 0) {
+        currentopponent.rewards.gems = 1;
+    }
+    else {
+        currentopponent.rewards.gems = 0;
+    }
+    currentopponent.rewards.creatureidx = currentopponent.opponentCreature[rand()%5].getcreaturenumber();
 }

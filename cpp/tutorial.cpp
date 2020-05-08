@@ -4,6 +4,7 @@
 
 #include "../hfiles/tutorial.h"
 #include "../hfiles/colours.h"
+#include "../hfiles/battle.h"
 using namespace std;
 
 // this tutorial is used to teach players different ways of moving around the map
@@ -133,7 +134,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
 
 // this tutorial is used to give the player an overview of how the batlles in our game will be like
 // parameter: deck is a deck of 5 creatures
-void battleTutorial(creature deck[5]) {
+void battleTutorial(creature deck[5], bool &winlose) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     delay(3);
     
@@ -220,21 +221,15 @@ void battleTutorial(creature deck[5]) {
         currentOpponent.opponentCreature[i].setcurrentstats(1);
     }
 
-    tutorialmode(deck, currentOpponent);
+    tutorialmode(deck, currentOpponent, winlose);
 }
 
 // main tutorial function
-void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock) {
+void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, opponent &currentopponent, bool &winlose, creature deck[5]) {
     // movement tutorial
-    movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock);
-
-    // automatically give player initial deck
-    creature deck[5];
-    for (int i = 0; i < 5; i++) {
-        deck[i].setbasestats(i+1);
-        deck[i].setcurrentstats(1);
-    }
+    movementTutorial(avatarCoordinate, enemyCoordinate, avatarSymbol, enemySymbol, currentBlock, newBlock);
 
     // battle tutorial
-    battleTutorial(deck);
+    determineopponent("tutorial", currentopponent, deck);
+    battleTutorial(deck, winlose);
 }

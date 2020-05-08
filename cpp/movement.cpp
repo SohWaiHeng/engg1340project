@@ -2,6 +2,7 @@
 #include <fstream>
 #include <limits>
 #include <string>
+#include <time.h>
 
 #include "../hfiles/movement.h"
 #include "../hfiles/colours.h"
@@ -154,7 +155,7 @@ bool checkForWall(string nextPosition){
 // to change position of avatar
 // parameters: blockArray is the array of block to be changed, currentPositionX and currentPostitionY are the current row and column number avatar is at, nextPositionX and nextPostitionY are the row and column number avatar is heading to, toReplaceOri is the string to replace original position and toReplaceNew is the string to replace new position
 // return blockArray after swapping the positions of strings
-void changePositions(string blockArray[], int currentPositionX, int currentPositionY, int nextPositionX, int nextPositionY, string currentCharacter, string toReplaceOri, string toReplaceNew){
+void changePositions(string blockArray[], int currentPositionX, int currentPositionY, int nextPositionX, int nextPositionY, string toReplaceOri, string toReplaceNew){
     blockArray[currentPositionX].replace(currentPositionY, toReplaceOri.length(),toReplaceOri);
     blockArray[nextPositionX].replace(nextPositionY, toReplaceNew.length(),toReplaceNew);
 }
@@ -302,22 +303,22 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
 
 // main function to allow avatar to move around the map
 // parameters: avatarCoordinate and enemyCoordinate are the current coordinates of avatar and enemy on the map, avatarSymbol and enemySymbol are the figures of current avatar and enemy respectively, currentBlock is the original block of map, newBlock is the map which includes avatar and enemy figures
-void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock){
+void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode){
     // prevMove is used to store the previous move of player
     string move, prevMove = "m";   
     // initial enemy coordinates are set, after the enemy is defeated its position will be randomly placed using the getRandomCoordinateForEnemy on the same block
     int enemyCoordinateArray[6][2] = {{3,43},{17,26},{21,10},{19,13},{22,35},{15,48}};
-    int moveFlag = 0, flag = 0, flag1 = 0, blockNum = 1; 
+    int moveFlag = 0, flag1 = 0, blockNum = 1; 
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock);
-    while (flag != 2){
+    while (flag == 0){
         cout << "Press WASD or alphabets shown in the map to move around.\n";
         cout << "Press M to open up the menu page.\n";
 	    cout << "Your move(s): ";
         cin >> move;
 	    flag = 0;
         flag1 = 0;
-	for (int i = 0; i < move.length() && flag == 0 && moveFlag == 0; i++){
+	    for (int i = 0; i < move.length() && flag == 0 && moveFlag == 0; i++){
 	    move[i] = tolower(move[i]);
         switch(move[i]){
             case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':{
@@ -367,7 +368,7 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                         getRandomCoordinateForEnemy(currentBlock,enemyCoordinate,avatarCoordinate);
                         enemyCoordinateArray[blockNum-1][0] = enemyCoordinate[0];
                         enemyCoordinateArray[blockNum-1][1] = enemyCoordinate[1];
-                        flag = 2;
+                        flag = 1;
                     }
 		        }
 
@@ -386,7 +387,8 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                     }
                     if (tolower(choice)=='y'){
                         //go to battle with final boss
-                        flag = 2;
+                        battlemode = "boss";
+                        flag = 1;
                     }
                 }
                 // update prevMove and the map

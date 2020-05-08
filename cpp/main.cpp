@@ -7,6 +7,7 @@
 #include "../classes/creature.h"
 #include "../classes/avatar.h"
 #include "../classes/currency.h"
+#include "../hfiles/colours.h"
 using namespace std;
 
 int main () {
@@ -20,7 +21,8 @@ int main () {
     int enemyCoordinate[2];     // enemy coordinate
     string currentblock;        // current block file name
     string filename;            // save file location name
-    string avatarSymbol = avatar.getfigure();  // avatar figure
+    string avatarSymbol = currentavatar.getfigure();  // avatar figure
+    opponent currentOpponent;
     string enemySymbol = "(^<^)";  // enemy figure
     string newBlock = "../txt/out.txt";
     int option;
@@ -30,30 +32,53 @@ int main () {
 
     // load data from file
     load(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentblock, currentavatar, deck);
-    
+    determineopponent("random", currentOpponent, deck);
+
     // start tutorial if new game
     if (option == 1) {
         cout << "STARTING A NEW GAME..." << endl;
         delay(2);
-        tutorial(currentCoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentBlock,newBlock);
+        bool winlose = false;
+        tutorial(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, currentOpponent, winlose, deck);
+        cout << BLUE << "Now go and defeat more opponent, level up yourself and prepare yourself for the final boss!" << WHITE << endl;
     }
 
     int flag = 0;
+    string battlemode = "random";
     while (flag != 3) {
-        // quit from menu
         if (flag == 0) {
-            opponent newopponent;
-            for (int i = 0; i < 5; i++) {
-                newopponent.opponentCreature[i].setbasestats(i+1);
-                newopponent.opponentCreature[i].setcurrentstats(1);
-            }
-            battle(deck, newopponent);
+            moveAroundMap(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, flag, battlemode);
         }
         else if (flag == 1) {
-            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
+            bool winlose = false;
+            determineopponent(battlemode, currentOpponent, deck);
+            battle(deck, currentOpponent, winlose);
+            for (int i = 0; i < 5; i++) {
+                deck[i].setdeployed(false);
+            }
+            if (winlose) {
+                delay(1);
+                cout << GREEN << "You gained " << currentOpponent.rewards.coins << " coins!" << endl;
+                currentcurrency.coins += currentOpponent.rewards.coins;
+                delay(1);
+                cout << "You gained " << currentOpponent.rewards.food << " food!" << endl;
+                currentcurrency.food += currentOpponent.rewards.food;
+                delay(1);
+                cout << "You gained " << currentOpponent.rewards.gems << " gems!" << endl;
+                currentcurrency.gems += currentOpponent.rewards.gems;
+                delay(1);
+                cout << "You obtained " << currentOpponent.opponentCreature[currentOpponent.rewards.creatureidx].getname() << "!" << WHITE << endl;
+                bool own;
+                buildLinkedListOfOwnedCreatures(ownedhead, currentOpponent.rewards.creatureidx, 1, own);
+                if (own == true) {
+                    cout << RED << "You already had this creature. An extra 5 food is given instead" << WHITE << endl;
+                    currentcurrency.food += 5;
+                }
+            }
+            flag = 0;
         }
         else if (flag == 2) {
-            moveAroundMap(currentCoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentBlock,newBlock);
+            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
         }
     }
 

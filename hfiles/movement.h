@@ -2,6 +2,7 @@
 #define MOVEMENT_H
 
 #include <string>
+using namespace std;
 
 void printMap(std::string map);
 
@@ -21,6 +22,6 @@ void getCoordinate(std::string currentBlock, char alphabet, int coordinate[2]);
 
 void movement(char move, std::string &newBlock, std::string currentCharacter, int &moveFlag);
 
-void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], std::string &avatarSymbol, std::string &enemySymbol, std::string &currentBlock, std::string &newBlock);
+void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode);
 
 #endif

@@ -382,9 +382,14 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                     cin >> yesno;
                 }
                 if (tolower(yesno) == 'y') {
-                    node->level += 1;
-                    currentcurrency.food -= node->level;
-                    cout << GREEN << temp.getname() << " upgraded to level " << node->level << WHITE << endl;
+                    if (node->level < 20) {
+                        node->level += 1;
+                        currentcurrency.food -= node->level;
+                        cout << GREEN << temp.getname() << " upgraded to level " << node->level << WHITE << endl;
+                    }
+                    else {
+                        cout << RED << "max level reached!" << endl;
+                    }
                 }
             }
             else if (playerschoice.length() == 2 && tolower(playerschoice[0]) == 'p') {
@@ -922,7 +927,7 @@ void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature dec
                 save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck);
                 break;
 	        case 5:
-                flag = 2;
+                flag = 0;
                 break;
             case 6:
                 cout << "\x1B[31m" << "Are you sure that you want to quit the game? [y/n] \n" << "\x1B[0m";
