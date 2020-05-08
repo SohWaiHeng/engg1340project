@@ -4,11 +4,7 @@
 #include <string>
 
 #include "../hfiles/movement.h"
-#include "../classes/avatar.h"
-#include "../classes/currency.h"
-#include "../classes/creature.h"
 #include "../hfiles/colours.h"
-#include "../hfiles/menu.h"
 
 using namespace std;
 
@@ -26,27 +22,70 @@ void printMap(string map){
 
 // to print map together with avatar
 
-void mapWithAvatar(string avatarSymbol, int currentCoordinate[2], string currentBlock, string newBlock){
-    int lineCount=0, columnCount=0;
-    string line, newLine;
+void mapWithAvatarAndEnemy(string avatarSymbol, string enemySymbol, int avatarCoordinate[2], int enemyCoordinate[2], string currentBlock, string newBlock){
+    int lineCount=0, flag=0;
+    string line, newLine, newLine2;
     ifstream fin(currentBlock);
     ofstream fout(newBlock);
     while (getline(fin,line)){
-        if (lineCount == currentCoordinate[0]){
-	    newLine = line.replace(currentCoordinate[1],5,avatarSymbol);
-	    fout << newLine << endl;
+        if (lineCount == avatarCoordinate[0] && lineCount == enemyCoordinate[0]){
+	    newLine = line.replace(avatarCoordinate[1],5,avatarSymbol);
+	    newLine2 = newLine.replace(enemyCoordinate[1],5,enemySymbol);
+	    fout << newLine2 << endl;
 	}
-	else {
-            fout << line << endl;
-    	}
+	else if (lineCount == avatarCoordinate[0]){
+            newLine = line.replace(avatarCoordinate[1],5,avatarSymbol);
+	    fout << newLine << endl;
+        }
+	else if (lineCount == enemyCoordinate[0]){
+            newLine = line.replace(enemyCoordinate[1],5,enemySymbol);
+            fout << newLine << endl;
+        }
+	else {fout << line << endl;}
 	lineCount++;
     }
     fin.close();
     fout.close();
 }
 
+void getRandomCoordinateForEnemy(string currentBlock, int enemyCoordinate[2], int avatarCoordinate[2]){
+    int i = 0;
+    string * arr = new string [25];
+    string line;
+    ifstream fin(currentBlock);
+    while(getline(fin, line)){
+        arr[i] = line;
+        cout << line << endl;
+        i++;
+    }
+    while (true){
+        srand(time(NULL));
+        int randomRow = rand() % 19 + 3;  //range 3 - 21
+        int randomColumn = rand() % 44 + 8;  //range 8 - 52
+	//continue if avatar is on that coordinate
+	if (randomRow == avatarCoordinate[0] && (randomColumn >= avatarCoordinate[1] && randomColumn <= avatarCoordinate[1]+4)){
+	    continue;
+	}
+	// continue if coordinates in final boss dungeon
+	if (currentBlock == "txt/map4.txt" && ((randomRow>=4 && randomRow<=12) && (randomColumn>=5 && randomColumn<=28))){
+	    continue;
+	}
+	for (int i = randomRow; i < 22; i++){
+            for (int j = randomColumn; j < 53; j++){
+                if (arr[i].substr(j,5)== "     "){
+                    enemyCoordinate[0] = i;
+                    enemyCoordinate[1] = j;
+                    cout << enemyCoordinate[0] << ' ' << enemyCoordinate[1];
+                    delete [] arr;
+                    return;
+                 }
+             }
+         }
+     }
+ }
+
 // to check if change of map block is needed
-bool checkForMapChange(string *currentBlock, int currentCoordinate[2], int *blockNum){
+bool checkForMapChange(string &currentBlock, int currentCoordinate[2], int &blockNum){
     int fileArray[6][14][3] = {
     			         {{3,64,2}},
 			         {{3,0,1},{24,5,5},{24,6,5},{24,7,5},{24,9,5},{24,10,5},{24,11,5},{24,58,5},{24,59,5},{24,62,5},{24,63,5},{11,64,3}},
@@ -63,19 +102,20 @@ bool checkForMapChange(string *currentBlock, int currentCoordinate[2], int *bloc
 				{{23,5},{23,6},{23,7},{23,9},{23,10},{23,11},{23,58},{23,59},{23,62},{23,63},{12,59},{19,59},{8,5},{16,5}},
 				{{8,59},{16,59},{23,52},{23,53},{23,54},{23,55},{23,56},{23,57},{23,58},{23,59}}
 			      };
-    int num = stoi((*currentBlock).substr(3,1));
-    *blockNum = num;
+    int num = stoi((currentBlock).substr(7,1));
     for (int i = 0; i < 6; i++){
     	for (int j = 0; j < 14; j++){
 	    if (fileArray[i][j][0] == currentCoordinate[0] && fileArray[i][j][1] == currentCoordinate[1] && i == num-1){
-	    	string newBlock = "map"+to_string(fileArray[i][j][2])+".txt";
-		*currentBlock = newBlock;
+	    	string newBlock = "txt/map"+to_string(fileArray[i][j][2])+".txt";
+		currentBlock = newBlock;
 		currentCoordinate[0] = moveArray[i][j][0];
 		currentCoordinate[1] = moveArray[i][j][1];
+		blockNum = stoi((currentBlock).substr(7,1));
 		return true;
 	    }
 	}
     }
+    blockNum = num;
     return false;
 }
 
@@ -138,9 +178,10 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
                             changePositions(blockArray, i, j, i-1, j, currentCharacter, blockArray[i-1].substr(j,(currentCharacter).length()), currentCharacter);
                             flag = 1;
                         }
-                        else if (moveFlag==0&&checkForWall(blockArray[i-1].substr(j,(currentCharacter).length()))==true) {  // send warning to player when wall is encountered
+                        else if (checkForWall(blockArray[i-1].substr(j,(currentCharacter).length()))==true) {  // send warning to player when wall is encountered
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
-                        }
+                            moveFlag = 1;
+			}
                         else {  
                             changePositions(blockArray, i, j, i-1, j, currentCharacter, "     ", currentCharacter);
                             flag = 1;
@@ -152,9 +193,10 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
                             changePositions(blockArray, i, j+4, i, j-1, string()+move, alphabet, currentCharacter);
                             flag = 1;
                         }
-                        else if (moveFlag==0&&checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==true) {
+                        else if (checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==true) {
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
-                        }
+                            moveFlag = 1;
+			}
                         else if (checkForWall(blockArray[i].substr(j-1,(currentCharacter).length()))==false){
                             changePositions(blockArray, i, j, i, j-1, currentCharacter, "     ", currentCharacter);
                             flag = 1;
@@ -165,8 +207,9 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
                             changePositions(blockArray, i, j, i+1, j, currentCharacter, blockArray[i+1].substr(j,(currentCharacter).length()), currentCharacter);
                             flag = 1;
                         }
-                        else if (moveFlag==0&&checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==true) {
+                        else if (checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==true) {
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
+			    moveFlag = 1;
                         }
                         else if (checkForWall(blockArray[i+1].substr(j,(currentCharacter).length()))==false){
                             changePositions(blockArray, i, j, i+1, j, currentCharacter, "     ", currentCharacter);
@@ -179,9 +222,10 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
                             changePositions(blockArray, i, j, i, j+1, currentCharacter, alphabet, currentCharacter);
                             flag = 1;
                         }
-                        else if (moveFlag==0&&checkForWall(blockArray[i].substr(j+1,(currentCharacter).length()))==true) {
+                        else if (checkForWall(blockArray[i].substr(j+1,(currentCharacter).length()))==true) {
                             cout << RED << "\nYou've hit the wall. Be careful!" << WHITE << endl;
                             flag = 1;
+			    moveFlag = 1;
 			}
                         else if (checkForWall(blockArray[i].substr(j+1,(currentCharacter).length()))==false){
                             changePositions(blockArray, i, j, i, j+1, currentCharacter, "     ", currentCharacter);
@@ -223,69 +267,120 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
 }
 
 // main function for avatar to move around the map
-void moveAroundMap(avatar currentAvatar, int currentCoordinate[2], string &currentBlock, int &flag){
+void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock){
     string moveArray[5] = {"z","x","c","v","b"};
-    string move, prevMove = "m", avatarSymbol = currentAvatar.getfigure(), newBlock = "../txt/out.txt";
+    string move, prevMove = "m";   
+    int enemyCoordinateArray[6][2] = {{3,43},{17,26},{21,10},{19,13},{22,35},{15,48}}; //set initial enemy coordinates, after enemy is defeated its position will be randomly placed on the same block
     int moveFlag = 0;
-    int flag1 = 0, blockNum = 1; //blockNum should be declared elsewhere
-    flag = 0;
-    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
+    int flag = 0, flag1 = 0, blockNum = 1; 
+    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock);
     while (flag != 2){
         cout << "Press WASD or alphabets shown in the map to move around.\n";
         cout << "Press M to open up the menu page.\n";
-	    cout << "Your move(s): ";
+	cout << "Your move(s): ";
         cin >> move;
-	    flag = 0;
+	flag = 0;
         flag1 = 0;
-	    for (int i = 0; i < move.length() && flag == 0 && moveFlag==0; i++){
-	        move[i] = tolower(move[i]);
-            switch(move[i]) {
-                case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v': {
-                    if (moveFlag==1||(prevMove == string()+move[i] && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))){
-			            break;
-		            }
-		            movement(move[i],newBlock,avatarSymbol,moveFlag);
-		            getCoordinate(newBlock,(avatarSymbol[0]),currentCoordinate);
-		            if (checkForMapChange(&currentBlock,currentCoordinate,&blockNum) == true){
-		    	    flag1 = 1;
-		            }
-		            if (flag1 == 0){
-                        currentCoordinate[1] += 4;
-                        checkForMapChange(&currentBlock,currentCoordinate,&blockNum);
-                        currentCoordinate[1] -= 4;
-                    }
-                    // FINAL BOSS
-                    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 30 && currentBlock == "map4.txt"){
-                        cout << "You have now reached the dungeon of our final boss.\n";
-                        cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss?\n";
-                    }
-                    if (currentCoordinate[0] == 8 && currentCoordinate[1] == 28 && currentBlock == "map4.txt"){
-                        // final boss battle
-                        cout << "final boss\n";
-                    }
-                    prevMove = string()+move[i];
-                    mapWithAvatar(avatarSymbol,currentCoordinate,currentBlock,newBlock);
-                    break;
-                }
-                case 'm': {
-		            // to main menu
-                    flag = 2;
-		            break;
-                }
-                default: {
+	for (int i = 0; i < move.length() && flag == 0 && moveFlag==0; i++){
+	    move[i] = tolower(move[i]);
+            switch(move[i]){
+                case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':{
+                    //moveFlag to avoid warning is sent multiple times at once, prevMove is to avoid error when player choosing the same shortcut character
+		    if (moveFlag==1||(prevMove == string()+move[i] && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))){
+			break;
+		    }
+		    movement(move[i],newBlock,avatarSymbol,moveFlag);
+		    getCoordinate(newBlock,(avatarSymbol)[0],avatarCoordinate);
+		    // to check if change of block is needed
+		    if (checkForMapChange(currentBlock,avatarCoordinate,blockNum) == true){
+			flag1 = 1;
+		    }
+		    if (flag1 == 0){
+		    	avatarCoordinate[1] += 4;
+		    	checkForMapChange(currentBlock,avatarCoordinate,blockNum);
+		    	avatarCoordinate[1] -= 4;
+			flag1 = 1;
+		    }
+		    if (flag1 = 1){  // get random coordinate to print enemy when player change block of map
+	        	enemyCoordinate[0] = enemyCoordinateArray[blockNum-1][0];
+			enemyCoordinate[1] = enemyCoordinateArray[blockNum-1][1];
+		    }
+
+		    // when player encounters enemy on map
+		    char choice;
+		    if ((avatarCoordinate[0] >= enemyCoordinate[0]-1 && avatarCoordinate[0] <= enemyCoordinate[0]+1) && (avatarCoordinate[1] >= enemyCoordinate[1]-5 && avatarCoordinate[1] <= enemyCoordinate[1]+5)){
+		    	mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+			printMap(newBlock);
+			cout << BLUE << "Look, seems like there is an enemy near you. Do you want to fight the enemy? [y/n] \n";
+			cout << "Your choice: " << WHITE;
+			cin >> choice;
+			while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
+			    cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+			    cout << RED << "Please type in \"y\" or \"n\" to choose. \n";
+                            cout << "Your choice: " << WHITE ;
+			    cin >> choice;
+			}
+			if (tolower(choice)=='y'){
+		            //go to battle
+		  	    getRandomCoordinateForEnemy(currentBlock,enemyCoordinate,avatarCoordinate);
+                            enemyCoordinateArray[blockNum-1][0] = enemyCoordinate[0];
+                            enemyCoordinateArray[blockNum-1][1] = enemyCoordinate[1];
+			}
+		    }
+
+		    // FINAL BOSS
+		    if (avatarCoordinate[0] == 8 && avatarCoordinate[1] == 30 && currentBlock == "txt/map4.txt"){
+		    	mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+                        printMap(newBlock);
+			cout << BLUE <<"You have now reached the dungeon of our final boss.\n";
+			cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss? [y/n]\n" << WHITE;
+			while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+			    cout << RED << "Are you sure you are ready to fight the boss? Please type in \"y\" or \"n\" to choose.\n";
+                            cout << "Your choice: " << WHITE ;
+                            cin >> choice;
+                        }
+                        if (tolower(choice)=='y'){
+                            //go to battle
+                        }
+		    }
+
+		    prevMove = string()+move[i];
+		    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+		    break;
+		}
+                case 'm':
+		    // to main menu
+		    flag = 2;
+		    break;
+                default:
                     cout << RED << "\nPress WASD keys or alphabets shown in the map to move.\n";
                     cout << "Press M to open up the menu page.\n" << WHITE ; 
-		            cin.clear();
+		    cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(),'\n'); 
-		            flag = 1;
-		            break;
-                }
+		    flag = 1;
+		    break;
             }
-	    }
-	    moveFlag = 0;
-	    printMap(newBlock);
+	}
+	moveFlag = 0;
+	printMap(newBlock);
     }	
 }
+/*
+int main(){
+    int avatarCoordinate[2] = {2,13};
+    int enemyCoordinate[2] = {3,54};
+    string avatarSymbol = "[o.o]";
+    string enemySymbol = "(^<^)";
+    string currentBlock = "txt/map1.txt";
+    string newBlock = "txt/out.txt";
+    moveAroundMap(avatarCoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentBlock,newBlock);
+}*/
+
+
+
 
 

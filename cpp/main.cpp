@@ -17,10 +17,14 @@ int main () {
     int avataridx[10] = {0};    // array to store the avatar player owned
     avatar currentavatar;       // current avatar 
     currency currentcurrency;   // current currency
-    int currentcoordinate[2];   // current coordinate
+    int currentcoordinate[2];   // current avatar coordinate
+    int enemyCoordinate[2];     // enemy coordinate
     string currentblock;        // current block file name
     string filename;            // save file location name
+    string avatarSymbol = currentavatar.getfigure();  // avatar figure
     opponent currentOpponent;
+    string enemySymbol = "(^<^)";  // enemy figure
+    string newBlock = "../txt/out.txt";
     int option;
 
     // print title screen, take in user's input, get the save file's name
@@ -28,12 +32,13 @@ int main () {
 
     // load data from file
     load(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentblock, currentavatar, deck);
-    
+    determineopponent("random", currentOpponent, deck);
+
     // start tutorial if new game
     if (option == 1) {
         cout << "STARTING A NEW GAME..." << endl;
         delay(2);
-        tutorial();
+        tutorial(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock);
     }
 
     int flag = 0;
@@ -71,7 +76,7 @@ int main () {
             mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
         }
         else if (flag == 2) {
-            moveAroundMap(currentavatar, currentcoordinate, currentblock, flag);
+            moveAroundMap(currentCoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentBlock,newBlock);
         }
     }
 

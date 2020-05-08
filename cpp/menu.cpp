@@ -421,7 +421,7 @@ void treasureChest(currency &currentcurrency, owned * &ownedhead) {
     	cin.clear();
 	    cin.ignore(numeric_limits<streamsize>::max(),'\n');
     	cout << "\x1B[31m" << "\nCOINS: " << currentcurrency.coins << endl << "\x1B[0m" ;
-	    cout << "\x1B[31m" << "\nWould you like to open a treasure chest? It will cost you 10 coins.\n" << "\x1B[0m" ;
+	    cout << "\x1B[31m" << "\nWould you like to open a treasure chest? It will cost you 50 coins.\n" << "\x1B[0m" ;
 	    cout << "\x1B[31m" << "Your choice : "<< "\x1B[0m" ;
 	    cin >> choice;
     }
