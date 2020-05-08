@@ -286,4 +286,4 @@ Our game does not include any non-standard C/C++ libraries.
 
 ## Compilation and execution instructions
 
-Our game can be executed in the Linux environment using the command "make cardmaster".
+Our game can be executed in the Linux environment using the commands "make cardmaster" and "./cardmaster".
