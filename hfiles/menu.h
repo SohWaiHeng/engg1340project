@@ -30,7 +30,7 @@ string newGame();
 // display menus
 void shop(owned * &ownedhead, int avataridx[], currency &currentcurrency);
 void displayInventory(creature deck[5], owned * ownedhead, int avataridx[], currency currentcurrency, avatar currentavatar);
-void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag);
+void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag, int enemycoordinate[2]);
 
 
 #endif
