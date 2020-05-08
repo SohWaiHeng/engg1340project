@@ -343,7 +343,7 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
 		        }
 
                 // to change the enemy coordinate when changing block of map
-                if (flag1 = 1){ 
+                if (flag1 == 1){ 
                     enemyCoordinate[0] = enemyCoordinateArray[blockNum-1][0];
                     enemyCoordinate[1] = enemyCoordinateArray[blockNum-1][1];
                 }
