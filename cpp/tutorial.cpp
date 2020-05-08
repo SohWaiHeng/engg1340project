@@ -4,6 +4,7 @@
 
 #include "../hfiles/tutorial.h"
 #include "../hfiles/colours.h"
+#include "../hfiles/battle.h"
 using namespace std;
 
 void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock){
@@ -130,7 +131,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
     }
 }
 
-void battleTutorial(creature deck[5]) {
+void battleTutorial(creature deck[5], bool &winlose) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     delay(3);
     
@@ -217,19 +218,14 @@ void battleTutorial(creature deck[5]) {
         currentOpponent.opponentCreature[i].setcurrentstats(1);
     }
 
-    tutorialmode(deck, currentOpponent);
+    tutorialmode(deck, currentOpponent, winlose);
 }
 
-void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock) {
+void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, opponent &currentopponent, bool &winlose, creature deck[5]) {
     // movement tutorial
-    movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock);
+    movementTutorial(avatarCoordinate, enemyCoordinate, avatarSymbol, enemySymbol, currentBlock, newBlock);
 
     // automatically give player initial deck
-    creature deck[5];
-    for (int i = 0; i < 5; i++) {
-        deck[i].setbasestats(i+1);
-        deck[i].setcurrentstats(1);
-    }
-
-    battleTutorial(deck);
+    determineopponent("tutorial", currentopponent, deck);
+    battleTutorial(deck, winlose);
 }

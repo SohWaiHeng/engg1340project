@@ -927,7 +927,7 @@ void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature dec
                 save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck);
                 break;
 	        case 5:
-                flag = 2;
+                flag = 0;
                 break;
             case 6:
                 cout << "\x1B[31m" << "Are you sure that you want to quit the game? [y/n] \n" << "\x1B[0m";

@@ -892,7 +892,7 @@ void battleResults (deployed * player, deployed * opponenthead, bool &winlose) {
 
 // overall battle function 
 // call this function to start the battle
-void battle(creature deck[], opponent currentOpponent, bool winlose) {
+void battle(creature deck[], opponent currentOpponent, bool &winlose) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     
     deployed * head1 = NULL;

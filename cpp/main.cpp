@@ -38,13 +38,18 @@ int main () {
     if (option == 1) {
         cout << "STARTING A NEW GAME..." << endl;
         delay(2);
-        tutorial(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock);
+        bool winlose = false;
+        tutorial(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, currentOpponent, winlose, deck);
+        cout << BLUE << "Now go and defeat more opponent, level up yourself and prepare yourself for the final boss!" << WHITE << endl;
     }
 
     int flag = 0;
     string battlemode = "random";
     while (flag != 3) {
         if (flag == 0) {
+            moveAroundMap(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, flag, battlemode);
+        }
+        else if (flag == 1) {
             bool winlose = false;
             determineopponent(battlemode, currentOpponent, deck);
             battle(deck, currentOpponent, winlose);
@@ -70,13 +75,10 @@ int main () {
                     currentcurrency.food += 5;
                 }
             }
-            flag = 2;
-        }
-        else if (flag == 1) {
-            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
+            flag = 0;
         }
         else if (flag == 2) {
-            moveAroundMap(currentCoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentBlock,newBlock);
+            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
         }
     }
 

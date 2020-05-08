@@ -523,7 +523,7 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
     return;
 }
 
-void determineopponent(string mode, opponent currentopponent, creature deck[5]) { 
+void determineopponent(string mode, opponent &currentopponent, creature deck[5]) { 
     int sum = 0;
     for (int i = 0; i < 5; i++) {
         sum += deck[i].getlevel();

@@ -2,6 +2,7 @@
 #define BATTLE_H
 #include "../classes/creature.h"
 #include <string>
+using namespace std;
 
 struct rewardstruct {
     int coins;
@@ -38,10 +39,10 @@ void death (deployed * &creaturenode, deployed * &head);
 //void playersMove (deployed * &player, deployed * &opponent, int &currentElixir, creature deck[], cardOnHand * &playerscard);
 //void setopponent(opponent &currentOpponent);
 //void repeatedPrinting (char start, char toBePrinted, int times, char end);
-//void printingCreature (int totalSpace, int creatureSpace, deployed * player, char indicator);\
+//void printingCreature (int totalSpace, int creatureSpace, deployed * player, char indicator);
 //void printingCard (int totalSpace, int cardSpace, cardOnHand * playerscard, char indicator, int currentElixir);
 //void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * opponent, int currentElixir);
-void determineopponent(std::string mode, opponent currentopponent, creature deck[5]);
+void determineopponent(string mode, opponent &currentopponent, creature deck[5]);
 void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHand * &cardhead, deployed * &playerhead);
 //void battleResults();
 //void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHand playerscard);
