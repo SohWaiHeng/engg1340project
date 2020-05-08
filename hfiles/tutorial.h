@@ -2,6 +2,7 @@
 #define TUTORIAL_H
 
 #include <string>
+
 #include "movement.h"
 #include "battle.h"
 
