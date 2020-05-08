@@ -56,6 +56,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
             switch(move[i]){
                 case 'c': case 'z': case 'x': case 'b': case 'v':
                     movement(move[i],newBlock,avatarSymbol,moveFlag);
+                    prevMove = string()+move[i];
                     secondFlag = 2;
                     break;
                 default:
@@ -78,7 +79,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
     
     while(thirdFlag < 2) {
         thirdFlag = 0; 
-        getCoordinate(newBlock,'[',avatarCoordinate);
+        getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
         mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
         printMap(newBlock);
 	    moveFlag = 0;
