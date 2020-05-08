@@ -34,15 +34,15 @@ void treasureChest(currency &currentcurrency, owned * &ownedhead);
 
 // save and load
 void buildLinkedListOfOwnedCreatures (owned * &ownedhead, int newindex, int newlevel, bool &own);
-void load(string filename, owned * &ownedhead, int avataridx[10], currency &currentcurrency, int currentCoordinate[2], string &currentMap, avatar &currentAvatar, creature deck[5]);
+void load(string filename, owned * &ownedhead, int avataridx[10], currency &currentcurrency, int currentCoordinate[2], string &currentMap, avatar &currentAvatar, creature deck[5], int enemycoordinate[2]);
 string loadFileOption(int &option);
-void save(string &filename, owned * ownedhead, int avataridx[10], currency currentcurrency, int currentCoordinate[2], string currentMap, avatar currentAvatar, creature deck[5]);
+void save(string &filename, owned * ownedhead, int avataridx[10], currency currentcurrency, int currentCoordinate[2], string currentMap, avatar currentAvatar, creature deck[5], int enemycoordinate[2]);
 string newGame();
 
 // display menus
 void shop(owned * &ownedhead, int avataridx[], currency &currentcurrency);
 void displayInventory(creature deck[5], owned * ownedhead, int avataridx[], currency currentcurrency, avatar currentavatar);
-void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag);
+void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag, int enemycoordinate[2]);
 //void inBattleMenuPage(int *currency, std::string *currentAvatar, std::string creaturesDeck[5] , std::string *currentFile, creatures ownedCreature[100], avatars ownedAvatar[50],creatures notOwnedCreature[100], avatars notOwnedAvatar[50], int currentCoordinate[2], std::string *currentMap);
 
 #endif

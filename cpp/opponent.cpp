@@ -3,7 +3,6 @@
 #include<sstream>
 #include<stdlib.h>
 #include<time.h>
-#include<dos.h>
 #include<string>
 #include "../hfiles/battle.h"
 using namespace std;
@@ -564,5 +563,5 @@ void determineopponent(string mode, opponent &currentopponent, creature deck[5])
     else {
         currentopponent.rewards.gems = 0;
     }
-    currentopponent.rewards.creatureidx = currentopponent.opponentCreature[rand()%5].getcreaturenumber();
+    currentopponent.rewards.creatureidx = rand()%5;
 }

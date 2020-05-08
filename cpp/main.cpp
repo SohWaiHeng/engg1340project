@@ -21,18 +21,18 @@ int main () {
     int enemyCoordinate[2];     // enemy coordinate
     string currentblock;        // current block file name
     string filename;            // save file location name
-    string avatarSymbol = currentavatar.getfigure();  // avatar figure
     opponent currentOpponent;
     string enemySymbol = "(^<^)";  // enemy figure
-    string newBlock = "../txt/out.txt";
+    string newBlock = "txt/out.txt";
     int option;
 
     // print title screen, take in user's input, get the save file's name
     filename = titleScreen(option);
 
     // load data from file
-    load(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentblock, currentavatar, deck);
+    load(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentblock, currentavatar, deck, enemyCoordinate);
     determineopponent("random", currentOpponent, deck);
+    string avatarSymbol = currentavatar.getfigure();  // avatar figure
 
     // start tutorial if new game
     if (option == 1) {
@@ -47,11 +47,13 @@ int main () {
     string battlemode = "random";
     while (flag != 3) {
         if (flag == 0) {
+            avatarSymbol = currentavatar.getfigure();
             moveAroundMap(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, flag, battlemode);
         }
         else if (flag == 1) {
             bool winlose = false;
             determineopponent(battlemode, currentOpponent, deck);
+            cout << "You obtained " + currentOpponent.opponentCreature[currentOpponent.rewards.creatureidx].getname() + "!" << WHITE << endl;
             battle(deck, currentOpponent, winlose);
             for (int i = 0; i < 5; i++) {
                 deck[i].setdeployed(false);
@@ -67,9 +69,9 @@ int main () {
                 cout << "You gained " << currentOpponent.rewards.gems << " gems!" << endl;
                 currentcurrency.gems += currentOpponent.rewards.gems;
                 delay(1);
-                cout << "You obtained " << currentOpponent.opponentCreature[currentOpponent.rewards.creatureidx].getname() << "!" << WHITE << endl;
+                cout << "You obtained " + currentOpponent.opponentCreature[currentOpponent.rewards.creatureidx].getname() + "!" << WHITE << endl;
                 bool own;
-                buildLinkedListOfOwnedCreatures(ownedhead, currentOpponent.rewards.creatureidx, 1, own);
+                buildLinkedListOfOwnedCreatures(ownedhead, currentOpponent.opponentCreature[currentOpponent.rewards.creatureidx].getcreaturenumber(), 1, own);
                 if (own == true) {
                     cout << RED << "You already had this creature. An extra 5 food is given instead" << WHITE << endl;
                     currentcurrency.food += 5;
@@ -78,7 +80,7 @@ int main () {
             flag = 0;
         }
         else if (flag == 2) {
-            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag);
+            mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag, enemyCoordinate);
         }
     }
 

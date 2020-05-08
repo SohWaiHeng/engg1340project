@@ -6,10 +6,10 @@ card.o: classes/card.cpp classes/card.h
 creature.o: classes/creature.cpp classes/creature.h
 	g++ $(FLAGS) -c $<
 
-battle.o: cpp/battle.cpp hfiles/battle.h
+battle.o: cpp/battle.cpp hfiles/battle.h hfiles/menu.h hfiles/colours.h
 	g++ $(FLAGS) -c $<
 
-printbattle.o: cpp/printbattle.cpp hfiles/battle.h
+printbattle.o: cpp/printbattle.cpp hfiles/battle.h hfiles/colours.h
 	g++ $(FLAGS) -c $<
 
 test.o: cpp/test.cpp hfiles/battle.h

@@ -824,6 +824,7 @@ void playersMove (deployed * &player, deployed * &opponent, int &currentElixir, 
             show(player, opponent, deck, playerscard);
         }
         else if (action == "next") {
+            player = NULL;
             cout << "------------------------------------------------------------------------------" << endl;
             cout << endl;
             return;

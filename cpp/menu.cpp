@@ -692,7 +692,7 @@ void buildLinkedListOfOwnedCreatures (owned * &ownedhead, int newindex, int newl
     return;
 }
 
-void load(string filename, owned * &ownedhead, int avataridx[10], currency &currentcurrency, int currentCoordinate[2], string &currentMap, avatar &currentAvatar, creature deck[5]){
+void load(string filename, owned * &ownedhead, int avataridx[10], currency &currentcurrency, int currentCoordinate[2], string &currentMap, avatar &currentAvatar, creature deck[5], int enemycoordinate[2]){
     int index, level;
     string line, trash;
     ifstream fin(filename);
@@ -744,6 +744,10 @@ void load(string filename, owned * &ownedhead, int avataridx[10], currency &curr
     istringstream iss6(line);
     iss6 >> trash >> currentCoordinate[0] >> currentCoordinate[1];
 
+    getline(fin, line);
+    istringstream iss7(line);
+    iss6 >> trash >> enemycoordinate[0] >> enemycoordinate[1];
+
     fin.close();
 }
 
@@ -780,7 +784,7 @@ string newGame() {
     cout << endl;
     cout << GREEN << "Success!" << WHITE << endl;
     string trash;
-    cout << GREEN << "Press enter to continue" << WHITE << endl;
+    cout << GREEN << "Enter any character to continue." << WHITE << endl;
     cin >> trash;
 
     return fullfilename;
@@ -834,7 +838,7 @@ string loadFileOption(int &option) {
     return fullfilename;
 }
 
-void save(string &filename, owned * ownedhead, int avataridx[10], currency currentcurrency, int currentCoordinate[2], string currentMap, avatar currentAvatar, creature deck[5]){
+void save(string &filename, owned * ownedhead, int avataridx[10], currency currentcurrency, int currentCoordinate[2], string currentMap, avatar currentAvatar, creature deck[5], int enemycoordinate[2]){
     int option;
     cout << endl;
     cout << "Do you wish to overwrite the existing file or save to a new file?" << endl;
@@ -877,13 +881,14 @@ void save(string &filename, owned * ownedhead, int avataridx[10], currency curre
     fout << "currency " << currentcurrency.coins << ' ' << currentcurrency.food << ' ' << currentcurrency.gems << endl;
     fout << "currentMap " << currentMap << endl;
     fout << "currentCoordinate " << currentCoordinate[0] << ' ' << currentCoordinate[1] << endl;
+    fout << "enemyCoordinate " << enemycoordinate[0] << ' ' << enemycoordinate[1] << endl;
     fout.close();
 
     cout << endl << HIGHLIGHT << "Progress saved successfully!"  << WHITE << endl << endl;
 }
 
 // main menu page
-void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag){
+void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag, int enemycoordinate[2]){
     int choice = 0;
     while (choice != 5 && choice != 6) {
         cout << endl;
@@ -924,7 +929,7 @@ void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature dec
                 shop(ownedhead, avataridx, currentcurrency);
                 break;
             case 4:
-                save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck);
+                save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck, enemycoordinate);
                 break;
 	        case 5:
                 flag = 0;
@@ -940,7 +945,7 @@ void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature dec
                     cin >> toQuit;
                 }
                 if (toQuit=='y'){
-                    save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck);
+                    save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck, enemycoordinate);
                     flag = 3;
                 }
                 else { 
