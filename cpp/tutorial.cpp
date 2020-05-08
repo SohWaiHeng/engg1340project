@@ -13,7 +13,6 @@ using namespace std;
 // parameters: avatarCoordinate and enemyCoordinate are the current coordinates of avatar and enemy on the map, avatarSymbol and enemySymbol are the figures of current avatar and enemy respectively, currentBlock is the original block of map, newBlock is the map which includes avatar and enemy figures
 void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock){
     int moveFlag = 0;
-    string prevMove = "m";
     // teach players the movement keys used in this game (WASD)
     cout << endl;
     cout << BLUE << "Let's begin the tutorial.\n" << WHITE << endl;
@@ -56,7 +55,6 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
             switch(move[i]){
                 case 'c': case 'z': case 'x': case 'b': case 'v':
                     movement(move[i],newBlock,avatarSymbol,moveFlag);
-                    prevMove = string()+move[i];
                     secondFlag = 2;
                     break;
                 default:
@@ -121,13 +119,14 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
         getline(cin, move);
         for (int i = 0; i < move.length(); i++){
             move[i] = tolower(move[i]);
+            int testCoordinate[2] = {-1,-1};
             switch(move[i]){
                 case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':
-                    if (moveFlag==1||(prevMove == string()+move[i] && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))){
-                         break;
+                    getCoordinate(newBlock,toupper(move[i]),testCoordinate);
+                    if (((testCoordinate[0]==-1) && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))||moveFlag==1){
+                        break;
                     }
                     movement(move[i],newBlock,avatarSymbol,moveFlag);
-                    prevMove = string()+move[i];
                     break;
                 default:
                     cout << RED << "\nPress WASD keys or alphabets shown in the map to move." << WHITE << endl;

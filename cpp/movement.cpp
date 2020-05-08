@@ -305,7 +305,7 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
 // parameters: avatarCoordinate and enemyCoordinate are the current coordinates of avatar and enemy on the map, avatarSymbol and enemySymbol are the figures of current avatar and enemy respectively, currentBlock is the original block of map, newBlock is the map which includes avatar and enemy figures
 void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode){
     // prevMove is used to store the previous move of player
-    string move, prevMove = "m";   
+    string move;   
     // initial enemy coordinates are set, after the enemy is defeated its position will be randomly placed using the getRandomCoordinateForEnemy on the same block
     int enemyCoordinateArray[6][2] = {{21,16},{17,26},{21,10},{19,13},{22,35},{15,48}};
     int moveFlag = 0, flag1 = 0, blockNum = 1; 
@@ -320,12 +320,14 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
         flag1 = 0;
 	    for (int i = 0; i < move.length() && flag == 0 && moveFlag == 0; i++){
 	    move[i] = tolower(move[i]);
+        int testCoordinate[2] = {-1,-1};
         switch(move[i]){
             case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':{
-                //moveFlag to avoid warning is sent multiple times at once, prevMove is to avoid error when player choosing the same shortcut character
-		        if (moveFlag==1||(prevMove == string()+move[i] && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))){
-			        break;
-		        }
+                //moveFlag to avoid warning is sent multiple times at once
+                getCoordinate(newBlock,toupper(move[i]),testCoordinate);
+                if (((testCoordinate[0]==-1) && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))||moveFlag==1){
+                    break;
+                }
 		        movement(move[i],newBlock,avatarSymbol,moveFlag);
 		        getCoordinate(newBlock,(avatarSymbol)[0],avatarCoordinate);
 
@@ -391,8 +393,7 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                         flag = 1;
                     }
                 }
-                // update prevMove and the map
-                prevMove = string()+move[i];
+                // update the map
                 mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
                 break;
 		    }
