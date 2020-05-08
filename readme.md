@@ -10,8 +10,9 @@
 
 Our group is planning to make a text-based game which combines the concept of both an RPG (role-playing game) and a trading card game.
 
-The game follows a main story, and just like any RPGs, the player will be able to go around maps of different regions, to complete a variety of missions along with the progression of the storyline.
-The main goal of the game is to complete the storyline.
+In our game, the player will be able to go around maps of different regions, to battle against a variety of enemies, before facing the final boss which is set to be the last mission of the game.
+The main goal of the game is to defeat the final boss.
+
 There are three types of collectibles in the games, which are creatures, cards and in-game currencies. The player will collect these items along with the progression of the game.
 The creatures are used to build a deck to be used by the player in battles. Cards can be added to creatures, and in-game currencies are used to level up creatures or buy items in game.
 Along the journey, the player will be confronted with different opponents (computer AI) during mission tasks or at some locations in the map. The player will have to battle with these opponents in order to continue with the game.
@@ -47,7 +48,7 @@ The game is completed when the player has successfully defeated the "final boss"
 
 ### 3. Dynamic memory management
 	- Linked list is used to store the creatures the player owns. The linked list can be easily added with new creatures and thus memory can be easily allocated accordingly
-	- Data needed during runtime in the game are only loaded from certain txt files during runtime if possible. We plan to use a series of dynamic arrays and variables to achieve this. After these data are used the memory will be cleaned after changes were output and saved in txt files.
+	- Data needed during runtime in the game are only loaded from certain txt files during runtime if possible. We plan to use a series of dynamic arrays and variables to achieve this. After these data are used the memory will be cleaned after changes were output and saved in txt files
 
 ### 4. File I/O
 	- The game will include both save and load functions
@@ -59,13 +60,12 @@ The game is completed when the player has successfully defeated the "final boss"
 
 ### 5. Program codes in multiple files
 	- We are going to split the whole code into multiple cpp, header and txt files.
-	- Since our game is based on a storyline, we plan to split different events that will happen in the story into blocks of functions. These story function blocks will be written in different cpp files and be arranged in the main functions sequentially.
 	- Some necessary functions like functions for the player to move around the map, functions for battling will also be written in different cpp files.
 	- Multiple functions of the same category of usage (eg: for walking on map) can be declared in the sanme header file.
 	- txt files are used to store data like maps, list of creatures etc.
 
 ## Rules in the battlefield:
-TheThe concept of our card game will be based on an old game named Card Wars Kingdom. Before the battle commences, the player has to construct a deck of creature from all the creatures he owned before the battle begins. The deck can be constructed or changed anytime in the menu page. The player has to come up with an effective strategy and choose the most suitable creatures for the battle in order to increase his/her chances of winning.
+The concept of our card game will be based on an old game named Card Wars Kingdom. Before the battle commences, the player has to construct a deck of creature from all the creatures he owned before the battle begins. The deck can be constructed or changed anytime in the menu page. The player has to come up with an effective strategy and choose the most suitable creatures for the battle in order to increase his/her chances of winning.
 
 a. Creatures:
         
@@ -246,7 +246,7 @@ If the player chooses to start a new game, a tutorial page will be prompted to t
 
 3. Map/player movement:
 
-We will create a map and divide it into smaller blocks (25 x 65 characters) to be displayed on the screen terminal. The player can move his/her character around the map using the keys WASD via the paths set by us, and attempts to walk through the walls will lead to an error message. When the character has reached the sides of the map, another block of the map will be displayed to replace the existing one. The player is allowed to fast-forward their movement by entering the characters shown on different junctions.
+We will create a map and divide it into 6 smaller blocks (25 x 65 characters) to be displayed on the screen terminal. The player can move his/her character around the map using the keys WASD via the paths set by us, and attempts to walk through the walls will lead to an error message. When the character has reached the sides of the map, another block of the map will be displayed to replace the existing one. The player is allowed to fast-forward their movement by entering the characters shown on different junctions.
 
 An example of a single block of map is shown below:
 
@@ -277,3 +277,13 @@ An example of a single block of map is shown below:
 	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
 	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
 	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
+
+
+## Non-standard C/C++ libraries
+
+Our game does not include any non-standard C/C++ libraries.
+
+
+## Compilation and execution instructions
+
+Our game can be executed in the Linux environment using the command "make cardmaster".

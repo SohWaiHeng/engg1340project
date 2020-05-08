@@ -8,6 +8,7 @@
 
 using namespace std;
 
+// to print out title screen from txt file at the start of the game
 void printTitleScreen(){
     ifstream fin("txt/titleScreen.txt");
     string line;
@@ -17,6 +18,8 @@ void printTitleScreen(){
     fin.close();
 }
 
+// for player to choose either starting a new game or load previous progress
+// return either a new game or a previously saved progress
 string titleScreen(int &option){
     printTitleScreen();
     cout << "Please Enter a Number: ";
