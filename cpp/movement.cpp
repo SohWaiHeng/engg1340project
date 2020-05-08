@@ -307,7 +307,7 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
     // prevMove is used to store the previous move of player
     string move, prevMove = "m";   
     // initial enemy coordinates are set, after the enemy is defeated its position will be randomly placed using the getRandomCoordinateForEnemy on the same block
-    int enemyCoordinateArray[6][2] = {{3,43},{17,26},{21,10},{19,13},{22,35},{15,48}};
+    int enemyCoordinateArray[6][2] = {{21,16},{17,26},{21,10},{19,13},{22,35},{15,48}};
     int moveFlag = 0, flag1 = 0, blockNum = 1; 
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock);
