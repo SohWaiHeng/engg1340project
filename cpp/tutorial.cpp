@@ -95,6 +95,8 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
                 cout << GREEN << "Press enter to start battle." << WHITE << endl;
                 string trash;
                 getline(cin, trash);
+                enemyCoordinate[0] = 21;
+                enemyCoordinate[1] = 16;
                 thirdFlag = 3;
                 break;
             }
@@ -106,6 +108,8 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
                 cout << GREEN << "Press enter to start battle." << WHITE << endl;
                 string trash;
                 getline(cin, trash);
+                enemyCoordinate[0] = 21;
+                enemyCoordinate[1] = 16;
                 thirdFlag = 3;
                 break;
             }

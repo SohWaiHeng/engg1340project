@@ -304,11 +304,11 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
 // main function to allow avatar to move around the map
 // parameters: avatarCoordinate and enemyCoordinate are the current coordinates of avatar and enemy on the map, avatarSymbol and enemySymbol are the figures of current avatar and enemy respectively, currentBlock is the original block of map, newBlock is the map which includes avatar and enemy figures
 void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode){
-    // prevMove is used to store the previous move of player
     string move;   
     // initial enemy coordinates are set, after the enemy is defeated its position will be randomly placed using the getRandomCoordinateForEnemy on the same block
     int enemyCoordinateArray[6][2] = {{21,16},{17,26},{21,10},{19,13},{22,35},{15,48}};
-    int moveFlag = 0, flag1 = 0, blockNum = 1; 
+    // moveFlag and stopQuestion are used to avoid repeating sending of messages
+    int moveFlag = 0, flag1 = 0, blockNum = 1, stopQuestion = 0; 
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock);
     while (flag == 0){
@@ -352,7 +352,7 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
 
                 // when player encounters an enemy on map
                 char choice;
-                if ((avatarCoordinate[0] >= enemyCoordinate[0]-1 && avatarCoordinate[0] <= enemyCoordinate[0]+1) && (avatarCoordinate[1] >= enemyCoordinate[1]-5 && avatarCoordinate[1] <= enemyCoordinate[1]+5)){
+                if (stopQuestion==0 && (avatarCoordinate[0] >= enemyCoordinate[0]-1 && avatarCoordinate[0] <= enemyCoordinate[0]+1) && (avatarCoordinate[1] >= enemyCoordinate[1]-5 && avatarCoordinate[1] <= enemyCoordinate[1]+5)){
                     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
                     printMap(newBlock);
                     cout << BLUE << "Look, seems like there is an enemy near you. Do you want to fight the enemy? [y/n] \n";
@@ -372,7 +372,11 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                         enemyCoordinateArray[blockNum-1][1] = enemyCoordinate[1];
                         flag = 1;
                     }
+                    else if (tolower(choice)=='n'){
+                        stopQuestion == 1;
+                    }
 		        }
+                else if ((avatarCoordinate[0] < enemyCoordinate[0]-1 || avatarCoordinate[0] > enemyCoordinate[0]+1) && (avatarCoordinate[1] < enemyCoordinate[1]-5 || avatarCoordinate[1] > enemyCoordinate[1]+5)){stopQuestion = 0;}
 
                 // when player encounters the final boss
                 if (avatarCoordinate[0] == 8 && avatarCoordinate[1] == 30 && currentBlock == "txt/map4.txt"){
@@ -380,7 +384,7 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                     printMap(newBlock);
                     cout << BLUE <<"You have now reached the dungeon of our final boss.\n";
                     cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss? [y/n]\n" << WHITE;
-                   while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
+                    while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
                         cin.clear();
                         cin.ignore(numeric_limits<streamsize>::max(),'\n');
                         cout << RED << "Are you sure you are ready to fight the boss? Please type in \"y\" or \"n\" to choose.\n";
@@ -408,7 +412,6 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                 cin.ignore(numeric_limits<streamsize>::max(),'\n'); 
                 cout << RED << "\nPress WASD keys or alphabets shown in the map to move.\n";
                 cout << "Press M to open up the menu page.\n" << WHITE ; 
-		        flag = 1;
 		        break;
         }
 	}
