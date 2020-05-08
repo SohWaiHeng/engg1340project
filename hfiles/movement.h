@@ -3,8 +3,6 @@
 
 #include <string>
 
-//include "structs.h"
-
 void printMap(std::string map);
 
 void mapWithAvatarAndEnemy(std::string avatarSymbol, std::string enemySymbol, int avatarCoordinate[2], int enemyCoordinate[2], std::string currentBlock, std::string newBlock);
@@ -17,7 +15,7 @@ bool checkForAlphabet(std::string nextPosition);
 
 bool checkForWall(std::string nextPosition);
 
-void changePositions(std::string blockArray[], int currentPositionX, int currentPositionY, int nextPositionX, int nextPositionY, std::string currentCharacter, std::string toReplaceOri, std::string toReplaceNew);
+void changePositions(std::string blockArray[], int currentPositionX, int currentPositionY, int nextPositionX, int nextPositionY, std::string toReplaceOri, std::string toReplaceNew);
 
 void getCoordinate(std::string currentBlock, char alphabet, int coordinate[2]);
 

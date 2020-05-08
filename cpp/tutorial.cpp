@@ -6,19 +6,21 @@
 #include "../hfiles/colours.h"
 using namespace std;
 
+// this tutorial is used to teach players different ways of moving around the map
+// parameters: avatarCoordinate and enemyCoordinate are the current coordinates of avatar and enemy on the map, avatarSymbol and enemySymbol are the figures of current avatar and enemy respectively, currentBlock is the original block of map, newBlock is the map which includes avatar and enemy figures
 void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock){
     int moveFlag = 0;
-   
-    // teach player to move around using wasd
+
+    // teach players the movement keys used in this game (WASD)
     cout << endl;
     cout << BLUE << "Let's begin the tutorial.\n" << WHITE << endl;
-    getCoordinate(newBlock,'[',avatarCoordinate);
+    getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock); 
     cout << BLUE << "\nYou can move around the map by using WASD keys and press enter." << WHITE << endl;
-
-    int numberOfMove = 0, firstFlag = 0, secondFlag = 0; //numberOfMove is used to allow player to move around (WASD) 5 times 
+    int numberOfMove = 0, firstFlag = 0, secondFlag = 0; 
     string move;
+    // allow player to move around using WASD 5 times before proceeding to the next part of tutorial
     while (numberOfMove < 5){
         cout << "Your move(s)?: ";
         cin >> move;
@@ -33,14 +35,15 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
                 default:
                     cout << RED << "\nPlease enter WASD keys to move around.\n" << WHITE;
             	    firstFlag = 1;
-	    }
+	        }
         }
 	firstFlag=0;
-	getCoordinate(newBlock,'[',avatarCoordinate);
-        mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+	getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
+    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
 	printMap(newBlock);
     }
-    // teach player shortcut movement
+
+    // teach player the shortcut characters to fast forward their avatar's movement
     cout << BLUE << "\nGood job! Now, can you see those alphabets on the map? You can fast forward your movement by typing those shortcut characters in. Try it out!" << WHITE << endl;
     while(secondFlag < 2){
         secondFlag = 0;
@@ -59,13 +62,13 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
             }
 
         }
-        getCoordinate(newBlock,'[',avatarCoordinate);
+        getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
         mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
-	printMap(newBlock);
+	    printMap(newBlock);
     	moveFlag = 0;
     }
 
-    // player can move freely
+    // allow player to move freely before proceeding to the battle tutorial
     cout << BLUE << "\nGreat! You can save yourself a lot of time but using these fast forward keys to move around!\n" << WHITE;
     cout << BLUE << "Now, try moving around and explore the map. Remember, avoid hitting the wall!\n" << WHITE;
     int thirdFlag = 0;
@@ -73,14 +76,13 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
     
     while(thirdFlag < 2) {
         thirdFlag = 0; 
-        
         getCoordinate(newBlock,'[',avatarCoordinate);
         mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
         printMap(newBlock);
-	moveFlag = 0;
+	    moveFlag = 0;
 
         if (!notrepeatprinting) {
-            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 45){  //any coordinate, first enemy pops up
+            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 45){  // messages sent when they are nearing the enemy
                 cout << BLUE << "\nHey, you did a great job moving around the map and exploring!" << endl;
                 cout << "Seems like you are ready to face your first opponent. Go nearer to your opponent to start battle." << WHITE << endl;
                 notrepeatprinting = true;
@@ -113,7 +115,6 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
 
         cout << "\nPress WASD keys or alphabets shown in the map to move." << endl;
         cout << "Your move(s)?: ";
-        
         getline(cin, move);
         for (int i = 0; i < move.length(); i++){
             move[i] = tolower(move[i]);
@@ -130,6 +131,8 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
     }
 }
 
+// this tutorial is used to give the player an overview of how the batlles in our game will be like
+// parameter: deck is a deck of 5 creatures
 void battleTutorial(creature deck[5]) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     delay(3);
@@ -220,6 +223,7 @@ void battleTutorial(creature deck[5]) {
     tutorialmode(deck, currentOpponent);
 }
 
+// main tutorial function
 void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock) {
     // movement tutorial
     movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock);
@@ -231,5 +235,6 @@ void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSy
         deck[i].setcurrentstats(1);
     }
 
+    // battle tutorial
     battleTutorial(deck);
 }
