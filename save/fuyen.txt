@@ -1,8 +1,0 @@
-creature 1 20 17 20 35 20 53 20 65 20
-avatar 1
-creaturesDeck 1 20 17 20 35 20 53 20 65 20
-currentAvatar 1
-currency 100 0 0
-currentMap txt/map1.txt
-currentCoordinate 2 13
-enemyCoordinate 3 53

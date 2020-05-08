@@ -555,7 +555,6 @@ void determineopponent(string mode, opponent &currentopponent, creature deck[5])
             currentopponent.opponentCreature[i].setbasestats(81);
             currentopponent.opponentCreature[i].setcurrentstats(1);
         }
-
     }
     currentopponent.rewards.food = averagedecklevel * 3;
     currentopponent.rewards.coins = averagedecklevel * 75;

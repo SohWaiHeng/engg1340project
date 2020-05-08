@@ -139,7 +139,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
 
 // this tutorial is used to give the player an overview of how the batlles in our game will be like
 // parameter: deck is a deck of 5 creatures
-void battleTutorial(creature deck[5], bool &winlose) {
+void battleTutorial(creature deck[5], bool &winlose, opponent currentOpponent) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     delay(3);
     
@@ -220,12 +220,6 @@ void battleTutorial(creature deck[5], bool &winlose) {
     cout << GREEN << "Press enter to continue." << WHITE << endl;
     getline(cin, trash);
 
-    opponent currentOpponent;
-    for (int i = 0; i < 5; i++) {
-        currentOpponent.opponentCreature[i].setbasestats(i+1);
-        currentOpponent.opponentCreature[i].setcurrentstats(1);
-    }
-
     tutorialmode(deck, currentOpponent, winlose);
 }
 
@@ -236,5 +230,5 @@ void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSy
 
     // battle tutorial
     determineopponent("tutorial", currentopponent, deck);
-    battleTutorial(deck, winlose);
+    battleTutorial(deck, winlose, currentopponent);
 }
