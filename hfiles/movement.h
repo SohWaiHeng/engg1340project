@@ -2,6 +2,7 @@
 #define MOVEMENT_H
 
 #include <string>
+
 using namespace std;
 
 void printMap(std::string map);

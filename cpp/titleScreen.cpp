@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <limits>
+
 #include "../hfiles/titleScreen.h"
 #include "../hfiles/menu.h"
 
@@ -40,14 +41,3 @@ string titleScreen(int &option){
     }
     return filename;
 }
-
-/*int main(){
-    creatures ownedCreature[100], notOwnedCreature[100];
-    avatars ownedAvatar[50], notOwnedAvatar[50];
-    int currency, currentCoordinate[2];
-    string currentFile = "", currentMap, currentAvatar, creaturesDeck[5];
-   // moveAroundMap(&currency, &currentAvatar, creaturesDeck, &currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, &currentMap);
-    titleScreen();
-//    moveAroundMap(&currency, &currentAvatar, creaturesDeck, &currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, &currentMap);
-    mainMenuPage(&currency, &currentAvatar, creaturesDeck, &currentFile, ownedCreature, ownedAvatar, notOwnedCreature, notOwnedAvatar, currentCoordinate, &currentMap);
-}*/

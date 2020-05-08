@@ -3,6 +3,7 @@
 
 #include "status.h"
 #include "card.h"
+
 #include<string>
 
 // struct to store creatures' stats

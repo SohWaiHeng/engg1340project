@@ -3,9 +3,10 @@
 #include<sstream>
 #include<stdlib.h>
 #include<time.h>
-#include<dos.h>
 #include<string>
+
 #include "../hfiles/battle.h"
+
 using namespace std;
 
 void opponentdeploy (int &currentElixir, creature deck[], deployed * &head, int creatureidx, int position) {

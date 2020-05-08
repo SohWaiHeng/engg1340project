@@ -2,7 +2,9 @@
 #define AVATAR_H
 
 #include<string>
+
 #include "card.h"
+
 using namespace std;
 
 class avatar {

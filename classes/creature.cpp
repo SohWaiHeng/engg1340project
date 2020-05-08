@@ -3,7 +3,9 @@
 #include<sstream>
 #include<stdlib.h>
 #include<time.h>
+
 #include "creature.h"
+
 using namespace std;
 
 // increase: by how much a stat increase for each level (eg: hp increase by 0.05 for every level up)
