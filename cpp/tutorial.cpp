@@ -17,7 +17,6 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
     // teach players the movement keys used in this game (WASD)
     cout << endl;
     cout << BLUE << "Let's begin the tutorial.\n" << WHITE << endl;
-    getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock); 
     cout << BLUE << "\nYou can move around the map by using WASD keys and press enter." << WHITE << endl;
