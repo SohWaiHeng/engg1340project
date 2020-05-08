@@ -44,5 +44,5 @@ cardmaster: card.o creature.o avatar.o battle.o main.o menu.o movement.o opponen
 	mv movement.o ofiles
 	mv opponent.o ofiles
 	mv printbattle.o ofiles
-	mv titleScrenn.o ofiles
+	mv titleScreen.o ofiles
 	mv tutorial.o ofiles
