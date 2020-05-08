@@ -1,0 +1,38 @@
+no  namelength name              symbol      card                hp   cost  atk  mgc  crt
+1   1          puppy             -[oUo]-     1   2   3   4   5   131  2     36   92   30  
+2   2          corn ball         ~(*.*)~     6   7   8   9   10  191  3     54   84   15
+3   2          bat soup          ~(0^0)~     9   11  12  13  8   171  3     57   83   26
+4   1          worm              ~~~(--)     5   6   8   18  19  167  3     66   90   9
+5   2          hay stack         |||||||     5   14  15  16  17  189  2     26   83   4 
+6   1          giant             {@___@}     8   11  16  17  20  405  6     153  92   11
+7   2          white knight      ~(-v-~)     2   2   12  21  22  234  4     98   98   11
+8   2          the earlings      =(TvT)=     1   7   9   23  24  312  5     128  93   7
+9   1          tank              [[]]-->     5   8   12  13  25  318  5     122  75   19
+10  2          donkey khan       v(o-o)v     2   5   15  20  26  221  3     50   93   23    
+11  2          captain taco      |=o~o=|     2   5   16  20  27  251  4     105  111  23
+12  2          the lord          d(*c*)b     5   13  15  25  27  267  4     102  111  19
+13  2          banana ninja      d(oUo)b    9   19  23  28  29  321  5     143  108  20   
+14  2          black reaper      +<*x*>+     5   10  20  21  27  293  5     159  98   21
+15  2          insta stalker     -(.w.-)     5   9   23  26  30  230  4     117  86   34
+16  2          mother hydra      {!!_!!}     2   5   8   10  12  293  4     98   123  4
+17  2          cool dog          (0.w.0)     31  32  33  34  35  174  3     50   102  20
+18  2          manowar elf       -('u')/    31  33  34  36  37  159  3     65   108  4
+19  2          true ninja        (,o_o,)     31  36  38  39  40  167  3     59   102  11
+20  1          pig               ^0(o)0^     31  34  35  41  42  158  2     36   86   11
+21  2          wizard elf        ^(0A0)^    31  34  35  43  44  131  2     33   113  15
+22  1          scholar           (=-v-)=     31  33  37  41  45  150  2     33   127  22
+23  1          earl              0(>w<)0     33  37  40  46  47  167  3     69   98   26
+24  2          fat knight        |(oIo)|      34  37  41  42  48  269  4     92   90   4
+25  2          jafar jin         !(<_>)!     40  41  41  42  49  258  4     96   93   4
+26  1          book              ([[[[[[      37  43  50  51  52  278  4     72   98   19
+27  2          elf chief         ~(-M-)~      31  32  41  41  53  155  2     30   158  24
+28  2          guitar ben        \(ouo)/      40  45  46  54  55  204  3     65   137  17
+29  2          punk cat          (^OwO^)      31  31  54  56  57  177  3     66   134  34
+30  1          fireballer        -/\_/\-      31  35  48  58  59  345  5     135  143  4
+31  2          hot dog           -|0.0|-      31  41  60  61  62  180  2     51   108  11
+32  1          jane              (U.-.)/      31  37  40  41  48  195  3     56   158  19
+
+
+// all creatures should be stored in this format cuz i coded creature.cpp according to this format
+// if changes are made in this txt file then there may be some changes needed to be done in the creature.cpp code
+// name should not be longer than 17 bits
