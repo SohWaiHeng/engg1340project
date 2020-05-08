@@ -17,7 +17,6 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
     // teach players the movement keys used in this game (WASD)
     cout << endl;
     cout << BLUE << "Let's begin the tutorial.\n" << WHITE << endl;
-    getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock); 
     cout << BLUE << "\nYou can move around the map by using WASD keys and press enter." << WHITE << endl;
@@ -51,7 +50,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
     while(secondFlag < 2){
         secondFlag = 0;
         cout << "Your move(s)?: ";
-        getline(cin, move);
+        cin >> move;
         for (int i = 0; i < move.length() && secondFlag==0; i++){
             move[i] = tolower(move[i]);
             switch(move[i]){
@@ -90,7 +89,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
                 cout << "Seems like you are ready to face your first opponent. Go nearer to your opponent to start battle." << WHITE << endl;
                 notrepeatprinting = true;
             }
-            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 48) {  //coordinates to go to battlefield
+            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 47) {  //coordinates to go to battlefield
                 cout << endl;
                 cout << BLUE << "Along your journey, you may often encounter with enemies at different parts of the map." << endl;
                 cout << "You will have to battle with them in order to continue with your journey." << WHITE << endl;
@@ -102,7 +101,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
             }
         }
         else {
-            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 48) {  //coordinates to go to battlefield
+            if (avatarCoordinate[0] == 3 && avatarCoordinate[1] > 47) {  //coordinates to go to battlefield
                 cout << endl << BLUE << "Along your journey, you may often encounter with enemies at different parts of the map." << endl;
                 cout << "You will have to battle with them in order to continue with your journey." << WHITE << endl;
                 cout << GREEN << "Press enter to start battle." << WHITE << endl;

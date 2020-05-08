@@ -281,9 +281,9 @@ An example of a single block of map is shown below:
 
 ## Non-standard C/C++ libraries
 
-Our game does not include any non-standard C/C++ libraries.
+The Cardmaster does not include any non-standard C/C++ libraries.
 
 
 ## Compilation and execution instructions
 
-Our game can be executed in the Linux environment using the commands "make cardmaster" and "./cardmaster".
+The Cardmaster can be executed in the Linux environment by first typing the command "make cardmaster" in order to compile all the files needed for our game. After the compilation process is completed, you may use the command "./cardmaster" to run our game. Enjoy! ;)
