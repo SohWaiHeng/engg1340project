@@ -374,7 +374,7 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                             flag = 1;
                         }
                         else if (tolower(choice)=='n'){
-                            stopQuestion == 1;
+                            stopQuestion = 1;
                         }
 		            }
                     else if ((avatarCoordinate[0] < enemyCoordinate[0]-1 || avatarCoordinate[0] > enemyCoordinate[0]+1) && (avatarCoordinate[1] < enemyCoordinate[1]-5 || avatarCoordinate[1] > enemyCoordinate[1]+5))
