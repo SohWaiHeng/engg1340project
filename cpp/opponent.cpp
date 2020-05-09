@@ -494,7 +494,15 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
         if (head == NULL || playerhead == NULL) {
             return;
         }
-        if (numberOfCreatures(head) == 4) {
+        bool notalldeployed = false;
+        if (numberOfCreatures(head) != 4) {
+            for (int i = 0; i < 5; i++) {
+                if (deck[i].getdeployed() == false) {
+                    notalldeployed = true;
+                }
+            }
+        }
+        if (numberOfCreatures(head) == 4 && !notalldeployed) {
             actionAvailable = false;
             deployed * currentnode = head;
             while (currentnode != NULL && !actionAvailable) {
