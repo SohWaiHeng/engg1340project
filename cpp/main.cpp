@@ -60,7 +60,6 @@ int main () {
         else if (flag == 1) {
             bool winlose = false;
             determineopponent(battlemode, currentOpponent, deck);
-            cout << "You obtained " + currentOpponent.opponentCreature[currentOpponent.rewards.creatureidx].getname() + "!" << WHITE << endl;
             battle(deck, currentOpponent, winlose);
             for (int i = 0; i < 5; i++) {
                 deck[i].setdeployed(false);
