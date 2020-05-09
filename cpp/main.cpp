@@ -24,9 +24,9 @@ int main () {
     int enemyCoordinate[2];     // enemy coordinate
     string currentblock;        // current block file name
     string filename;            // save file location name
-    opponent currentOpponent;
+    opponent currentOpponent;   // current opponent 
     string enemySymbol = "(^<^)";  // enemy figure
-    string newBlock = "txt/out.txt";
+    string newBlock = "txt/out.txt";  // save the current block of map with avatar and enemy
     int option;
 
     // print title screen, take in user's input, get the save file's name
@@ -41,7 +41,8 @@ int main () {
     if (option == 1) {
         cout << "STARTING A NEW GAME..." << endl;
         delay(2);
-        bool winlose = false;
+        // winlose is used to determine if player has won a battle (true if player wins, false otherwise)
+        bool winlose = false; 
         tutorial(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, currentOpponent, winlose, deck);
         cout << BLUE << "Now go and defeat more opponent, level up yourself and prepare yourself for the final boss!" << WHITE << endl;
     }
@@ -61,6 +62,7 @@ int main () {
             for (int i = 0; i < 5; i++) {
                 deck[i].setdeployed(false);
             }
+            // reward the player is he/she wins a battle
             if (winlose) {
                 delay(1);
                 cout << GREEN << "You gained " << currentOpponent.rewards.coins << " coins!" << endl;
@@ -82,6 +84,7 @@ int main () {
             }
             flag = 0;
         }
+        // to open up the main menu page
         else if (flag == 2) {
             mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag, enemyCoordinate);
         }

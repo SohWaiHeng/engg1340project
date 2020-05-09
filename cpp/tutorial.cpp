@@ -38,10 +38,10 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
             	    firstFlag = 1;
 	        }
         }
-	firstFlag=0;
-	getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
-    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
-	printMap(newBlock);
+	    firstFlag=0;
+	    getCoordinate(newBlock,avatarSymbol[0],avatarCoordinate);
+        mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+	    printMap(newBlock);
     }
 
     // teach player the shortcut characters to fast forward their avatar's movement
@@ -142,7 +142,7 @@ void movementTutorial(int avatarCoordinate[2], int enemyCoordinate[2], string &a
 }
 
 // this tutorial is used to give the player an overview of how the batlles in our game will be like
-// parameter: deck is a deck of 5 creatures
+// parameter: deck is a deck of 5 creatures, winlose is to determine if player has win the battle (true when player wins, false otherwise), currentopponent is the current opponent player is facing
 void battleTutorial(creature deck[5], bool &winlose, opponent currentOpponent) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     delay(3);
@@ -224,10 +224,12 @@ void battleTutorial(creature deck[5], bool &winlose, opponent currentOpponent) {
     cout << GREEN << "Press enter to continue." << WHITE << endl;
     getline(cin, trash);
 
+    // more tutorial on the battle
     tutorialmode(deck, currentOpponent, winlose);
 }
 
 // main tutorial function
+// parameters are same as the parameters mentioned above
 void tutorial (int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, opponent &currentopponent, bool &winlose, creature deck[5]) {
     // movement tutorial
     movementTutorial(avatarCoordinate, enemyCoordinate, avatarSymbol, enemySymbol, currentBlock, newBlock);
