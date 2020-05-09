@@ -386,6 +386,8 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
                         printMap(newBlock);
                         cout << BLUE <<"You have now reached the dungeon of our final boss.\n";
                         cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss? [y/n]\n" << WHITE;
+                        cout << "Your choice: ";
+                        cin >> choice;
                         while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
                             cin.clear();
                             cin.ignore(numeric_limits<streamsize>::max(),'\n');
