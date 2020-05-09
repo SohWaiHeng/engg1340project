@@ -9,6 +9,7 @@
 using namespace std;
 
 // count number of cards on player's hand
+// parameter: head of linked list of card on hand
 int numberOfCards (cardOnHand * cardhead) {
     int count = 0;
     cardOnHand *currentnode =  cardhead;
@@ -20,6 +21,7 @@ int numberOfCards (cardOnHand * cardhead) {
 }
 
 // count number of player's creatures deployed on field
+// parameter : head of linked list of deployed creatures
 int numberOfCreatures (deployed * head) {
     int count = 0;
     deployed *currentnode = head;
@@ -31,6 +33,7 @@ int numberOfCreatures (deployed * head) {
 }
 
 // for printing repeated char
+// parameters: starting of the line, the char to be repeatedly printed, times to be printed, end of the line
 void repeatedPrinting (char start, char toBePrinted, int times, char end) {
     if (times > 1) {
         cout << start;
@@ -44,7 +47,9 @@ void repeatedPrinting (char start, char toBePrinted, int times, char end) {
     }
 }
 
-// printing creature section
+// printing creature section in battle screen
+// parameters: total width of battle screen, width to display one creature, head of linked list of player's deployed creature, indicator determines what feature of a creature is to be printed
+// indicator: a = print atk, m = print mgc, h = print hp, s = print symbol, n = print name, c = print cost
 void printingCreature (int totalSpace, int creatureSpace, deployed * player, char indicator) {
     int blankspace = (totalSpace - 22 - (creatureSpace * numberOfCreatures(player)));
     repeatedPrinting(' ', ' ', blankspace / 2 + blankspace % 2, ' ');
@@ -111,6 +116,7 @@ void printingCreature (int totalSpace, int creatureSpace, deployed * player, cha
 }
 
 // get nth word in a string
+// parameter : a sentence of words, value of n (nth word in the sentence)
 string getword (string wordlist, int index) {
     string targetword;
     istringstream iss (wordlist);
@@ -120,7 +126,9 @@ string getword (string wordlist, int index) {
     return targetword;
 }
 
-// printing card on hand section
+// printing card on hand section in battle screen
+// parameters: total width of battle screen, width to display one card, head of linked list of player's cards on hand, indicator determines what feature of a card is to be printed
+// indicator: \0 = prints top of card, 1 = prints card index number, c = prints card cost, 0 = prints empty part of a card, \n = prints bottom of card, n = prints name of card
 void printingCard (int totalSpace, int cardSpace, cardOnHand * playerscard, char indicator, int currentElixir) {
     int blankspace = (totalSpace - 22 - (cardSpace * numberOfCards(playerscard)));
     repeatedPrinting(' ', ' ', blankspace / 2, ' ');
@@ -242,6 +250,7 @@ void printingCard (int totalSpace, int cardSpace, cardOnHand * playerscard, char
 }
 
 // printing undeployed creatures on the left side of battle screen
+// parameters: player's deck, line number (nth line)
 void printUndeployed (creature deck[], int line) {
     string leftarray[3] = {"|_______    ", "||  ", "|_______|   "};
     if (line > 6 && line < 22) {
@@ -266,6 +275,8 @@ void printUndeployed (creature deck[], int line) {
     }
 }
 
+// prints creatures status below/above the creature in battle screen
+// parameters: total width of battle screen, width to display one creature, head of player's deployed creatures, nth line, full deck of the player (array of creatures)
 void printStatus (int totalSpace, int creatureSpace, deployed * player, int &line, creature deck[]) {
     struct statuslinked {
         string statusname;
@@ -381,7 +392,7 @@ void printStatus (int totalSpace, int creatureSpace, deployed * player, int &lin
                     }
                     else if (currentptr->statusname == "heroic") {
                         cout << left;
-                        cout << setw(creatureSpace) << RED << " !! HEROIC !! x " + to_string(currentptr->number) << WHITE;
+                        cout << RED << setw(creatureSpace) << " !! HEROIC !! x " + to_string(currentptr->number) << WHITE;
                     }
                     else if (currentptr->statusname == "revenge") {
                         cout << left;
@@ -441,14 +452,17 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
     int totalSpace = max({ (creatureSpace * numberOfCreatures(player)), (cardSpace * numberOfCards(cardhead)), (creatureSpace * numberOfCreatures(opponent))}) + 22;
     int line = 0;
     
+    // prints top of battle screen
     repeatedPrinting(' ', '_', totalSpace, ' ');
     line++;
     cout << endl;
     
+    // prints an empty line
     repeatedPrinting('|', ' ', totalSpace, '|');
     line++;
     cout << endl;
 
+    // prints opponent's creatures
     char toPrintOpponent[5] = {'a', 'm', 'h', 's', 'n'};
     for (int i = 0; i < 5; i++) {
         printUndeployed(deck, line);
@@ -457,9 +471,10 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
         line++;
         cout << endl;
     }
-
+    // print opponent's creature's status
     printStatus(totalSpace, creatureSpace, opponent, line, deck);
 
+    // prints 6 empty lines
     for (int i = 0; i < 6; i++) {
         printUndeployed(deck, line);
         repeatedPrinting(' ', ' ', totalSpace-12, '|');
@@ -467,8 +482,10 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
         cout << endl;
     }
 
+    // prints player's creatures' status
     printStatus(totalSpace, creatureSpace, player, line, deck);
 
+    // prints player's creatures
     char toPrintPlayer[6] = {'n', 's', 'c', 'h', 'a', 'm'};
     for (int i = 0; i < 6; i++) {
         printUndeployed(deck, line);
@@ -478,11 +495,13 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
         cout << endl;
     }
 
+    // prints an empty line
     printUndeployed(deck, line);
     repeatedPrinting(' ', ' ', totalSpace-12, '|');
     line++;
     cout << endl;
 
+    // prints player's card on hand
     char toPrintCard[5] = {'\0', '1', 'c', 'n', '\n'};
     for (int i = 0; i < 5; i++) {
         printUndeployed(deck, line);
@@ -492,6 +511,7 @@ void printBattleScreen(deployed * player, cardOnHand * cardhead, deployed * oppo
         cout << endl;
     }
 
+    // prints bottom of battle screen
     repeatedPrinting('|', '_', totalSpace, '|');
     cout << endl;
 

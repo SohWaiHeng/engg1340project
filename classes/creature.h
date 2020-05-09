@@ -18,6 +18,7 @@ struct stats {
     int crt;
 };
 
+// stuct to store player's owned creatures in game
 struct owned {
     int index;
     int level;
@@ -42,6 +43,7 @@ struct owned {
 */
 class creature {
     public:
+        // get creature's index number in creature.txt
         int getcreaturenumber() { return creaturenumber; };
         int getlevel() { return current.lvl; };
 
@@ -49,11 +51,15 @@ class creature {
         int gethp() { return current.hp; };
         void decreasehp(int byhowmuch);
         int gethpratio();
-
+        
+        // obtain atk value with critical possibility included
         int getatk(bool &critical);
+        // obatin raw atk value
         int getoriginalatk() { return current.atk; };
 
+        // obtain mgc value with critical possibility included
         int getmgc(bool &critical);
+        // obtain raw mgc value
         int getoriginalmgc() { return current.mgc; };
 
         std::string getname() { return current.name; };
@@ -68,25 +74,36 @@ class creature {
         int getstatus(std::string condition);
         int getnumberofstatus() { return creaturestatus.numberofstatus; };
 
+        // sets deployed value to true if creature is deployed onto field
         void setdeployed(bool deployedbool) { deployed = deployedbool; };
         bool getdeployed() { return deployed; };
 
+        // heal by n percentage
         void heal(int percentage);
+        // counterattack the attacker
         void counteratk(creature &attacker);
+        // cost -1, parameter 'start' indicates if haste value -1 at the start of a round (true = -1)
         void haste(bool start);
+        // atk increase by n percentage
         void atk(int percentage);
+        // attack the target with damage of mgc value
         void magic(creature &target);
+        // negate damage
         void shield();
+        // saps elixir from target creatues, by n elixir, if the creature is attacking (true)
         void elixirsap(creature &target, int &elixir, bool attacking);
+        // adds current elixir, by byHowMuch
         void addelixir(int &elixir, int byHowMuch);
-        void drawcard();
+        // draw a card from creature
         void directdmg(int percentage);
+        // reflects the damage back to attacker
         void thorns(int damage, creature attacker);
+        // stores damage in one turn, release all damage in revenger attack if release = true, target to revenge on)
         void revenge(int store, bool release, creature &target);
+        // reduce 30% damage
         void defenseup(int &damage);
+        // reduce n percent hp based on poison percentage of a creature
         void poison();
-        void silence();
-        void blockcard();
 
         card cardpool[5];
 

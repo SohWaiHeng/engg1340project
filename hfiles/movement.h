@@ -23,6 +23,6 @@ void getCoordinate(std::string currentBlock, char alphabet, int coordinate[2]);
 
 void movement(char move, std::string &newBlock, std::string currentCharacter, int &moveFlag);
 
-void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode);
+void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode, int enemyCoordinateArray[6][2]);
 
 #endif

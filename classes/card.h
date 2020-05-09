@@ -14,6 +14,7 @@ class card {
         int getcardnumber() { return cardnumber; };
         std::string getname() { return cardname; };
         void cardDrawn() { cardrarity--; };
+        // initialise card
         void setcard(int cardno);
         int getcost() { return cardcost; };
         int getnamelength() { return cardnamelength; };

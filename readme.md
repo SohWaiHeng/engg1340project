@@ -8,68 +8,123 @@
 
 ## Game description:
 
-Our group is planning to make a text-based game which combines the concept of both an RPG (role-playing game) and a trading card game.
+Our group has made a text-based game which combines the concept of both an RPG (role-playing game) and a trading card game.
 
-In our game, the player will be able to go around maps of different regions, to battle against a variety of enemies, before facing the final boss which is set to be the last mission of the game.
+In our game, the player will be able to go around maps of different regions, to battle against a variety of enemies, get rewards to upgade the player's deck, before facing the final boss which is set to be the last mission of the game.
 The main goal of the game is to defeat the final boss.
 
-There are three types of collectibles in the games, which are creatures, cards and in-game currencies. The player will collect these items along with the progression of the game.
-The creatures are used to build a deck to be used by the player in battles. Cards can be added to creatures, and in-game currencies are used to level up creatures or buy items in game.
-Along the journey, the player will be confronted with different opponents (computer AI) during mission tasks or at some locations in the map. The player will have to battle with these opponents in order to continue with the game.
+There are two types of collectibles in the games, which are creatures and in-game currencies. The player will collect these items along with the progression of the game.
+The creatures are used to build a deck to be used by the player in battles. In-game currencies are used to level up creatures or buy items in game.
+Along the journey, the player will be confronted with different opponents (computer AI) at some locations in the map. The player will have to battle with these opponents in order to continue with the game.
 
 These battles will be carried out in the form of a turn-based card game.The battle rules are implemented based on an old mobile card game named Card Wars Kingdom.
 The players will deploy the creatures in his deck to the battlefield, then decide how he should use his creatures/cards based on the elixir he owns that round.
 To win the battle, the player has to defeat all of opponent's creature deployed on the battlefield.
 The in-depth battle rules are written in the section ```Rules in the battlefield``` below.
 
-As the reward of winning the battle, the player will obtain new creatures/cards and in-game currencies to improve his inventories.
-Battles are usually required for the player to complete a mission when progressing with the main story. There would be a number of missions designed for the player to complete in game.
-All these missions also serve to prepare the player to face the last and biggest battle of our game, which is the "final boss". 
-The game is completed when the player has successfully defeated the "final boss" and thus finishes the story.
+As the reward of winning the battle, the player will obtain new creatures and in-game currencies to improve his inventories.
+All these battles serve to prepare the player to face the last and biggest battle of our game, which is the "final boss". 
+The game is completed when the player has successfully defeated the "final boss".
 
 
 ## Features in game in relation to the coding requirements:
 
 ### 1. Generation of random game sets or events
-	- There are several features in the game which can be randomly generated including:
-	  1. Random locations in map where the player will be confronted with an opponent (with certain probabilities)
-	  2. Random draw from the player's available card pool in battle (totally random)
+	- There are several features in the game which are randomly generated including:
+	  1. Random locations in map where the player will be confronted with a randomly initialised opponent
+	  2. Random draw from the player's available card pool in battle
 	  3. Random moves by the the opponent's Computer AI
-	  4. Random drops and rewards given to player after winning a battle (with certain probabilities)
-	  5. Random draw of a creature given to player every time the player buys a treasure chest (with certain probabilities)
+	  4. Random draw of a creature given to player every time the player buys a treasure chest
 
 ### 2. Data structures for storing game status
-   	- Creatures' data like their names, stats and cards will be stored in structs
-	- List of the player's creature will be stored in linked list / array of structs
-	- Cards will be represented in a class, with member functions (function of the card) and member variables (name of card, stats of card, whom this card is played on)
-	- Currencies will also be stored in structs, since there are different type of currencies
-	- In the game there will be a menu page where the player can access all the creatures he has, check his stats and build his deck
-	- We plan to represent the menu page in a class, for which its member functions are used to perform different functions available in the menu page (eg: build deck from creature list)
+   	1. We have used classes to store cards, creatures and avatar. The classes are equipped with various member functions which are extensively used in battles and menu.
+	2. We used structs to store in game currencies, creature's status and opponent's rewards.
+	3. We used linked lists to store information during battle (cards on player's hand, deployed creatures on the field) and all the player's owned creatures, since these information are constantly changing throughout the game and a linked list is useful for addition and deletion of these information
+	4. We used arrays to store the player's coordinates on map and all avatars owned by the player
+	5. In the game there is be a menu page where the player can access all the creatures he has, check and upgrade his stats and build his deck
 
 ### 3. Dynamic memory management
-	- Linked list is used to store the creatures the player owns. The linked list can be easily added with new creatures and thus memory can be easily allocated accordingly
-	- Data needed during runtime in the game are only loaded from certain txt files during runtime if possible. We plan to use a series of dynamic arrays and variables to achieve this. After these data are used the memory will be cleaned after changes were output and saved in txt files
+	1. Linked lists are used to store various information like the player's creature in battle and all creatures owned by player. New nodes can be added easily into these linked lists and thus memory was allocated accordingly during runtime with the use of these linked lists
+	2. A lot of data in game are only loaded from various txt files when needed to save memory. (Eg: We only load 5 creatures (deck) into memory, while the player may own a lot more creatures. Only when the player changes his deck then the new creature will be loaded from the creature.txt file) We rarely used fixed arrays of large sizes to store data in our codes.
+	3. Maps are loaded into game only when it was printed. A map block is stored in a dynamic array when printed, and the dynamic array is deleted after printing is done.
 
 ### 4. File I/O
-	- The game will include both save and load functions
-	- The player can save the game at certain save points
-	- Saving will take all the info of the creatures owned by the player, the player's amount of in-game currencies, and the part of storyline the player is in at the time of saving, and output them to a txt file (file name decided by player)
-	- The player can continue his game by loading an available txt save file
-	- Loading will take in some necessary info from txt file (when starting the game) and memory will be allocated to store these data
-	- Some game data will also be stored in txt files and is loaded when needed. For example: maps, full list of creatures, full list of cards
+	1. The game includes both save and load functions
+	2. The player can save the game at any points in a game.
+	3. Saving will take all necessary information about the player's game progress and output them to a txt file (file name decided by player)
+	4. The player can continue his game by loading an available txt save file
+	5. Loading will take in some necessary info from txt file (when starting the game) and memory will be allocated to store these data
+	6. Some game data will also be stored in txt files and is loaded when needed during runtime. For example: maps, full list of creatures, full list of cards
 
 ### 5. Program codes in multiple files
-	- We are going to split the whole code into multiple cpp, header and txt files.
-	- Some necessary functions like functions for the player to move around the map, functions for battling will also be written in different cpp files.
-	- Multiple functions of the same category of usage (eg: for walking on map) can be declared in the sanme header file.
-	- txt files are used to store data like maps, list of creatures etc.
+	1. Our codes are splitted into multiple cpp, header and txt files.
+	2. All functions such as the function for the player to move around the map, functions for battling are defined in different cpp files.
+	3. Multiple functions of the same category of usage (eg: for walking on map) are declared in the same header file.
+	3. txt files are used to store data like maps, list of creatures etc.
+
+
+## Features in our game:
+
+1. Title screen: 
+
+Player will be given the choice of starting a new game or continue their previously saved game progress, which has been stored in other files.
+
+2. Tutorial: 
+
+If the player chooses to start a new game, a tutorial page will be prompted to teach the player on the rules of the game and different controls and keys used in the game at the beginning of the game. This tutorial page will be loaded from another file.
+
+3. Map/player movement:
+
+- We created a map and divide it into 3x3 smaller blocks (25 x 65 characters) to be displayed on the terminal screen. 
+- The player can move his/her character around the map using the keys WASD via the paths set by us, and attempts to walk through the walls will lead to an error message. 
+- When the character has reached the sides of the map, another block of the map will be displayed to replace the existing one. The player is allowed to fast-forward their movement by entering the characters shown on different junctions.
+
+An example of a single block of map is shown below:
+
+                                65 columns
+
+	OOOOOOOOOOO|    |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOO|    |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOO|    |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOO|  G                                    |OOOOOOOOOOOOO
+	OOOOOOOOOOO|__________________________________  F  |OOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
+	OOOOO|             |OOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
+	OOOOO|             |OOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
+	OOOOO|             |OOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
+	OOOOO|   LIBRARY   |OOOOOOOO|                   E  |OOOOOOOOOOOOO
+	OOOOO|             |OOOOOOOO|  J   ________________|OOOOOOOOOOOOO
+	OOOOO|             |OOOOOOOO|     |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO     25 rows
+	OOOOO|_____   _____|OOOOOOOO|     |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOO| |OOOOOOOOOOOOOO|     |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO    
+	(3.3)       A                  C  |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	_________________ B ______________|OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOO|H_______________  I|OOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
+	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
+
+4.  Menu
+
+- You can access the menu on map by typing m. 
+- You can change your battle deck, change your avatar and view all the creatures you own in the menu.
+- You can also buy treasure chests in the menu to draw a random creature into your collection.
+- You can also save and quit the game in the menu.
+
+5. Battle (explained below)
+
 
 ## Rules in the battlefield:
-The concept of our card game will be based on an old game named Card Wars Kingdom. Before the battle commences, the player has to construct a deck of creature from all the creatures he owned before the battle begins. The deck can be constructed or changed anytime in the menu page. The player has to come up with an effective strategy and choose the most suitable creatures for the battle in order to increase his/her chances of winning.
+The concept of our card game are based on an old game named Card Wars Kingdom. Before the battle commences, the player has to construct a deck of creature from all the creatures he owned before the battle begins. The deck can be constructed or changed anytime in the menu page. The player has to come up with an effective strategy and choose the most suitable creatures for the battle in order to increase his/her chances of winning.
 
 a. Creatures:
         
-	i. There will be many different creatures available in game, and they are there to assist the player in battling the opponents. These creatures are categorised into different rarities (eg: common, rare, legendary, etc.). This will be explained in the "types of creatures" section later.
+	i. There will be many different creatures available in game, and they are there to assist the player in battling the opponents.
 	
 	ii. Each creature will have six stats: hp (health), atk (attack damage), mgc (magic damage), crt (critical damage chance), elixir cost and level.
 	
@@ -81,15 +136,16 @@ a. Creatures:
 	
 	vi. The creatures are started at level 1 when the player obtains them in chests.
 	
-	vii. The player can upgrade their creatures to a higher level by feeding them with cakes, which can be obtained from the battles, or feeding them with other creatures which are not needed by the player. (Feeding with creatures gives more XP than cakes)
+	vii. The player can upgrade their creatures to a higher level by feeding them with food, which can be obtained from the battles
 	
-	viii. Levelling up increases a creature's hp, atk, mgc. and crt.
+	viii. Leveling up increases a creature's hp, atk, mgc. and crt.
 	
-	ix. The maximum level of a creature is 50.
+	ix. The maximum level of a creature is 20.
 
 b. Getting the creatures:
 
-The player can own creatures by opening the treasure chests, and these chests can be earned from either the rewards of winning battles or paying in-game money. The creatures gotten by the player from the chest are completely random. However, there will be few different types of chests available, and the more expensive the chest is, the higher the chances of getting a rarer creature.
+The player can own creatures by opening the treasure chests, and these chests can be earned by paying in-game money. The creatures drawn by the player from the chest are completely random.
+The player can also obtain one creature (from opponent's deck) for every win in a battle.
 
 c. Basic rules of battle: 
 
@@ -97,7 +153,7 @@ c. Basic rules of battle:
 	
 	ii. Elixir is used to perform actions in each round. Different action requires different amount of elixir.
 	
-	iii. The player or AI is randomly chosen to start the game.
+	iii. The player will start the game first.
 	
 	iv. At the start of the battle, 5 cards from the 25 available cards (5 creatures) are randomly drawn to the player's hand.
 	
@@ -123,12 +179,16 @@ d. Moves player can make in a battle:
 		- there is a probability of crt % that the attack will be a critical attack. Critical attack = attack + 35%
 		
 	ii. Deploy: 
-      	- by typing "deploy <creature no.>"
-		- adding the creature on battlefield
+      	- by typing "deploy <creature no.> <position>"
+		- adding the creature on battlefield at position x
 		- total elixir decrease by 1
 		
 	iii. Use Card: 
-      	- by typing "use card <number> on <own_or_opponent's_creature>"
+      	- by typing "use <card's name> on <own_or_opponent's_creature>"
+
+	iv. Show Info:
+		- by typing "show <card/creature> <card's name/creature's name/creature number>"
+		- show details about the card or creature
         
 e. Cards
 
@@ -177,21 +237,9 @@ e. Cards
 		  
 	iii. A card can have multiple functions and criterias for the fucntions to activate:
 	
-		eg: - card A: 10% poison, if creature has thorns, attack down for 2 turns
+		eg: - card A: 10% poison for each enemy creature on the board, attack down for 2 turns
 
-f. Types of creatures: 
-
-    i. Type 1: These creatures have very high atk value, low/average mgc value, cards found on them usually have functions like atk up, haste.
-    
-	ii. Type 2: These creatures have very high mgc value, low atk value, cards found on them usually have functions like magic attack, shield, elixir sap.
-	
-	iii. Type 3: These creatures have average atk and mgc, cards found on them usually have functions like poison, silence, block card, blind.
-	
-	iv. Type 4: These creatures have high hp, average atk and mgc, cards found on them usually have functions like thorns, defence up, heroic.
-	
-	v. Type 5: These creatures have low hp, low atk, high mgc, cards found usually have functions like heal, direct damage, remove.
-
-g. Player avatar:
+f. Player avatar:
 
     i. The player can choose and change avatar for himself/herself in the game. Each avatar will have a set of five unique cards.
     
@@ -213,9 +261,9 @@ h. Example of how the battlefield looks like:
 		|                 NyanCat            Shrek             Najib                 |
 		|                                                                            |
 		|_____                                                                       |
-		|(*-*)| 3  These are                                                         |
-		|_____|    undeployed                                                        |
-		|_____     creatures                                                         |
+		|(*-*)| 3                                                                    |
+		|_____|                                                                      |
+		|_____                                                                       |
 		|[=3=]| 5                                                                    |
 		|_____|            Baymax            Happy           CryingMan               |
 		|               \[ 0 - 0 ]/       ~( ^ u ^ )~       ={ T w T }=              |
@@ -232,52 +280,11 @@ h. Example of how the battlefield looks like:
 		|          |________||________||________||________||________|                |
 		|____________________________________________________________________________|
 
+## Sample input and output files
 
-
-## Other functions/features in our game:
-
-1. Title screen: 
-
-Player will be given the choice of starting a new game or continue their previously saved game progress, which has been stored in other files.
-
-2. Tutorial: 
-
-If the player chooses to start a new game, a tutorial page will be prompted to teach the player on the rules of the game and different controls and keys used in the game at the beginning of the game. The player is given the choice to skip the tutorials. This tutorial page will be loaded from another file.
-
-3. Map/player movement:
-
-We will create a map and divide it into 6 smaller blocks (25 x 65 characters) to be displayed on the screen terminal. The player can move his/her character around the map using the keys WASD via the paths set by us, and attempts to walk through the walls will lead to an error message. When the character has reached the sides of the map, another block of the map will be displayed to replace the existing one. The player is allowed to fast-forward their movement by entering the characters shown on different junctions.
-
-An example of a single block of map is shown below:
-
-                                65 columns
-
-	OOOOOOOOOOO|    |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOO|    |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOO|    |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOO|  G                                    |OOOOOOOOOOOOO
-	OOOOOOOOOOO|__________________________________  F  |OOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
-	OOOOO|             |OOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
-	OOOOO|             |OOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
-	OOOOO|             |OOOOOOOOOOOOOOOOOOOOOOOOOO|    |OOOOOOOOOOOOO
-	OOOOO|   LIBRARY   |OOOOOOOO|                   E  |OOOOOOOOOOOOO
-	OOOOO|             |OOOOOOOO|  J   ________________|OOOOOOOOOOOOO
-	OOOOO|             |OOOOOOOO|     |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO     25 rows
-	OOOOO|_____   _____|OOOOOOOO|     |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOO| |OOOOOOOOOOOOOO|     |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO    
-	(3.3)       A                  C  |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	_________________ B ______________|OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOO|H_______________  I|OOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
-	OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO| |OOOOOOOOOOOOOOOOOOOOOOOOOOO
-
+- The sample in game input txt files is kept in the "txt" directory
+- The sample of a save file is kept in the "save" directory
+- The list of all creatures and cards in game is kept in "classes/txt" directory
 
 ## Non-standard C/C++ libraries
 
@@ -286,4 +293,8 @@ The Cardmaster does not include any non-standard C/C++ libraries.
 
 ## Compilation and execution instructions
 
-The Cardmaster can be executed in the Linux environment by first typing the command "make cardmaster" in order to compile all the files needed for our game. After the compilation process is completed, you may use the command "./cardmaster" to run our game. Enjoy! ;)
+The Cardmaster can be executed in the Linux environment by first typing the command "make cardmaster" in order to compile all the files needed for our game. After the compilation process is completed, you may use the command "./cardmaster" to run our game. Please maximise your terminal screen for better playing experience. Enjoy! ;)
+
+## Citations:
+
+1. Card Wars Kingdom, a mobile card game developed by Kung Fu Factory

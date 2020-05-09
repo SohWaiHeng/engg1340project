@@ -1,6 +1,7 @@
 #ifndef COLOURS_H
 #define COLOURS_H
 
+// coloured texts
 #define RED "\x1B[1;31m"
 #define WHITE "\x1B[0m"
 #define GREEN "\x1B[1;92m"

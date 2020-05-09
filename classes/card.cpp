@@ -102,8 +102,11 @@ string card::getfunction (string &clean) {
             final = final + statusname[i] + " x " + to_string(status[i]) + ",  ";
         }
         if (status[i] != 0) {
-            if (statusname[i] == "area" || statusname[i] == "remove") {
+            if (statusname[i] == "area") {
                 clean = statusname[i] + " ";
+            }
+            else if (statusname[i] == "remove") {
+                clean = statusname[i] + statusname[status[i] + 4] + ", ";
             }
             else if (statusname[i] == "own") {
                 record = " for each creature on the board";

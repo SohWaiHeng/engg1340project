@@ -307,10 +307,8 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
 
 // main function to allow avatar to move around the map
 // parameters: avatarCoordinate and enemyCoordinate are the current coordinates of avatar and enemy on the map, avatarSymbol and enemySymbol are the figures of current avatar and enemy respectively, currentBlock is the original block of map, newBlock is the map which includes avatar and enemy figures
-void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode){
+void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode, int enemyCoordinateArray[6][2]){
     string move;   
-    // initial enemy coordinates are set, after the enemy is defeated its position will be randomly placed using the getRandomCoordinateForEnemy on the same block
-    int enemyCoordinateArray[6][2] = {{21,16},{17,26},{21,10},{19,13},{22,35},{15,48}};
     // moveFlag and stopQuestion are used to avoid repeating sending of messages
     int moveFlag = 0, flag1 = 0, blockNum = 1, stopQuestion = 0; 
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);

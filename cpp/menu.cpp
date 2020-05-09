@@ -401,7 +401,10 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                     cin >> yesno;
                 }
                 if (tolower(yesno) == 'y') {
-                    if (node->level < 20) {
+                    if (currentcurrency.food < node->level + 1) {
+                        cout << RED << "you don't have enough food!" << endl;
+                    }
+                    else if (node->level < 20) {
                         node->level += 1;
                         currentcurrency.food -= node->level;
                         cout << GREEN << temp.getname() << " upgraded to level " << node->level << WHITE << endl;
@@ -452,8 +455,9 @@ void treasureChest(currency &currentcurrency, owned * &ownedhead) {
 
         creature temp;
         temp.setbasestats(num);
+        temp.setcurrentstats(1);
 
-        cout << "\nThe creature you have gotten is " << temp.getname() << '.' << endl;
+        cout << "\nThe creature you have gotten is " << GREEN << temp.getname() << WHITE << '.' << endl;
         bool own = false;
         buildLinkedListOfOwnedCreatures(ownedhead, num, 1, own);
         if (!own){

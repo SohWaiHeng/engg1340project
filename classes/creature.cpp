@@ -94,9 +94,9 @@ void creature::setcurrentstats (int creaturelvl) {
 
     // set creature's stats based on its level
     // the creature's cards and crt will not change with level
-    current.hp = base.hp + ((base.hp * increase) * creaturelvl);
-    current.atk = base.atk + ((base.atk * increase) * creaturelvl);
-    current.mgc = base.mgc + ((base.mgc * increase) * creaturelvl);
+    current.hp = base.hp + ((base.hp * increase) * (creaturelvl-1));
+    current.atk = base.atk + ((base.atk * increase) * (creaturelvl-1));
+    current.mgc = base.mgc + ((base.mgc * increase) * (creaturelvl-1));
 }
 
 // prints out all current stats and cards of a creature

@@ -27,6 +27,8 @@ int main () {
     opponent currentOpponent;   // current opponent 
     string enemySymbol = "(^<^)";  // enemy figure
     string newBlock = "txt/out.txt";  // save the current block of map with avatar and enemy
+    // initial enemy coordinates are set, after the enemy is defeated its position will be randomly placed using the getRandomCoordinateForEnemy on the same block
+    int enemyCoordinateArray[6][2] = {{21,16},{17,26},{21,10},{19,13},{22,35},{15,48}};
     int option;
 
     // print title screen, take in user's input, get the save file's name
@@ -51,12 +53,14 @@ int main () {
     }
 
     int flag = 0;
-    string battlemode = "random";
+    string battlemode = "random"; // randomly picks creature to battle with
     while (flag != 3) {
+        // flag = 0 : move on map
         if (flag == 0) {
             avatarSymbol = currentavatar.getfigure();
-            moveAroundMap(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, flag, battlemode);
+            moveAroundMap(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, flag, battlemode, enemyCoordinateArray);
         }
+        // flag = 1: enter battle
         else if (flag == 1) {
             bool winlose = false;
             determineopponent(battlemode, currentOpponent, deck);
@@ -84,9 +88,15 @@ int main () {
                     currentcurrency.food += 5;
                 }
             }
+            if (battlemode == "boss") {
+                battlemode = "random";
+                if (winlose) {
+                    cout << GREEN << "Congratulations you have completed the game!" << WHITE << endl;
+                }
+            }
             flag = 0;
         }
-        // to open up the main menu page
+        // flag = 2 : open up the main menu page
         else if (flag == 2) {
             mainMenuPage(currentcurrency, currentavatar, deck, filename, ownedhead, avataridx, currentcoordinate, currentblock, flag, enemyCoordinate);
         }

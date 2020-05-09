@@ -11,10 +11,12 @@
 
 using namespace std;
 
-// to deploy a creature on battle field
+// to deploy a creature on battle field (add a new undeployed creature into the linked list of deployed creatures)
 // format : deploy <creature number> <creature position>
 // negates all invalid input
+// parameters: current elixir count, the deck to deploy creature from, and the head of the linked list of deployed creatures
 void deploy (int &currentElixir, creature deck[], deployed * &head) {
+    // only allows 4 creatures on the field
     if (numberOfCreatures(head) == 4) {
         cin.clear(); 
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -24,6 +26,7 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
     
     int creatureidx;
     cin >> creatureidx;
+    // terminates function if player enters the input in a wrong format
     while ( cin.fail() ) {
         cin.clear(); 
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -37,6 +40,7 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
         cout << RED << "Please enter a valid creature number." << WHITE << endl;
         return;
     }
+    // terminates function if creature is already deployed
     else if ( deck[creatureidx-1].getdeployed() == true ) {
         cin.clear(); 
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -44,6 +48,7 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
         return;
     }
 
+    // takes in the position to deploy the creature
     int position;
     cin >> position;
     while ( cin.fail() ) {
@@ -53,6 +58,7 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
         return;
     }
 
+    // deploy takes 1 elixir, terminate function if not enough elixir.
     if (currentElixir > 0) {
         currentElixir--;
     }
@@ -61,10 +67,12 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
         return;
     }
 
+    // create a node for the newly deployed creature
     deployed * newdeployed = new deployed;
     newdeployed->deployedCreature = deck[creatureidx-1];
     deck[creatureidx-1].setdeployed(true);
     
+    // put the node in specified location
     int i = 1;
     deployed * currentnode = head;
     deployed * previousnode = NULL;
@@ -84,7 +92,10 @@ void deploy (int &currentElixir, creature deck[], deployed * &head) {
 }
 
 // randomly draw a card from a creature
+// parameter: the creature from which the card is drawn from (of type creature class)
+// output: the card's index number (as stored in the creature) (1~5)
 int drawCard(creature &toBeDrawnFrom) {
+    // store available cards in an array with size 25
     int cards[25] = {0};
     int count = 0;
     for (int i = 0; i < 5; i++) {
@@ -93,6 +104,8 @@ int drawCard(creature &toBeDrawnFrom) {
             count++;
         }
     }
+
+    // if all cards were already drawn, initialise cards again 
     if (count == 0) {
         for (int i = 0; i < 5; i++) {
             toBeDrawnFrom.cardpool[i].setcard(toBeDrawnFrom.cardpool[i].getcardnumber());
@@ -104,6 +117,8 @@ int drawCard(creature &toBeDrawnFrom) {
             }
         }
     }
+    
+    // randomly draw a card, return the card's index number
     delay(0.1);
     srand(time(NULL));
     int cardidx = cards[(rand() % count)];
@@ -111,7 +126,8 @@ int drawCard(creature &toBeDrawnFrom) {
     return cardidx;
 }
 
-// add a card to player's hand (after drawn)
+// add a card to player's hand (after drawn) (append to the linked list of the cards on hand)
+// parameters: head of the linked list of cards on hand, the card to be added (with type class card)
 void addCardToHand (cardOnHand * &cardhead, card toBeAdded) {
     cardOnHand * newnode = new cardOnHand;
     newnode->theCard = toBeAdded;
@@ -120,7 +136,8 @@ void addCardToHand (cardOnHand * &cardhead, card toBeAdded) {
     return;
 }
 
-// randomly draw 5 cards from all creatures' card at start of battle
+// randomly draw 5 cards from all creatures' card at start of battle and add to the hand
+// parameters: head of linked list of cards on hand, the deck of the player, a 'push' integer to randomise the random seed
 void initialiseCard (cardOnHand * &cardhead, creature deck[], int push) {
     for (int i = 0; i < 5; i++) {
         srand(time(NULL)+push);
@@ -130,12 +147,14 @@ void initialiseCard (cardOnHand * &cardhead, creature deck[], int push) {
     return;
 }
 
+// remove dead creature from the linked list of deployed creatures
+// parameters: the node of the dead creature, the head of the linked list of deployed creatures
 void death (deployed * &creaturenode, deployed * &head) {
     deployed * deleteafter = head;
     cout << creaturenode->deployedCreature.getname() << " is eliminated from the battlefield." << endl;
     if (deleteafter == creaturenode) {
         head = creaturenode->next;
-        if (creaturenode->deployedCreature.getstatus("elixirsap") < 0) {
+        if (creaturenode->next != NULL && creaturenode->deployedCreature.getstatus("elixirsap") < 0) {
             creaturenode->next->deployedCreature.setstatus("elixirsap", creaturenode->deployedCreature.getstatus("elixirsap"));
         }
         delete creaturenode;
@@ -144,7 +163,7 @@ void death (deployed * &creaturenode, deployed * &head) {
         while (deleteafter->next != creaturenode) {
             deleteafter = deleteafter->next;
         }
-        if (creaturenode->deployedCreature.getstatus("elixirsap") < 0) {
+        if (creaturenode->next != NULL && creaturenode->deployedCreature.getstatus("elixirsap") < 0) {
             deleteafter->deployedCreature.setstatus("elixirsap", creaturenode->deployedCreature.getstatus("elixirsap"));
         }
         deleteafter->next = creaturenode->next;
@@ -155,10 +174,13 @@ void death (deployed * &creaturenode, deployed * &head) {
 // attack the opponent creature
 // format: attack <opponent creature name> with <own creature name>
 // negates all invalid input
+// parameters: the player's and opponent's head of deployed creature linked list, head of the player's cards linked list, current elixir count
 void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard, int &currentElixir) {
+    // get input
     string fullsentence;
     getline(cin, fullsentence);
 
+    // rejects invalid input
     istringstream iss (fullsentence);
     string word;
     string name = "";
@@ -180,6 +202,7 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
         return;
     }
     
+    // check if the target in valid or if any opponent creature has heroic
     deployed * targetnode = opponent;
     bool flag = false;
     bool heroic = false;
@@ -208,7 +231,7 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
             continuenode = continuenode->next;
         }
     }
-    
+    // the player can only a creature with heroic if heroic is present on the field
     if (heroic == true && targetnode->deployedCreature.getstatus("heroic") == 0) {
         cout << RED << "You can only attack creatures with heroic." << WHITE << endl;
         return;
@@ -227,7 +250,7 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
         cout << RED << "No attacker name inserted." << WHITE << endl;
         return;
     }
-
+    // checks if attacker is valid
     deployed * attackernode = player;
     flag = false;
     while (flag == false && attackernode != NULL) {
@@ -242,7 +265,7 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
         cout << RED << "Invalid attacker name inserted. Please check your spelling." << WHITE << endl;
         return;
     }
-
+    // checks if elixir count is enough to attack
     if (attackernode->deployedCreature.getcost() > currentElixir) {
         cout << RED << "Not enough elixir!" << WHITE << endl;
         return;
@@ -250,12 +273,13 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
     else {
         currentElixir = currentElixir - attackernode->deployedCreature.getcost();
     }
-
-    if (targetnode->deployedCreature.getstatus("blind") > 0) {
+    //if attacker is blinded, miss attack
+    if (attackernode->deployedCreature.getstatus("blind") > 0) {
         cout << "MISSED!" << endl;
-        targetnode->deployedCreature.setstatus("blind", -1);
+        attackernode->deployedCreature.setstatus("blind", -1);
     }
     else {
+        // damage the target
         bool critical = false;
         int byHowMuch = attackernode->deployedCreature.getatk(critical);
         targetnode->deployedCreature.decreasehp(byHowMuch);
@@ -263,13 +287,15 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
             cout << "CRITICAL ATTACK !!!" << endl;
         }
         cout << targetnode->deployedCreature.getname() << " damaged by " << byHowMuch << " hp." << endl;
+        // activate thorns effect if target has thorns
         attackernode->deployedCreature.thorns(byHowMuch, targetnode->deployedCreature);
     }
-
+    // attacker draws a card after attack if no block card status
     if (attackernode->deployedCreature.getstatus("blockcard") > 0) {
         cout << "No card drawn. Blocked." << endl;
         attackernode->deployedCreature.setstatus("blockcard", -1);
     }
+    // a player can only has at most 9 cards on hand
     else if (numberOfCards(playerscard) < 9) {
         int idxOfCardDrawn = drawCard(attackernode->deployedCreature);
         addCardToHand(playerscard, attackernode->deployedCreature.cardpool[idxOfCardDrawn]);
@@ -278,19 +304,20 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
     else {
         cout << "Hand full." << endl;
     }
-
+    // revert 'attack up' status
     if (attackernode->deployedCreature.getstatus("atk") != 0) {
         attackernode->deployedCreature.atk(0);
     }
-
+    // saps elixir if elixir sap is present
     attackernode->deployedCreature.elixirsap(targetnode->deployedCreature, currentElixir, true);
-
-    if (targetnode->deployedCreature.gethp() <= 0) {
+    // checks if any creature is dead
+    if (targetnode->deployedCreature.gethp() <= 0 && attackernode->deployedCreature.gethp() <= 0) {
         death(targetnode, opponent);
+        death(attackernode, player);
     }
-    if (attackernode->deployedCreature.gethp() <= 0) {
+    else if (attackernode->deployedCreature.gethp() <= 0) {
         death (attackernode, player);
-
+        // target counterattacks if not dead and has counterattack
         targetnode->deployedCreature.counteratk(player->deployedCreature);
 
         targetnode->deployedCreature.elixirsap(player->deployedCreature, currentElixir, true);
@@ -302,8 +329,10 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
             death(targetnode, opponent);
         }
     }
-    if (targetnode->deployedCreature.gethp() >= 0 && attackernode->deployedCreature.gethp() >= 0) {
+    else if (targetnode->deployedCreature.gethp() > 0 && attackernode->deployedCreature.gethp() > 0) {
         targetnode->deployedCreature.counteratk(attackernode->deployedCreature);
+
+        targetnode->deployedCreature.elixirsap(attackernode->deployedCreature, currentElixir, true);
         
         if (attackernode->deployedCreature.gethp() <= 0) {
             death (attackernode, player);
@@ -312,13 +341,19 @@ void attack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard
             death(targetnode, opponent);
         }
     }
+    else {
+        death(targetnode, opponent);
+    }
     return;
 }
 
+// to use a card on a creature
+// parameters: the player's and opponent's head of deployed creature linked lists, current elixir count, head of linked list of player's cards on hand
 void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHand * &playerscard) {
     string fullsentence;
     getline(cin, fullsentence);
 
+    // rejects incorrect input
     istringstream iss (fullsentence);
     string word;
     string name = "";
@@ -378,6 +413,7 @@ void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHan
         cout << RED << "Invalid creature name inserted. Please check your spelling." << WHITE << endl;    
         return;
     }
+    // if creature name is present on both sides, ask if the creature is the player's own creature or the opponent's
     else if (creaturenode1 != NULL && creaturenode2 != NULL) {
         cout << "Do you wish to use this card on your own \"" << name << "\" or opponent's \"" << name << "\"?" << endl;
         cout << "Please type ( own / opponent ) ";
@@ -424,20 +460,17 @@ void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHan
             }
         }
     }
-
+    // checks if silence is present, player cannot play cards on silenced creature
     if (creaturenode1->deployedCreature.getstatus("silence") > 0) {
         cout << RED << "The creature is silenced. You cannot play card on it." << WHITE << endl;
         return;
     }
-
+    // cheks if current elixir is enough
     if (cardnode->theCard.getcost() > currentElixir) {
         cout << RED << "Not enough elixir!" << WHITE << endl;
         return;
     }
-    else {
-        currentElixir = currentElixir - cardnode->theCard.getcost();
-    }
-
+    // gets card's function
     string trash;
     string cardFunction = cardnode->theCard.getfunction(trash);
     istringstream iss2 (cardFunction);
@@ -449,6 +482,7 @@ void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHan
     string card;
     int number;
 
+    // do action on every function of the card
     while (iss2 >> condition) {
         iss2 >> trash;
         iss2 >> number;
@@ -634,7 +668,10 @@ void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHan
 
         iss2 >> trash;
     }
+    // reduces current elixir count
+    currentElixir = currentElixir - cardnode->theCard.getcost();
 
+    // delete the card from hand
     cardOnHand * deleteafter = playerscard;
     if (deleteafter == cardnode) {
         playerscard = cardnode->next;
@@ -648,6 +685,7 @@ void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHan
         delete cardnode;
     }
 
+    // removes dead creatures
     if (creaturenode1->deployedCreature.gethp() <= 0) {
         if (indicator) {
             death(creaturenode1, player);
@@ -660,12 +698,16 @@ void use (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHan
     return;
 }
 
+// show card or creature info in battle
+// parameters: head of player's  and opponent's deployed creature linked list, the players full deck (array of creatures), head of the player's card on hand linked list
 void show (deployed * player, deployed * opponent, creature deck[], cardOnHand * playerscard) {
     string type;
     cin >> type;
 
     cout << endl;
 
+    // to show craeture info
+    // rejects invalid input
     if (type == "creature") {
         string name;
         cin >> name;
@@ -730,6 +772,8 @@ void show (deployed * player, deployed * opponent, creature deck[], cardOnHand *
             }
         }
     }
+    // to show card info
+    // rejects invalid input
     else if (type == "card") {
         string name;
         cin >> name;
@@ -807,6 +851,7 @@ void show (deployed * player, deployed * opponent, creature deck[], cardOnHand *
 }
 
 // a centre switch to take in player's input and calls different functions based on user's input
+// parameters : player's and opponent's head of linked lists of deployed creatures, current elixir count, player's full deck of creatures (array of creatures), head of linked list of player's card on hand
 void playersMove (deployed * &player, deployed * &opponent, int &currentElixir, creature deck[], cardOnHand * &playerscard) {
     string action;
     while (player != NULL && opponent != NULL) {
@@ -838,17 +883,22 @@ void playersMove (deployed * &player, deployed * &opponent, int &currentElixir, 
     }
 }
 
+// do some in game changes at the start of the player's round
+// parameters: player's and opponent's head of linked lists of deployed creatures, current elixir count
 void roundStart (deployed * &player, deployed * &opponent, int &currentElixir) {
     if (player != NULL && opponent != NULL) {
         deployed * currentnode = player;
         while (currentnode != NULL) {
+            // if creature has niceland, heal 10% every round
             if (currentnode->deployedCreature.getstatus("niceland") != 0) {
                 currentnode->deployedCreature.heal(10);
             }
 
+            // if creature has haste, cost -1
             currentnode->deployedCreature.elixirsap(currentnode->deployedCreature, currentElixir, false);
             currentnode->deployedCreature.haste(true);
 
+            // if creature has revenge, revenge attack the opponent team
             currentnode->deployedCreature.revenge(0, true, opponent->deployedCreature);
             if (opponent->deployedCreature.gethp() <= 0) {
                 death(opponent, opponent);
@@ -860,6 +910,7 @@ void roundStart (deployed * &player, deployed * &opponent, int &currentElixir) {
                 break;
             }
 
+            // if creature had poison, decrease hp at every start of round
             currentnode->deployedCreature.poison();
             if (currentnode->deployedCreature.gethp() <= 0) {
                 deployed * deathnode = currentnode;
@@ -868,6 +919,7 @@ void roundStart (deployed * &player, deployed * &opponent, int &currentElixir) {
                 break;
             }
 
+            // these status' count -1
             string minusOneTurn[4] = {"thorns", "heroic", "defenseup", "silence"};
             for (int i = 0; i < 4; i++) {
                 if (currentnode->deployedCreature.getstatus(minusOneTurn[i]) != 0) {
@@ -880,6 +932,8 @@ void roundStart (deployed * &player, deployed * &opponent, int &currentElixir) {
     }
 }
 
+// prints if player lose or win
+// parameters: head of player's and opponent's deployed creature's linked list, bool winlose as a reference to bring the results to main function
 void battleResults (deployed * player, deployed * opponenthead, bool &winlose) {
     if (player == NULL) {
         cout << RED << "You lose!" << WHITE << endl;
@@ -894,22 +948,28 @@ void battleResults (deployed * player, deployed * opponenthead, bool &winlose) {
 
 // overall battle function 
 // call this function to start the battle
+// parameters: player's deck (array of creatures of size 5), opponent of type struct 'opponent' (initialised), bool winlose to indicate the battle's results (initialisation not needed)
 void battle(creature deck[], opponent currentOpponent, bool &winlose) {
     cout << HIGHLIGHT << "Heading to battlefield..."  << WHITE << endl;
     
+    // initialise player's and opponents' head of deployed creatures as null
+    // head 1 is player's, head 2 is opponent's
     deployed * head1 = NULL;
     deployed * head2 = NULL;
     cardOnHand * cardhead1 = NULL;
     cardOnHand * cardhead2 = NULL;
 
+    // initialise both player's card on hand
     initialiseCard(cardhead1, deck, 0);
     initialiseCard(cardhead2, currentOpponent.opponentCreature, 5);
 
     int totalElixir = 1;
     int currentElixir = totalElixir;
     
+    // print the battle screen
     printBattleScreen(head1, cardhead1, head2, currentElixir, deck);
 
+    // ask player to deploy a creature
     while (currentElixir == 1) { 
         cout << "Please deploy a creature: deploy ";
         deploy(currentElixir, deck, head1);
@@ -918,21 +978,26 @@ void battle(creature deck[], opponent currentOpponent, bool &winlose) {
 
     cout << "------------------------------------------------------------------------------" << endl << endl;
     opponentsResponse(currentOpponent.opponentCreature, currentElixir, head2, cardhead2, head1);
-
+     
+    // repeats adding elixir, gets user's input for every round until all deployed creatures of one of the players are dead
     while (head1 != NULL && head2 != NULL) {
-        totalElixir++;
+        if (totalElixir < 10) {
+            totalElixir++;
+        }
         currentElixir = totalElixir;
         roundStart(head1, head2, currentElixir);
         playersMove(head1, head2, currentElixir, deck, cardhead1);
         currentElixir = totalElixir;
         roundStart(head2, head1, currentElixir);
-        //playersMove(head2, head1, currentElixir, currentOpponent.opponentCreature, cardhead2);
+        //playersMove(head2, head1, currentElixir, currentOpponent.opponentCreature, cardhead2); // if pvp
         opponentsResponse(currentOpponent.opponentCreature, currentElixir, head2, cardhead2, head1);
     }
     printBattleScreen(head1, cardhead1, head2, currentElixir, deck);
     battleResults(head1, head2, winlose);
 }
 
+// same as battle but for tutorial use
+// teach new players about battle mechanics
 void tutorialmode (creature deck[], opponent currentOpponent, bool &winlose) {
     deployed * head1 = NULL;
     deployed * head2 = NULL;
@@ -1146,7 +1211,9 @@ void tutorialmode (creature deck[], opponent currentOpponent, bool &winlose) {
     opponentsResponse(currentOpponent.opponentCreature, currentElixir, head2, cardhead2, head1);
 
     while (head1 != NULL && head2 != NULL) {
-        totalElixir++;
+        if (totalElixir < 10) {    
+            totalElixir++;
+        }
         currentElixir = totalElixir;
         roundStart(head1, head2, currentElixir);
         playersMove(head1, head2, currentElixir, deck, cardhead1);

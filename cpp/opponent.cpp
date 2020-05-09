@@ -9,6 +9,8 @@
 
 using namespace std;
 
+// to deploy an opponent creature onto battle field, similar with the deploy() function in battle.cpp
+// takes in two more parameters: the creature's (to be deployed) index (1~5) and the position to be deployed on
 void opponentdeploy (int &currentElixir, creature deck[], deployed * &head, int creatureidx, int position) {
     if (numberOfCreatures(head) == 4) {
         return;
@@ -44,6 +46,8 @@ void opponentdeploy (int &currentElixir, creature deck[], deployed * &head, int 
     return;
 }
 
+// for opponent to attack, similar with the attack() function in battle.cpp
+// takes in two more parameters: the attacker's and the target's node in the linked lists of deployed creature
 void opponentattack (deployed * &player, deployed * &opponent, cardOnHand * &playerscard, int &currentElixir, deployed * &attackernode, deployed * &targetnode) {
     if (attackernode->deployedCreature.getcost() > currentElixir) {
         return;
@@ -52,10 +56,10 @@ void opponentattack (deployed * &player, deployed * &opponent, cardOnHand * &pla
     currentElixir = currentElixir - attackernode->deployedCreature.getcost();
     cout << "Opponent attacked your " << targetnode->deployedCreature.getname() << " with his " << attackernode->deployedCreature.getname() << "!" << endl;
 
-    if (targetnode->deployedCreature.getstatus("blind") > 0) {
+    if (attackernode->deployedCreature.getstatus("blind") > 0) {
         cout << "MISSED!" << endl;
         cout << endl;
-        targetnode->deployedCreature.setstatus("blind", -1);
+        attackernode->deployedCreature.setstatus("blind", -1);
     }
     else {
         bool critical = false;
@@ -84,12 +88,13 @@ void opponentattack (deployed * &player, deployed * &opponent, cardOnHand * &pla
 
     attackernode->deployedCreature.elixirsap(targetnode->deployedCreature, currentElixir, true);
 
-    if (targetnode->deployedCreature.gethp() <= 0) {
+    if (targetnode->deployedCreature.gethp() <= 0 && attackernode->deployedCreature.gethp() <= 0) {
         death(targetnode, player);
-    }
-    if (attackernode->deployedCreature.gethp() <= 0) {
         death(attackernode, opponent);
-
+    }
+    else if (attackernode->deployedCreature.gethp() <= 0) {
+        death (attackernode, opponent);
+        // target counterattacks if not dead and has counterattack
         targetnode->deployedCreature.counteratk(opponent->deployedCreature);
 
         targetnode->deployedCreature.elixirsap(opponent->deployedCreature, currentElixir, true);
@@ -101,8 +106,10 @@ void opponentattack (deployed * &player, deployed * &opponent, cardOnHand * &pla
             death(targetnode, player);
         }
     }
-    if (targetnode->deployedCreature.gethp() >= 0 && attackernode->deployedCreature.gethp() >= 0) {
+    else if (targetnode->deployedCreature.gethp() > 0 && attackernode->deployedCreature.gethp() > 0) {
         targetnode->deployedCreature.counteratk(attackernode->deployedCreature);
+
+        targetnode->deployedCreature.elixirsap(attackernode->deployedCreature, currentElixir, true);
         
         if (attackernode->deployedCreature.gethp() <= 0) {
             death (attackernode, opponent);
@@ -111,10 +118,15 @@ void opponentattack (deployed * &player, deployed * &opponent, cardOnHand * &pla
             death(targetnode, player);
         }
     }
+    else {
+        death(targetnode, player);
+    }
     return;
 }
 
-// indicator true: used on opponent (ai) creature
+// for opponent to use a card on a creature, similar to the use() function in battle.cpp
+// takes in four more parameters: a bool indicator (explained below), the node of the card in the linked list of card on hand, the node of the creature that the card is used on, and the node of the target creature if a magic card is used 
+// indicator true: used on opponent's creature, false: used on player's creature
 void opponentuse (deployed *&player, deployed * &opponent, int &currentElixir, cardOnHand * &playerscard, bool indicator, cardOnHand * &cardnode, deployed * &creaturenode1, deployed * &targetnode) {
     if (cardnode->theCard.getcost() > currentElixir) {
         return;
@@ -147,13 +159,11 @@ void opponentuse (deployed *&player, deployed * &opponent, int &currentElixir, c
             }
         }
     }
-    
-    currentElixir = currentElixir - cardnode->theCard.getcost();
-    cout << "Opponent used \"" << cardnode->theCard.getname() << "\" on " << creaturenode1->deployedCreature.getname() << " -> ";
 
     string trash;
-    string cardFunction = cardnode->theCard.getfunction(trash);
-    cout << trash << endl;
+    string clean;
+    string cardFunction = cardnode->theCard.getfunction(clean);
+    cout << "Opponent used \"" << cardnode->theCard.getname() << "\" on " << creaturenode1->deployedCreature.getname() << " -> " + clean << endl;
     istringstream iss2 (cardFunction);
 
     string condition;
@@ -331,6 +341,8 @@ void opponentuse (deployed *&player, deployed * &opponent, int &currentElixir, c
 
         iss2 >> trash;
     }
+
+    currentElixir = currentElixir - cardnode->theCard.getcost();
     cout << endl;
 
     cardOnHand * deleteafter = playerscard;
@@ -357,23 +369,32 @@ void opponentuse (deployed *&player, deployed * &opponent, int &currentElixir, c
     return;
 }
 
+// to randomly determine what the opponent does (to simulate an AI opponent)
+// parameters: current elixir count, the opponent's deck, the opponent's head of deployed creatures, an integer push to randomise the seed, the player's head of deployed creatures, the opponent's head of cards on hand
 void random(int &elixir, creature deck[], deployed * &head, int push, deployed * &playerhead, cardOnHand * &cardhead) {
     srand(time(NULL) + push);
+    // a random first word to determine if opponent deploy, attack or use
     int firstword = (rand() % 3);
 
+    // use another seed
     srand(time(NULL) + push + 1);
+    // deploy if first word = 0
     if (firstword == 0) {
+        // deploy random creature
         int creatureidx = (rand() % 5);
         int position = (rand() % (numberOfCreatures(head)+1)) + 1;
         opponentdeploy(elixir, deck, head, creatureidx, position);
     }
+    // attack if first word = 2
     else if (firstword == 1) {
+        // random attacker
         int attacker = (rand() % (numberOfCreatures(head)));
         deployed * attackernode = head;
         for (int i = 0; i < attacker; i++) {
             attackernode = attackernode->next;
         }
-
+        // random target
+        // use another seed
         srand(time(NULL) + push + 2);
         int target = (rand() % (numberOfCreatures(playerhead)));
         deployed * targetnode = playerhead;
@@ -383,13 +404,16 @@ void random(int &elixir, creature deck[], deployed * &head, int push, deployed *
 
         opponentattack(playerhead, head, cardhead, elixir, attackernode, targetnode);
     }
+    // use if first word = 3
     else {
+        // random card
         int card = (rand() % numberOfCards(cardhead));
         cardOnHand * cardnode = cardhead;
         for (int i = 0; i < card; i++) {
             cardnode = cardnode->next;
         }
 
+        // gets function of card, use card on player if the card has a negative effect
         bool indicator = true;
         string trash;
         istringstream iss (cardnode->theCard.getfunction(trash));
@@ -403,7 +427,7 @@ void random(int &elixir, creature deck[], deployed * &head, int push, deployed *
         if (function == "poison" || (function == "blockcard" || (function == "silence" || (function == "blind" || function == "directdmg")))) {
             indicator = false;
         }
-    
+
         deployed * creaturenode1;
         if (indicator) {
             creaturenode1 = head;
@@ -412,6 +436,8 @@ void random(int &elixir, creature deck[], deployed * &head, int push, deployed *
             creaturenode1 = playerhead;
         }
 
+        // random creature to play card on
+        // use another seed
         srand(time(NULL) + push + 2);
         int creatureno = (rand() % numberOfCreatures(creaturenode1));
         for (int i = 0; i < creatureno; i++) {
@@ -429,6 +455,9 @@ void random(int &elixir, creature deck[], deployed * &head, int push, deployed *
     }
 }
 
+// delays time to simulate loading time
+// not useful on linux lol
+// parameter: number of seconds, can be decimal
 void delay(double number_of_seconds) { 
     // Converting time into milli_seconds 
     int milli_seconds = 1000 * number_of_seconds; 
@@ -440,13 +469,17 @@ void delay(double number_of_seconds) {
     while (clock() < start_time + milli_seconds); 
 } 
 
+// main function to determine all opponent's response
+// parameters: opponents deck (array of creatures), current elixir count, head of opponent's deployed creatures, head of opponent's cards on hand, head of player's deployed creatures
 void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHand * &cardhead, deployed * &playerhead) {
+    // is first round, deploy a creature
     if (head == NULL && elixir == 1) {
         srand(time(NULL));
         opponentdeploy(elixir, deck, head, rand() % 5, 1);
         cout << "------------------------------------------------------------------------------" << endl;
         return;
     }
+    // if all deployed creatures dead, terminate function
     else if (head == NULL || playerhead == NULL) {
         return;
     }
@@ -456,7 +489,7 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
     int push = 0;
 
     while (elixir > 0 && actionAvailable) {
-        // make sure there is some moves left
+        // make sure there is actions available to be done by opponent
         delay(1);
         if (head == NULL || playerhead == NULL) {
             return;
@@ -479,11 +512,10 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
                         }
                         cardnode = cardnode->next;
                     }
-                    if (!actionAvailable) {
+                    if (actionAvailable) {
                         break;
                     }
                     else {
-                        actionAvailable = false;
                         currentnode = head;
                         while (currentnode != NULL && !actionAvailable) {
                             if (currentnode->deployedCreature.getstatus("silence") <= 0) {
@@ -503,6 +535,9 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
                                 break;
                             }
                         }
+                        else {
+                            break;
+                        }
                     }
                 }
                 else {
@@ -511,7 +546,7 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
             }
         }
 
-        while (currentElixir == elixir) {
+        while (currentElixir == elixir && actionAvailable) {
             random(elixir, deck, head, push, playerhead, cardhead);
             push++;
         }
@@ -524,6 +559,7 @@ void opponentsResponse (creature deck[], int &elixir, deployed * &head, cardOnHa
     return;
 }
 
+// datermine the opponent's deck on different occasions
 void determineopponent(string mode, opponent &currentopponent, creature deck[5]) { 
     int sum = 0;
     for (int i = 0; i < 5; i++) {
@@ -531,6 +567,7 @@ void determineopponent(string mode, opponent &currentopponent, creature deck[5])
     }
     int averagedecklevel = sum/5;
 
+    // in boss fight, intialise the opponent's deck with the strongest creatures (in my opinion)
     if (mode == "boss") {
         currentopponent.opponentCreature[0].setbasestats(31);
         currentopponent.opponentCreature[1].setbasestats(44);
@@ -541,21 +578,25 @@ void determineopponent(string mode, opponent &currentopponent, creature deck[5])
             currentopponent.opponentCreature[i].setcurrentstats(20);
         }
     }
+    // in other condition, just randomly assign creatures in opponent's deck
     else if (mode == "random") {
         int push = 0;
         for (int i = 0; i < 5; i++) {
             srand(time(NULL)+push);
             currentopponent.opponentCreature[i].setbasestats(rand()%80+1);
+            // level of opponent's creatures depend on player's avarage deck level
             currentopponent.opponentCreature[i].setcurrentstats(averagedecklevel);
             push++;
         }
     }
+    // put 5 dummies in opponent's deck if it's in tutorial
     else if (mode == "tutorial") {
         for (int i = 0; i < 5; i++) {
             currentopponent.opponentCreature[i].setbasestats(81);
             currentopponent.opponentCreature[i].setcurrentstats(1);
         }
     }
+    // initialise player's reward if opponent defeated
     currentopponent.rewards.food = averagedecklevel * 3;
     currentopponent.rewards.coins = averagedecklevel * 75;
     if (rand()%7 == 0) {
