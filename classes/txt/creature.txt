@@ -79,7 +79,7 @@ no  namelength name              symbol      card                hp   cost  atk 
 78  2          mr muscle         L[:>D]/     126 133 141 142 149 213  3     60   129  23
 79  2          steak chop        6(~o~)9     136 137 152 153 154 167  2     63   98   11
 80  2          chicken chop      {U-_-}U     126 127 128 139 155 264  4     101  120  17
-81  1          dummy             -[^-^]-     161 161 161 161 161 120  4     1    1    1
+81  1          dummy             -[^-^]-     161 161 161 161 161 50   4     1    1    1
 
 // all creatures should be stored in this format cuz i coded creature.cpp according to this format
 // if changes are made in this txt file then there may be some changes needed to be done in the creature.cpp code

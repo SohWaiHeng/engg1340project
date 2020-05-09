@@ -44,6 +44,9 @@ int main () {
         bool winlose = false;
         tutorial(currentcoordinate,enemyCoordinate,avatarSymbol,enemySymbol,currentblock,newBlock, currentOpponent, winlose, deck);
         cout << BLUE << "Now go and defeat more opponent, level up yourself and prepare yourself for the final boss!" << WHITE << endl;
+        for (int i = 0; i < 5; i++) {
+            deck[i].setdeployed(false);
+        }
     }
 
     int flag = 0;
