@@ -87,11 +87,11 @@ void getRandomCoordinateForEnemy(string currentBlock, int enemyCoordinate[2], in
                     cout << enemyCoordinate[0] << ' ' << enemyCoordinate[1];
                     delete [] arr;
                     return;
-                 }
-             }
-         }
-     }
- }
+                }
+            }
+        }
+    }
+}
 
 // to check if change of map block is needed
 // parameters: currentBlock is the block of map the avatar is currently on, currentCoordinate is the coordinates of the avatar on map, blockNum returns the block number avatar is on
@@ -204,6 +204,7 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
             // this if statement is true when avatar is found
             if (blockArray[i].substr(j,(currentCharacter).length())==currentCharacter){    
                 switch (move){ 
+                    // move upwards
                     case 'w':
                         // swap the positions of avatar and alphabet when an alphabet is encountered
                         if (checkForAlphabet(blockArray[i-1].substr(j,(currentCharacter).length()))==true){ 
@@ -221,6 +222,7 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
                             flag = 1;
                         }
                         break;
+                    // move to the left
                     case 'a':
                         if (checkForAlphabet(blockArray[i].substr(j-1,1))==true){
                             string alphabet = blockArray[i].substr(j-1,1);
@@ -236,6 +238,7 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
                             flag = 1;
                         }
                         break;
+                    // move downwards
                     case 's':
                         if (checkForAlphabet(blockArray[i+1].substr(j,(currentCharacter).length()))==true){
                             changePositions(blockArray, i, j, i+1, j, blockArray[i+1].substr(j,(currentCharacter).length()), currentCharacter);
@@ -250,6 +253,7 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
                             flag = 1;
                         }
                         break;
+                    // move to the right
                     case 'd':
 			            if (checkForAlphabet(blockArray[i].substr(j+5,1))==true){
                             string alphabet = blockArray[i].substr(j+5,1);
@@ -304,11 +308,11 @@ void movement(char move, string &newBlock, string currentCharacter, int &moveFla
 // main function to allow avatar to move around the map
 // parameters: avatarCoordinate and enemyCoordinate are the current coordinates of avatar and enemy on the map, avatarSymbol and enemySymbol are the figures of current avatar and enemy respectively, currentBlock is the original block of map, newBlock is the map which includes avatar and enemy figures
 void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avatarSymbol, string &enemySymbol, string &currentBlock, string &newBlock, int &flag, string &battlemode){
-    // prevMove is used to store the previous move of player
-    string move, prevMove = "m";   
+    string move;   
     // initial enemy coordinates are set, after the enemy is defeated its position will be randomly placed using the getRandomCoordinateForEnemy on the same block
     int enemyCoordinateArray[6][2] = {{21,16},{17,26},{21,10},{19,13},{22,35},{15,48}};
-    int moveFlag = 0, flag1 = 0, blockNum = 1; 
+    // moveFlag and stopQuestion are used to avoid repeating sending of messages
+    int moveFlag = 0, flag1 = 0, blockNum = 1, stopQuestion = 0; 
     mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
     printMap(newBlock);
     while (flag == 0){
@@ -319,99 +323,105 @@ void moveAroundMap(int avatarCoordinate[2], int enemyCoordinate[2], string &avat
 	    flag = 0;
         flag1 = 0;
 	    for (int i = 0; i < move.length() && flag == 0 && moveFlag == 0; i++){
-	    move[i] = tolower(move[i]);
-        switch(move[i]){
-            case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':{
-                //moveFlag to avoid warning is sent multiple times at once, prevMove is to avoid error when player choosing the same shortcut character
-		        if (moveFlag==1||(prevMove == string()+move[i] && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))){
-			        break;
-		        }
-		        movement(move[i],newBlock,avatarSymbol,moveFlag);
-		        getCoordinate(newBlock,(avatarSymbol)[0],avatarCoordinate);
+	        move[i] = tolower(move[i]);
+            int testCoordinate[2] = {-1,-1};
+            switch(move[i]){
+                case 'w': case 'a': case 's': case 'd': case 'c': case 'z': case 'x': case 'b': case 'v':{
+                    getCoordinate(newBlock,toupper(move[i]),testCoordinate);
+                    if (((testCoordinate[0]==-1) && (move[i]=='z'||move[i]=='x'||move[i]=='c'||move[i]=='v'||move[i]=='b'))||moveFlag==1){
+                        break;
+                    }
+		            movement(move[i],newBlock,avatarSymbol,moveFlag);
+		            getCoordinate(newBlock,(avatarSymbol)[0],avatarCoordinate);
 
-		        // to check if change of block is needed using the most left character of avatar, for cases which player is heading to the left side of block
-		        if (checkForMapChange(currentBlock,avatarCoordinate,blockNum) == true){
-			        flag1 = 1;
-		        }
+		            // to check if change of block is needed using the most left character of avatar, for cases which player is heading to the left side of block
+		            if (checkForMapChange(currentBlock,avatarCoordinate,blockNum) == true){
+			            flag1 = 1;
+		            }
 
-                // to check if change of block is needed using the most right character of avatar, for cases which player is heading to the right side of block
-		        if (flag1 == 0){
-		    	    avatarCoordinate[1] += 4;
-		    	    checkForMapChange(currentBlock,avatarCoordinate,blockNum);
-		    	    avatarCoordinate[1] -= 4;
-			        flag1 = 1;
-		        }
+                    // to check if change of block is needed using the most right character of avatar, for cases which player is heading to the right side of block
+		            if (flag1 == 0){
+		    	        avatarCoordinate[1] += 4;
+		    	        checkForMapChange(currentBlock,avatarCoordinate,blockNum);
+		    	        avatarCoordinate[1] -= 4;
+			            flag1 = 1;
+		            }
 
-                // to change the enemy coordinate when changing block of map
-                if (flag1 == 1){ 
-                    enemyCoordinate[0] = enemyCoordinateArray[blockNum-1][0];
-                    enemyCoordinate[1] = enemyCoordinateArray[blockNum-1][1];
-                }
+                    // to change the enemy coordinate when changing block of map
+                    if (flag1 == 1){ 
+                        enemyCoordinate[0] = enemyCoordinateArray[blockNum-1][0];
+                        enemyCoordinate[1] = enemyCoordinateArray[blockNum-1][1];
+                    }
 
-                // when player encounters an enemy on map
-                char choice;
-                if ((avatarCoordinate[0] >= enemyCoordinate[0]-1 && avatarCoordinate[0] <= enemyCoordinate[0]+1) && (avatarCoordinate[1] >= enemyCoordinate[1]-5 && avatarCoordinate[1] <= enemyCoordinate[1]+5)){
-                    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
-                    printMap(newBlock);
-                    cout << BLUE << "Look, seems like there is an enemy near you. Do you want to fight the enemy? [y/n] \n";
-                    cout << "Your choice: " << WHITE;
-                    cin >> choice;
-                    while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
-                        cin.clear();
-                        cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                        cout << RED << "Please type in \"y\" or \"n\" to choose. \n";
-                        cout << "Your choice: " << WHITE ;
+                    // when player encounters an enemy on map
+                    char choice;
+                    if (stopQuestion==0 && (avatarCoordinate[0] >= enemyCoordinate[0]-1 && avatarCoordinate[0] <= enemyCoordinate[0]+1) && (avatarCoordinate[1] >= enemyCoordinate[1]-5 && avatarCoordinate[1] <= enemyCoordinate[1]+5)){
+                        mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+                        printMap(newBlock);
+                        cout << BLUE << "Look, seems like there is an enemy near you. Do you want to fight the enemy? [y/n] \n";
+                        cout << "Your choice: " << WHITE;
                         cin >> choice;
+                        while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                            cout << RED << "Please type in \"y\" or \"n\" to choose. \n";
+                            cout << "Your choice: " << WHITE ;
+                            cin >> choice;
+                        }
+                        if (tolower(choice)=='y'){
+                            //go to battle and change the coordinates of enemy for the next battle
+                            getRandomCoordinateForEnemy(currentBlock,enemyCoordinate,avatarCoordinate);
+                            enemyCoordinateArray[blockNum-1][0] = enemyCoordinate[0];
+                            enemyCoordinateArray[blockNum-1][1] = enemyCoordinate[1];
+                            flag = 1;
+                        }
+                        else if (tolower(choice)=='n'){
+                            stopQuestion == 1;
+                        }
+		            }
+                    else if ((avatarCoordinate[0] < enemyCoordinate[0]-1 || avatarCoordinate[0] > enemyCoordinate[0]+1) && (avatarCoordinate[1] < enemyCoordinate[1]-5 || avatarCoordinate[1] > enemyCoordinate[1]+5))
+                        {stopQuestion = 0;}
+
+                    // when player encounters the final boss
+                    if (avatarCoordinate[0] == 8 && avatarCoordinate[1] == 30 && currentBlock == "txt/map4.txt"){
+                        mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+                        printMap(newBlock);
+                        cout << BLUE <<"You have now reached the dungeon of our final boss.\n";
+                        cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss? [y/n]\n" << WHITE;
+                        while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                            cout << RED << "Are you sure you are ready to fight the boss? Please type in \"y\" or \"n\" to choose.\n";
+                            cout << "Your choice: " << WHITE ;
+                            cin >> choice;
+                        }
+                        if (tolower(choice)=='y'){
+                            //go to battle with final boss
+                            battlemode = "boss";
+                            flag = 1;
+                        }
                     }
-                   if (tolower(choice)=='y'){
-                        //go to battle and change the coordinates of enemy for the next battle
-                        getRandomCoordinateForEnemy(currentBlock,enemyCoordinate,avatarCoordinate);
-                        enemyCoordinateArray[blockNum-1][0] = enemyCoordinate[0];
-                        enemyCoordinateArray[blockNum-1][1] = enemyCoordinate[1];
-                        flag = 1;
-                    }
+
+                    // update the map
+                    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
+                    break;
 		        }
 
-                // when player encounters the final boss
-                if (avatarCoordinate[0] == 8 && avatarCoordinate[1] == 30 && currentBlock == "txt/map4.txt"){
-                    mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
-                    printMap(newBlock);
-                    cout << BLUE <<"You have now reached the dungeon of our final boss.\n";
-                    cout << "This will be the toughest challenge that you may encounter. Are you sure that you are ready to go in and fight the final boss? [y/n]\n" << WHITE;
-                   while ((tolower(choice)!='y'&&tolower(choice)!='n')||cin.fail()){
-                        cin.clear();
-                        cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                        cout << RED << "Are you sure you are ready to fight the boss? Please type in \"y\" or \"n\" to choose.\n";
-                        cout << "Your choice: " << WHITE ;
-                        cin >> choice;
-                    }
-                    if (tolower(choice)=='y'){
-                        //go to battle with final boss
-                        battlemode = "boss";
-                        flag = 1;
-                    }
-                }
-                // update prevMove and the map
-                prevMove = string()+move[i];
-                mapWithAvatarAndEnemy(avatarSymbol,enemySymbol,avatarCoordinate,enemyCoordinate,currentBlock,newBlock);
-                break;
-		    }
+                // to main menu
+                case 'm':
+		            flag = 2;
+		            break;
 
-            // to main menu
-            case 'm':
-		        flag = 2;
-		        break;
-
-            default:
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(),'\n'); 
-                cout << RED << "\nPress WASD keys or alphabets shown in the map to move.\n";
-                cout << "Press M to open up the menu page.\n" << WHITE ; 
-		        flag = 1;
-		        break;
-        }
-	}
-	moveFlag = 0;
-	printMap(newBlock);
+                // invalid inputs
+                default:
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(),'\n'); 
+                    cout << RED << "\nPress WASD keys or alphabets shown in the map to move.\n";
+                    cout << "Press M to open up the menu page.\n" << WHITE ; 
+		            break;
+            }
+	    }
+	    moveFlag = 0;
+	    printMap(newBlock);
     }	
 }

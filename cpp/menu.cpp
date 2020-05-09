@@ -21,10 +21,10 @@
 
 using namespace std;
 
-// CREATURES
-
+// display creatures and their basic infos by page, 10 creatures each page
+// parameters: pageCount is the page number player is viewing, ownedhead is the head of linked list of all creatures player owned
 void displayCreatureByPage(int pageCount, owned * ownedhead) {
-    cout << "No.          NAME              SYMBOL  " <<endl;
+    cout << "No.       NAME          SYMBOL  " << endl;
     int count = 0;
     while (count < 10) {
         bool own = false;
@@ -41,29 +41,39 @@ void displayCreatureByPage(int pageCount, owned * ownedhead) {
             creature temp;
             temp.setbasestats(currentnode->index);
             temp.setcurrentstats(1);
-            cout << setw(2) << count << '.' << setw(25) << temp.getname() << "  "<< setw(8) << temp.getsymbol() << endl;
+            int length = temp.getname().length();
+            int space = (20 - length)/2;
+            string name = string(space,' ') + temp.getname() + string(space,' ');
+            cout << ' ' << count << '.' << setw(20) << name << setw(8) << temp.getsymbol() << endl;
         }
         else {
-            cout << setw(2) << count << '.' << setw(25) << "???" << "  "<< setw(8) << "???" << endl;
+            cout << ' ' << count << ".        ???           ???   " << endl;
         }
         count ++;
     }
 }
 
+// display avatars and their basic infos by page, 10 avatars each page
+// parameter: avataridx is the array that store avatars that player owned
 void displayAvatarByPage(int avataridx[]) {
-    cout << "No.          NAME              SYMBOL  " <<endl;
+    cout << "No.    NAME     SYMBOL" <<endl;
     for (int i = 0; i < 10; i++) {
         if (avataridx[i] != 0) {
             avatar temp;
             temp.set(i+1);
-            cout << setw(2) << i << '.' << setw(25) << temp.getname() << "  "<< setw(8) << temp.getfigure() << endl;
+            int length = temp.getname().length();
+            int space = (12 - length)/2;
+            string name = string(space,' ') + temp.getname() + string(space,' ');
+            cout << ' ' << i << '.' << setw(12) << name << ' ' << setw(8) << temp.getfigure() << endl;
         }
         else {
-            cout << setw(2) << i << '.' << setw(25) << "???" << "  "<< setw(8) << "???" << endl;
+            cout << ' ' << i << ".    ???       ???" << endl;
         }
     }
 }
 
+// display the details of an creatures
+// parameters: index is the index of that creature, level is the current level the creature is on
 void displayCreatureDetails (int index, int level) {
     creature temp;
     temp.setbasestats(index);
@@ -73,6 +83,8 @@ void displayCreatureDetails (int index, int level) {
     cout << endl;
 }
 
+// display the details of an avatar
+// parameter: index is the index of that avatar
 void displayAvatarDetails (int index) {
     avatar temp;
     temp.set(index);
@@ -87,31 +99,36 @@ void displayAvatarDetails (int index) {
 }
 
 // display 10 owned creatures each page
+// parameters: pageCount is the page number player is viewing, ownedhead is the head of linked list of all creatures player owned
 void displayOwnedCreaturesByPage(int pageCount, owned * ownedhead){
-    cout << "No.          NAME              SYMBOL   LEVEL " << endl;
+    cout << "No.        NAME         SYMBOL  LEVEL" << endl;
     owned * printhead = ownedhead;
     for (int i = 0; i < 10*(pageCount-1); i++) {
         printhead = printhead->next;
     }
-    //cout << ownedCreature[0].name << " in creatures page" << endl;
     int count = 0;
     for (int i = 10*(pageCount-1); i < 10*(pageCount-1)+10 && printhead != NULL; i++) {
         creature temp;
         temp.setbasestats(printhead->index);
         temp.setcurrentstats(printhead->level);
-        cout << setw(2) << count << '.' << setw(25) << temp.getname() << "  " << setw(8) << temp.getsymbol() << "  " << setw(6) << printhead->level << endl;
+        int length = temp.getname().length();
+        int space = (20 - length)/2;
+        string name = string(space,' ') + temp.getname() + string(space,' ');
+        cout << ' ' << count << '.' << setw(20) << name << setw(8) << temp.getsymbol() << "   " << printhead->level << endl;
         count ++;
         printhead = printhead->next;
     }
 }
 
+// the main function to display creatures, used to arrange and organize the other creature displaying functions 
+// parameters: choice is the type of the menu to be displayed (main, inventory or upgrade), ownedhead is the head of linked list of all creatures player owned, deck is the current deck of creatures, currentcurrency is the currency the player has 
 void displayCreature(string choice, owned * ownedhead, creature deck[5], currency &currentcurrency) {
     string viewChoiceList[10] = {"0","1","2","3","4","5","6","7","8","9"};  
     string pageChoiceList[10] = {"10","1","2","3","4","5","6","7","8","9"};
     string creatureStats[] = {"   HP   ", "  COST  ", "  ATK   ", "  MGC   ", "  CRT   "};
     // main menu
     if (choice=="main"){
-        int pageCount = 1 ,maxPageCount = 8;  //maxPageCount can be changed depending on the number of creatures, try to not exceed single digit pages (more convenient?)
+        int pageCount = 1 ,maxPageCount = 8;
         char playersChoice[3] = "P1";
         cout << BLUE << "\n = CREATURE BOOK = \n" << WHITE;
         while (toupper(playersChoice[0])!='Q'){
@@ -134,6 +151,7 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                 if (toupper(playersChoice[0])=='Q'){break;}
             }
             switch (toupper(playersChoice[0])){
+                //display creatures by page
                 case 'P':
                     if (stoi(string(playersChoice).substr(1)) <= maxPageCount) {
                         pageCount = stoi(string(playersChoice).substr(1));
@@ -142,6 +160,7 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                         cout << RED << "Exceeded maximum page count" << WHITE << endl;
                     }
                     break;
+                // display details of a creature
                 case 'V': {
                     int creatureNumber;
                     creatureNumber = stoi(string(playersChoice).substr(1))+((pageCount-1)*10);
@@ -166,6 +185,7 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                     }
                     break;
                 }
+                // quit 
                 case 'Q':
                     cout << "";
                     break;
@@ -262,6 +282,7 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                 if (toupper(playersChoice[0])=='Q'){break;}
             }
             switch (toupper(playersChoice[0])){
+                // display creatures by page
                 case 'P': {
                     if (stoi(string(playersChoice).substr(1)) > maxPageCount) {
                         cout << RED << "Exceeded maximum page count" << WHITE << endl;
@@ -272,12 +293,9 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                     }
                     break;
                 }
+                // display details of a creature
                 case 'V': {
                     int creatureNumber = stoi(string(playersChoice).substr(1)) + ((pageCount-1)*10);
-                    /*if (ownedCreature[stoi(string(playersChoice).substr(1))+((pageCount-1)*10)].index == 0){
-                        cout << "\x1B[31m" << "Invalid input!\n" << "\x1B[0m";
-                        break;
-                    }*/
                     owned * node = ownedhead;
                     for (int i = 0; node != NULL && i < creatureNumber; i++) {
                         node = node->next;
@@ -297,6 +315,7 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
                     }
                     break;
                 }
+                // to make changes to the deck of creatures
                 case 'C': {
                     int creatureNumber = stoi(string(playersChoice).substr(2,1)) + ((pageCount-1)*10);
                     owned * node = ownedhead;
@@ -327,7 +346,7 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
             }
         }
     }
-    // upgrade
+    // menu to upgrade creatures
     if (choice=="upgrade") {
         int count = 0, pageCount = 1 ,maxPageCount = 0;
         owned * iterator = ownedhead;
@@ -405,7 +424,8 @@ void displayCreature(string choice, owned * ownedhead, creature deck[5], currenc
     }
 }
 
-// treasure chest
+// to allow player to purchase and open a chest, a random creature will be given to the player
+// parameters: currentcurrency is the current currency the player has, ownedhead is the head of linked list of owned creatures
 void treasureChest(currency &currentcurrency, owned * &ownedhead) {
     char choice;
     int num;
@@ -446,7 +466,8 @@ void treasureChest(currency &currentcurrency, owned * &ownedhead) {
 	}
 }
 
-// display inventory menu
+// to display the inventory menu
+// parameters: deck is the player's current deck of creatures, ownedhead is the head of linked list of owned creatures, avataridx is the array of owned avatar, currentcurrency is the currency the player has, currentavatar is the current avatar of player
 void displayInventory(creature deck[5], owned * ownedhead, int avataridx[], currency currentcurrency, avatar currentavatar){
     int choice = 0;
     while (choice!=3){
@@ -479,6 +500,7 @@ void displayInventory(creature deck[5], owned * ownedhead, int avataridx[], curr
             cin >> choice;
         }
         switch (choice){
+            // to allow player to change their current avatar
             case 0: {
                 string input = "";
                 while (tolower(input[0]) != 'q') {
@@ -506,21 +528,25 @@ void displayInventory(creature deck[5], owned * ownedhead, int avataridx[], curr
                 }
                 break;
             }
+            // display creatures owned by player
             case 1: {
                 displayCreature("inventory", ownedhead, deck, currentcurrency);
                 break;
             }
+            // allow upgrade of creatures
             case 2: {
                 displayCreature("upgrade", ownedhead, deck, currentcurrency);
                 break;
             }
+            // quit to main menu
             case 3:
                 return;
         }
     }
 }
 
-// display shop 
+// to allow player to purchase new stuff including avatars, food and treasure chest
+// parameters: ownedhead is the head of linked list of owned creatures, avataridx is the array of owned avatar, currentcurrency is the currency player has
 void shop(owned * &ownedhead, int avataridx[], currency &currentcurrency){
     int choice = 0;
     while (choice != 3){
@@ -544,6 +570,7 @@ void shop(owned * &ownedhead, int avataridx[], currency &currentcurrency){
             cin >> choice;
         }
         switch (choice){
+            // allow player to purchase an avatar
             case 0: {
                 string input;
                 while (toupper(input[0]) != 'Q') {
@@ -600,6 +627,7 @@ void shop(owned * &ownedhead, int avataridx[], currency &currentcurrency){
                 }
                 break;
             }
+            // allow player to purchase food
             case 1: {
                 string input = "";
                 while (input != "Q") {
@@ -641,15 +669,19 @@ void shop(owned * &ownedhead, int avataridx[], currency &currentcurrency){
                 }
                 break;
             }
+            // allow player to purchase treasure chest
             case 2:
                 treasureChest(currentcurrency, ownedhead);
                 break;
+            // quit to main menu
             case 3:
                 break;
         }
     }
 }
 
+// to build a linked list of creatures owned by player
+// parameters: ownedhead is the head of linked list of owned creatures, newindex is the index of the creature, newlevel is the level the creature is currently on, own is used to determine if the creature is owned
 void buildLinkedListOfOwnedCreatures (owned * &ownedhead, int newindex, int newlevel, bool &own) {
     owned * newnode = new owned;
     newnode->index = newindex;
@@ -692,6 +724,8 @@ void buildLinkedListOfOwnedCreatures (owned * &ownedhead, int newindex, int newl
     return;
 }
 
+// to load all the details needed in game from file
+// filename is the file that player wants to open, currentCoordinate is the current coordinate of the avatar, currentMap is the current block player is on, currentAvatar is the current avatar of player, enemycoordinate is the current coordinate of enemy, other parameters have already been explained above 
 void load(string filename, owned * &ownedhead, int avataridx[10], currency &currentcurrency, int currentCoordinate[2], string &currentMap, avatar &currentAvatar, creature deck[5], int enemycoordinate[2]){
     int index, level;
     string line, trash;
@@ -751,7 +785,7 @@ void load(string filename, owned * &ownedhead, int avataridx[10], currency &curr
     fin.close();
 }
 
-// to start a new game, initialize items that player has, set the avatar and creatures for players to start with
+// to start a new game, allow player to name the new file
 string newGame() {
     cout << "To start a new game, you need to create a save file to store the progress of your game." << endl;
     cout << "Please name your save file: ";
@@ -791,6 +825,7 @@ string newGame() {
 }
 
 // for player to choose a file to load
+// parameter: option is the file number player wants to open
 string loadFileOption(int &option) {
     int count = 1;
     string name = "";
@@ -838,6 +873,8 @@ string loadFileOption(int &option) {
     return fullfilename;
 }
 
+// allow player to save their progress in either a new file or an existing file
+// parameters are similar to the parameters used for load function
 void save(string &filename, owned * ownedhead, int avataridx[10], currency currentcurrency, int currentCoordinate[2], string currentMap, avatar currentAvatar, creature deck[5], int enemycoordinate[2]){
     int option;
     cout << endl;
@@ -887,7 +924,8 @@ void save(string &filename, owned * ownedhead, int avataridx[10], currency curre
     cout << endl << HIGHLIGHT << "Progress saved successfully!"  << WHITE << endl << endl;
 }
 
-// main menu page
+// to display the main menu page
+// parameters are similar to the parameters used for load function
 void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature deck[5], string &filename, owned * ownedhead, int avataridx[10], int currentcoordinate[2], string currentMap, int &flag, int enemycoordinate[2]){
     int choice = 0;
     while (choice != 5 && choice != 6) {
@@ -919,21 +957,27 @@ void mainMenuPage(currency &currentcurrency, avatar &currentavatar, creature dec
             cin >> choice;
         }
         switch (choice) {
+            // display inventory page
             case 1:
                 displayInventory(deck, ownedhead, avataridx, currentcurrency, currentavatar);
                 break;
+            // display creature page
             case 2:
                 displayCreature("main", ownedhead, deck, currentcurrency);
                 break;
+            // display the shop
             case 3:
                 shop(ownedhead, avataridx, currentcurrency);
                 break;
+            // allow player to save progress
             case 4:
                 save(filename, ownedhead, avataridx, currentcurrency, currentcoordinate, currentMap, currentavatar, deck, enemycoordinate);
                 break;
+            // return to the map
 	        case 5:
                 flag = 0;
                 break;
+            // quit and save game
             case 6:
                 cout << "\x1B[31m" << "Are you sure that you want to quit the game? [y/n] \n" << "\x1B[0m";
                 char toQuit;
